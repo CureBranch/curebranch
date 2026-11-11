@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https:; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="cb-build" content="__BUILD_ID__">
 <title>CureBranch</title>
@@ -182,6 +184,10 @@
       <h1 id="tree-title">The tree</h1>
       <div data-listen-mount="#s-tree"></div>
       <p class="notice"><strong>EXAMPLE DATA.</strong> These are made-up patients so you can see how the tree works.</p>
+      <figure class="lt-figure">
+        <div id="living-tree"></div>
+        <figcaption id="lt-caption" aria-live="polite">Tap or pick a limb or a leafy tip to see that branch below.</figcaption>
+      </figure>
       <div class="seg" role="tablist" aria-label="Tree views">
         <button type="button" class="on" role="tab" aria-selected="true" id="tab-branch" data-treeseg="branch" aria-controls="panel-branch">My branch</button>
         <button type="button" role="tab" aria-selected="false" id="tab-explore" data-treeseg="explore" aria-controls="panel-explore" tabindex="-1">Explore</button>

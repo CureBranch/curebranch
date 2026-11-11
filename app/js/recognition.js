@@ -3,6 +3,7 @@
 // Rules: everything is OFF until the patient turns it on. The public page shows only the
 // random code unless the patient chooses more. No names, no money, no rankings.
 import { buildTree } from "./tree.js";
+import { livingTreeSvg, hashStr } from "./living-tree.js";
 import { privacyLevel, isPublicLevel } from "./privacy.js";
 
 export const FOUNDING_LIMIT = 1000;
@@ -99,37 +100,13 @@ export function shouldGlow(nearby = [], now = new Date(), hours = 24) {
   return nearby.some((e) => e && e.at && now - new Date(e.at) <= hours * 3600000 && now - new Date(e.at) >= 0);
 }
 
-const escX = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
 /**
- * A small tree picture (SVG string). Top-level branches are cancer types; the patient's own
- * branch is drawn thicker, and glows (CSS) when someone landed near it recently.
+ * The tree picture for the profile page (SVG string, drawn by living-tree.js). Limbs are
+ * cancer types; the patient's own branch is outlined in gold with a flower at its tip, and
+ * the flower glows (CSS) when someone landed near it recently.
  */
 export function branchTreeSvg(summaries, path, { glow = false } = {}) {
-  const root = buildTree(summaries);
-  const tops = [...root.children.values()].sort((a, b) => b.shown - a.shown).slice(0, 6);
   const mine = path && path.length ? path : null;
-  if (mine && !tops.some((t) => t.name === mine[0])) tops.splice(Math.min(tops.length, 5), 1, { name: mine[0], children: new Map(), shown: 0 });
-  const W = 320, H = 230, baseX = W / 2, baseY = H - 10, forkY = 150;
-  let g = `<path class="tr-trunk" d="M${baseX} ${baseY} V${forkY}"/>`;
-  const labels = [];
-  tops.forEach((t, i) => {
-    const x = 26 + (i * (W - 52)) / Math.max(1, tops.length - 1 || 1);
-    const y = 92;
-    const isMine = mine && t.name === mine[0];
-    g += `<path class="tr-branch${isMine ? " tr-mine" : ""}" d="M${baseX} ${forkY} Q${(baseX + x) / 2} ${forkY - 10} ${x} ${y}"/>`;
-    labels.push(`<text x="${x}" y="${y + 18}" text-anchor="middle" class="tr-label${isMine ? " tr-label-mine" : ""}">${escX(t.name.slice(0, 10))}</text>`);
-    if (isMine && mine.length > 1) {
-      let px = x, py = y;
-      for (let d = 1; d < Math.min(mine.length, 3); d++) {
-        const nx = Math.max(30, Math.min(W - 30, px + (x < baseX ? 34 : -34))), ny = py - 34;
-        g += `<path class="tr-branch tr-mine" d="M${px} ${py} Q${px} ${ny + 8} ${nx} ${ny}"/>`;
-        labels.push(`<text x="${nx}" y="${ny - 14}" text-anchor="middle" class="tr-label tr-label-mine">${escX(mine[d].slice(0, 10))}</text>`);
-        px = nx; py = ny;
-      }
-      g += `<circle class="tr-leaf${glow ? " tr-glow" : ""}" cx="${px}" cy="${py}" r="9"/>`;
-    }
-  });
-  const desc = mine ? `Your branch, ${mine.join(", then ")}, is drawn thicker${glow ? " and is glowing, because someone landed near it in the last day" : ""}.` : "Your branch isn't on the tree yet.";
-  return `<svg class="tr-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tree picture. ${escX(desc)}"><g fill="none">${g}</g>${labels.join("")}</svg>`;
+  const desc = mine ? `Your branch, ${mine.join(", then ")}, is outlined in gold with a flower at its tip${glow ? ". The flower is glowing, because someone landed near your branch in the last day" : ""}.` : "Your branch isn't on the tree yet.";
+  return livingTreeSvg(buildTree(summaries), { mine, glow, interactive: false, label: `Tree picture. ${desc}`, idPrefix: "lt-p" + (hashStr((mine || []).join("|")) % 100000) });
 }

@@ -278,12 +278,40 @@ def run_axe(pg, label):
     results["axe"].append({"view": label, "violations": r})
     if r: fails.append(f"axe {label}: {[(v['id'], v['n'], v['t']) for v in r]}")
 
+def tree_flow(b):
+    """Lifelike tree picture: every branch tip is a labelled button; click and keyboard both pick it."""
+    ctx = b.new_context(viewport={"width": 390, "height": 900})
+    pg = ctx.new_page()
+    pg.on("pageerror", lambda e: results["console"].append(f"pageerror: {e}"))
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    if wizard_open(pg): finish_wizard(pg)
+    go(pg, "tree")
+    info = pg.evaluate("""() => { const h = [...document.querySelectorAll('#living-tree .lt-hit')];
+      return { n: h.length, tips: h.filter(x => x.classList.contains('lt-tip')).length,
+        ok: h.every(x => x.getAttribute('role') === 'button' && x.tabIndex === 0 && /shown, \\d+ counted/.test(x.getAttribute('aria-label'))),
+        svg: !!document.querySelector('#living-tree svg.lt-svg[role=group][aria-label]') }; }""")
+    tips = len({tuple(s["branch"]["path"]) for s in json.loads((DIST / "data/example-summaries.json").read_text())["summaries"]})
+    check("tree picture: one labelled button per patient branch tip", info["svg"] and info["ok"] and info["tips"] == tips, str(info))
+    pg.click('#living-tree .lt-tip[data-lt-path="Melanoma/BRAF/V600E"] .lt-hit-area', force=True)
+    st = pg.evaluate("""() => ({ pressed: document.querySelector('#living-tree [data-lt-path="Melanoma/BRAF/V600E"]').getAttribute('aria-pressed'),
+      panel: document.querySelector('#panel-branch').textContent, cap: document.querySelector('#lt-caption').textContent })""")
+    check("tree picture: clicking a tip picks that branch", st["pressed"] == "true" and "Melanoma › BRAF › V600E" in st["panel"] and "Melanoma" in st["cap"], str(st)[:300])
+    pg.focus('#living-tree [data-lt-path="Breast"]'); pg.keyboard.press("Enter"); pg.wait_for_timeout(100)
+    st = pg.evaluate("""() => ({ pressed: document.querySelector('#living-tree [data-lt-path="Breast"]').getAttribute('aria-pressed'),
+      old: document.querySelector('#living-tree [data-lt-path="Melanoma/BRAF/V600E"]').getAttribute('aria-pressed'),
+      focus: document.activeElement && document.activeElement.dataset.ltPath, panel: document.querySelector('#panel-branch h2').textContent })""")
+    check("tree picture: Enter on a focused limb picks it and keeps focus", st == {"pressed": "true", "old": "false", "focus": "Breast", "panel": "Branch you picked"}, str(st))
+    pg.click("#tab-explore"); pg.focus('#living-tree [data-lt-path="Lung"]'); pg.keyboard.press(" "); pg.wait_for_timeout(100)
+    check("tree picture: Space picks too and shows the branch tab", pg.evaluate("!document.querySelector('#panel-branch').hidden && document.querySelector('#panel-branch').textContent.includes('Lung')"))
+    ctx.close()
+
 def main():
     httpd, state = start(DIST, PORT)
     STATE.update(hits=state.setdefault("hits", []))
     with sync_playwright() as p:
         b = p.chromium.launch()
         wizard_flow(b)
+        tree_flow(b)
         # ---------- flows ----------
         ctx = b.new_context(viewport={"width": 390, "height": 844})
         pg = ctx.new_page()

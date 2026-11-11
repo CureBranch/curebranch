@@ -249,13 +249,7 @@ html{scroll-padding-top:72px;scroll-padding-bottom:96px}
 .rc-owner h3{margin:18px 0 6px;font-size:1rem}
 .rc-tree{max-width:420px}
 .tr-svg{width:100%;height:auto;display:block}
-.tr-trunk,.tr-branch{stroke:var(--line);stroke-width:8;stroke-linecap:round}
-.tr-trunk{stroke:var(--muted)}
-.tr-mine{stroke:var(--green);stroke-width:12}
-.tr-label{font-size:12px;fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
-.tr-label-mine{font-weight:700;fill:var(--green-d)}
-.tr-leaf{fill:var(--green)}
-.tr-glow{fill:#e0a400;filter:drop-shadow(0 0 6px #e0a400)}
+.tr-glow{filter:drop-shadow(0 0 6px #e0a400) drop-shadow(0 0 3px #fff3c4)}
 @media (prefers-reduced-motion:no-preference){.tr-glow{animation:trglow 1.6s ease-in-out infinite alternate}@keyframes trglow{from{opacity:.65}to{opacity:1}}}
 .rc-badges{padding-left:1.1rem;margin:0}
 .rc-badges li{margin:0 0 6px;overflow-wrap:anywhere}
@@ -269,3 +263,27 @@ html{scroll-padding-top:72px;scroll-padding-bottom:96px}
 .rc-notes p{margin:0;overflow-wrap:anywhere}
 .rc-note-form textarea{width:100%;box-sizing:border-box}
 .rc-msg{margin:8px 0 0;overflow-wrap:anywhere}
+/* Lifelike tree (js/living-tree.js). Fixed natural colors: it is a picture, the same in every theme. */
+.lt-figure{margin:0 auto 12px;max-width:560px;min-width:0}
+.lt-figure figcaption{text-align:center;font-size:.9rem;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.lt-svg{display:block;width:100%;height:auto;border-radius:16px}
+.lt-label{font:700 21px var(--font-sans,system-ui,sans-serif);fill:#14231a;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round;pointer-events:none}
+.lt-label-mine{fill:#5a3d00}
+.lt-mine-glow{fill:#f4c542;stroke:#f4c542;stroke-opacity:.8;stroke-linejoin:round}
+.lt-blossom circle{fill:#fff3c4;stroke:#a86d00;stroke-width:1.5}
+.lt-blossom .lt-blossom-c{fill:#e0a400;stroke:#7a4f00}
+.lt-hit{cursor:pointer;outline:none}
+.lt-hit-area{fill:#000;fill-opacity:0}
+.lt-ring,.lt-ring-in{fill:none;opacity:0}
+.lt-ring{stroke:#fff;stroke-width:8}
+.lt-ring-in{stroke:#111;stroke-width:3.5}
+.lt-hit:hover .lt-ring,.lt-hit:hover .lt-ring-in{opacity:.7}
+.lt-hit:focus-visible .lt-ring,.lt-hit:focus-visible .lt-ring-in,.lt-hit.lt-selected .lt-ring,.lt-hit.lt-selected .lt-ring-in{opacity:1}
+.lt-hit.lt-selected .lt-ring-in{stroke:#7a4f00;stroke-dasharray:7 5}
+.lt-hit.lt-selected:focus-visible .lt-ring-in{stroke:#111;stroke-dasharray:none}
+@media (prefers-reduced-motion:no-preference){
+  html:not([data-cb-motion="on"]) .lt-sway{animation:ltsway 7s ease-in-out infinite alternate}
+  html:not([data-cb-motion="on"]) .lt-sway-crown{animation-duration:9s}
+}
+@media (prefers-reduced-motion:reduce){html[data-cb-motion="off"] .lt-sway{animation:ltsway 7s ease-in-out infinite alternate}}
+@keyframes ltsway{from{transform:rotate(-.9deg)}to{transform:rotate(1.1deg)}}

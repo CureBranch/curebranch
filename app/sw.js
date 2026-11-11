@@ -14,7 +14,7 @@ const PRECACHE = [
   "/", "/index.html", "/profile.html", "/how-it-started.html", "/manifest.webmanifest",
   "/css/a11y.css", "/css/app.css",
   "/js/a11y.js", "/js/app.js", "/js/config.js", "/js/codes.js", "/js/fhir.js", "/js/shc.js", "/js/summary.js",
-  "/js/tree.js", "/js/store.js", "/js/smart.js", "/js/pwa.js", "/js/update.js", "/js/profile.js",
+  "/js/tree.js", "/js/living-tree.js", "/js/store.js", "/js/smart.js", "/js/pwa.js", "/js/update.js", "/js/profile.js",
   "/js/onboarding.js", "/js/wizard.js", "/js/portal-stub.js", "/js/consistency.js", "/js/privacy.js", "/js/privacy-ui.js", "/js/recognition.js", "/js/recognition-source.js", "/js/record.js",
   "/vendor/idb-keyval.js", "/vendor/canonicalize.js",
   "/data/example-summaries.json", "/data/trusted-issuers.json",

@@ -7,6 +7,7 @@ import { extractJwsList, verifyHealthCard } from "./shc.js";
 import { extractFacts, suggestBranch } from "./fhir.js";
 import { buildSummary, signSummary, DEFAULT_SHARE } from "./summary.js";
 import { buildTree, collect, treatmentStats } from "./tree.js";
+import { livingTreeSvg, parsePathKey } from "./living-tree.js";
 import { newStewardKey, stewardKeyHash, todayISO } from "./codes.js";
 import { startSmartConnect, finishSmartConnectIfReturning } from "./smart.js";
 import { initPwa, pushOptIn, pushOptOut } from "./pwa.js";
@@ -27,6 +28,7 @@ const SHARE_LABELS = { cancerType: "Cancer type", stageGroup: "Stage (e.g. III)"
 
 let record = null;
 let example = { summaries: [] };
+let pickedPath = null; // branch picked on the tree picture (this visit only)
 let toastTimer;
 
 export function toast(msg) {
@@ -174,8 +176,29 @@ function renderTree() {
     return `<li><details ${depth === 0 ? "open" : ""}><summary>${esc(node.name)} ${counts}</summary>${statHtml}${kids.length ? `<ul>${kids.map((k) => nodeHtml(k, depth + 1)).join("")}</ul>` : ""}</details></li>`;
   };
   $("#tree-list").innerHTML = nodeHtml(root, 0);
-  const path = branchPath() || ["Lung", "KRAS", "G12C"];
-  $("#panel-branch").innerHTML = `<h2>${branchPath() ? "My branch" : "Example branch"}</h2><p class="sub">${esc(path.join(" › "))}</p>${workedHtml(path)}`;
+  const mine = branchPath();
+  $("#living-tree").innerHTML = livingTreeSvg(buildTree(example.summaries), {
+    mine, selected: pickedPath, interactive: true, idPrefix: "lt-main",
+    label: `The tree, drawn as a living tree. Each big limb is a cancer type and each leafy tip is a branch of patients.${mine ? ` Your branch, ${mine.join(", then ")}, has a golden flower.` : ""} Pick a limb or a tip to see what people on it tried.`,
+  });
+  renderBranchPanel();
+}
+
+function renderBranchPanel() {
+  const mine = branchPath();
+  const path = pickedPath || mine || ["Lung", "KRAS", "G12C"];
+  const title = pickedPath ? "Branch you picked" : mine ? "My branch" : "Example branch";
+  $("#panel-branch").innerHTML = `<h2>${title}</h2><p class="sub">${esc(path.join(" › "))}</p>${workedHtml(path)}`;
+  $("#lt-caption").textContent = pickedPath ? `Showing ${pickedPath.join(" › ")} below.` : "Tap or pick a limb or a leafy tip to see that branch below.";
+}
+
+function pickTreeBranch(el) {
+  const p = parsePathKey(el.dataset.ltPath);
+  pickedPath = p.length ? p : null;
+  $$("#living-tree .lt-hit").forEach((h) => { const on = h === el; h.classList.toggle("lt-selected", on); h.setAttribute("aria-pressed", String(on)); });
+  const branchTab = $("#tab-branch");
+  if (branchTab.getAttribute("aria-selected") !== "true") branchTab.click();
+  renderBranchPanel();
 }
 
 function renderSettings(fillInputs) {
@@ -415,6 +438,15 @@ function wire() {
     openWizard();
   });
   $("#open-a11y").addEventListener("click", () => window.CureBranchA11y && CureBranchA11y.openPanel());
+
+  // Tree picture: limbs and tips are buttons (click, Enter or Space).
+  const lt = $("#living-tree");
+  lt.addEventListener("click", (e) => { const h = e.target.closest(".lt-hit"); if (h && h.dataset.ltPath) pickTreeBranch(h); });
+  lt.addEventListener("keydown", (e) => {
+    const h = e.target.closest(".lt-hit");
+    if (!h || (e.key !== "Enter" && e.key !== " ")) return;
+    e.preventDefault(); pickTreeBranch(h);
+  });
 
   // Tree tabs (arrow keys move between tabs, per the ARIA tabs pattern)
   const tabs = $$("#s-tree [role=tab]");
