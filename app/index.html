@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="cb-build" content="__BUILD_ID__">
+<title>CureBranch</title>
+<meta name="description" content="CureBranch: an open-source, patient-owned cancer knowledge tree. Your records stay on your device; you choose what to share.">
+<link rel="canonical" href="https://curebranch.ai/">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#1f5e4f">
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CureBranch">
+<link rel="stylesheet" href="/css/a11y.css">
+<link rel="stylesheet" href="/css/app.css">
+<script src="/js/a11y.js" defer></script>
+<script type="module" src="/js/app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#screens">Skip to main content</a>
+<div class="app" id="app">
+  <div class="chrome">
+  <header class="topbar">
+    <div class="brand"><span class="mark" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 21V11M12 11L7 6M12 11l5-5M7 6V3M17 6V3"/></svg></span>CureBranch</div>
+    <div class="topbar-end"><span data-a11y-launch="compact"></span></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Main">
+    <button type="button" class="on" data-go="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-4v-6H10v6H6a2 2 0 01-2-2z"/></svg>Home</button>
+    <button type="button" data-go="import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Import</button>
+    <button type="button" data-go="repo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 13h8M8 17h5"/></svg>Record</button>
+    <button type="button" data-go="tree"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 21V11M12 11L6 5M12 11l6-6M12 15l-4-3"/></svg>Tree</button>
+    <button type="button" data-go="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14 3h-4l-.6 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2L10 21h4l.6-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>Settings</button>
+  </nav>
+  </div>
+
+  <div id="banners"></div>
+
+  <main class="screens" id="screens" tabindex="-1">
+
+    <!-- HOME -->
+    <section class="screen active" id="s-home" aria-labelledby="home-title">
+      <div class="home-greet">
+        <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="#">…</a></p>
+        <h1 id="home-title">Welcome</h1>
+      </div>
+      <div data-listen-mount="#s-home" data-listen-label="Listen to this Home screen"></div>
+
+      <div class="card privacy-card">
+        <div class="row">
+          <div class="grow">
+            <p class="status-line" id="privacy-title">Your summary is private</p>
+            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared. Your records stay on this device.</p>
+          </div>
+          <button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="privacy-title"><span class="track" aria-hidden="true"></span></button>
+        </div>
+      </div>
+
+      <div class="card tint" id="home-branch"></div>
+
+      <h2>What others on your branch reported</h2>
+      <p class="sub">Counts from <strong>example</strong> verified summaries only. Information, not medical advice.</p>
+      <div id="home-worked"></div>
+
+      <h2>Quick actions</h2>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" data-go="import">Import records</button>
+        <button type="button" class="btn btn-ghost" data-go="repo">My record</button>
+        <button type="button" class="btn btn-ghost" data-go="tree">Explore the tree</button>
+        <button type="button" class="btn btn-ghost" data-go="start">How it works</button>
+      </div>
+
+      <div class="card sky">
+        <h2>After you're gone</h2>
+        <p class="sub" style="margin:0 0 8px">Current choice: <strong id="after-status">Keep my summary public</strong></p>
+        <button type="button" class="btn btn-ghost" data-go="settings" data-focus="after-death">Change this</button>
+      </div>
+
+      <p class="dedication" style="font-style:italic;margin:16px 0">In honor of my dad, whose son wishes AI had come a few months sooner. Let tomorrow be decided by patients and their own medical records. Here's to you, Dad.</p>
+      <p class="disc">Information, not medical advice. Tree figures are EXAMPLE DATA until a real public index exists.</p>
+    </section>
+
+    <!-- HOW IT WORKS (not a tab) -->
+    <section class="screen" id="s-start" aria-labelledby="start-title">
+      <button type="button" class="back-btn" data-go="home">‹ Back to Home</button>
+      <h1 id="start-title">How CureBranch works</h1>
+      <div data-listen-mount="#s-start" data-listen-label="Listen to how it works"></div>
+      <ol class="stack">
+        <li><strong>Your records stay with you.</strong> You import them into this app. They are saved only in this browser on this device.</li>
+        <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (Grok, ChatGPT, Claude or any other). CureBranch never runs AI on your data.</li>
+        <li><strong>A tiny public summary, only if you say so.</strong> One switch. When it's on, a short summary (cancer type, markers, treatments, how it went) is shared under a random code like <span class="mono">k7x2m9</span>. Never your name, birthday or record numbers.</li>
+        <li><strong>Only checked records count.</strong> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
+        <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a person to carry it out.</li>
+      </ol>
+      <div class="card">
+        <h2>The plain-English agreement</h2>
+        <label class="check"><input type="checkbox" class="agree"> I own my data, and I'm responsible for what I choose to share.</label>
+        <label class="check"><input type="checkbox" class="agree"> CureBranch is information, not medical advice. I'll make care decisions with my doctors.</label>
+        <label class="check"><input type="checkbox" class="agree"> The software is open source and provided "as is", with no warranty.</label>
+        <label class="check"><input type="checkbox" class="agree"> Anything I make public can be copied by others, even if I remove it later.</label>
+        <button type="button" class="btn btn-primary" id="agree-next" disabled data-go="import">I agree, import my records</button>
+      </div>
+      <p class="disc">Consent video step from the mockup: not built yet (see docs/open-choices.md).</p>
+    </section>
+
+    <!-- IMPORT -->
+    <section class="screen" id="s-import" aria-labelledby="import-title">
+      <h1 id="import-title">Import your records</h1>
+      <div data-listen-mount="#s-import"></div>
+      <p class="sub">Files are read right here in your browser. Nothing is uploaded.</p>
+      <div class="card">
+        <label class="file-label" for="file-in">Choose a SMART Health Card or FHIR file
+          <input id="file-in" type="file" accept=".smart-health-card,.json,.txt,application/json,application/smart-health-card">
+        </label>
+        <p class="sub" style="margin:8px 0 0">SMART Health Cards are signed by the hospital or lab, so they can be <strong>verified</strong>. Plain FHIR files are kept but marked <strong>unverified</strong>.</p>
+      </div>
+      <div class="card">
+        <label class="field-label" for="shc-text" style="margin-top:0">Or paste the text from a SMART Health Card QR code (starts with shc:/)</label>
+        <textarea class="field" id="shc-text" rows="3" autocomplete="off" spellcheck="false"></textarea>
+        <button type="button" class="btn btn-ghost" id="shc-paste-go" style="margin-top:8px">Import pasted card</button>
+      </div>
+      <div class="card">
+        <h2>Connect your hospital portal</h2>
+        <p class="sub">Uses SMART on FHIR, the standard behind MyChart and other patient portals.</p>
+        <button type="button" class="btn btn-primary" id="smart-connect">Connect a patient portal</button>
+      </div>
+      <div class="card sky">
+        <h2>Just trying it out?</h2>
+        <p class="sub">Load made-up EXAMPLE records to see how it works.</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-ghost" id="try-shc">Example health card</button>
+          <button type="button" class="btn btn-ghost" id="try-fhir">Example FHIR file</button>
+        </div>
+      </div>
+      <div id="import-result" aria-live="polite"></div>
+      <p class="disc">You'll use your own Grok or another AI to read your records. CureBranch never runs AI on your data itself.</p>
+    </section>
+
+    <!-- MY RECORD -->
+    <section class="screen" id="s-repo" aria-labelledby="repo-title">
+      <h1 id="repo-title">My record</h1>
+      <div data-listen-mount="#s-repo"></div>
+      <p class="sub">Kept on this device. Code: <span class="mono" id="repo-code">…</span></p>
+      <h2>Imported records</h2>
+      <div class="card" id="sources"></div>
+      <h2>What your records show</h2>
+      <div class="card" id="facts"></div>
+      <h2 id="branch-h">Your branch</h2>
+      <div class="card">
+        <p class="sub" id="branch-how"></p>
+        <label class="field-label" for="branch-in">Branch, from trunk to tip, separated by ›</label>
+        <input class="field" id="branch-in" type="text" autocomplete="off">
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="branch-save">Save my branch</button>
+          <button type="button" class="btn btn-ghost" id="branch-reset">Use the suggestion</button>
+        </div>
+      </div>
+      <h2>What to include if you go public</h2>
+      <div class="card">
+        <fieldset class="share-list choice-list" id="share-list">
+          <legend class="sr-only">Parts of the public summary</legend>
+        </fieldset>
+      </div>
+      <h2>Your public summary</h2>
+      <div class="card">
+        <p class="sub" id="summary-state"></p>
+        <pre class="json" id="summary-json" tabindex="0" aria-label="Public summary preview"></pre>
+        <div class="btn-row">
+          <button type="button" class="btn btn-ghost" id="dl-summary">Download summary</button>
+          <button type="button" class="btn btn-ghost" id="copy-ai">Copy a prompt for my AI</button>
+        </div>
+        <p class="sub" style="margin:0">There is no live public index yet, so nothing is sent anywhere. See docs/open-choices.md.</p>
+      </div>
+      <p class="disc">Information, not medical advice.</p>
+    </section>
+
+    <!-- TREE -->
+    <section class="screen" id="s-tree" aria-labelledby="tree-title">
+      <h1 id="tree-title">The tree</h1>
+      <div data-listen-mount="#s-tree"></div>
+      <p class="notice"><strong>EXAMPLE DATA.</strong> These are made-up patients so you can see how the tree works.</p>
+      <div class="seg" role="tablist" aria-label="Tree views">
+        <button type="button" class="on" role="tab" aria-selected="true" id="tab-branch" data-treeseg="branch" aria-controls="panel-branch">My branch</button>
+        <button type="button" role="tab" aria-selected="false" id="tab-explore" data-treeseg="explore" aria-controls="panel-explore" tabindex="-1">Explore</button>
+      </div>
+      <div id="panel-branch" class="treeseg" role="tabpanel" aria-labelledby="tab-branch"></div>
+      <div id="panel-explore" class="treeseg" role="tabpanel" aria-labelledby="tab-explore" hidden>
+        <p class="sub">Each line shows how many summaries are <strong>shown</strong> and how many are <strong>counted</strong>. Only verified records are counted, and each person counts once.</p>
+        <ul class="tree-list" id="tree-list"></ul>
+      </div>
+      <div class="card sky"><p class="sub" style="margin:0">Bring anything you find to your care team. Patterns in shared data aren't proof that a treatment will work for you.</p></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="s-settings" aria-labelledby="settings-title">
+      <h1 id="settings-title">Settings</h1>
+      <div data-listen-mount="#s-settings"></div>
+      <p class="sub">You decide everything here. Changes are saved on this device and noted in your edit history.</p>
+
+      <h2>Public or private</h2>
+      <div class="card">
+        <div class="item"><div class="grow"><h3 id="vis-lbl">Share my summary publicly</h3><small>One switch. Off means nothing is shared.</small></div><button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="vis-lbl"><span class="track" aria-hidden="true"></span></button></div>
+      </div>
+
+      <h2 id="after-death" tabindex="-1">After you're gone</h2>
+      <div class="card">
+        <fieldset class="choice-list">
+          <legend class="sr-only">What happens to my public summary after I die</legend>
+          <label><input type="radio" name="afterdeath" value="keep-public"> Keep my summary public</label>
+          <label><input type="radio" name="afterdeath" value="remove"> Remove my summary</label>
+          <label><input type="radio" name="afterdeath" value="person-decides"> Let the person I name decide</label>
+        </fieldset>
+        <h3 style="margin-top:10px">The person who carries this out</h3>
+        <p class="sub">Their name stays on this device. It is never published.</p>
+        <label class="field-label" for="steward-name">Their name</label>
+        <input class="field" id="steward-name" type="text" autocomplete="off">
+        <label class="field-label" for="steward-reach">How they can be reached (optional)</label>
+        <input class="field" id="steward-reach" type="text" autocomplete="off">
+        <button type="button" class="btn btn-ghost" id="steward-save" style="margin-top:8px">Save</button>
+        <button type="button" class="btn btn-primary" id="steward-key" style="margin-top:8px">Make a key for this person</button>
+        <div id="steward-out" aria-live="polite"></div>
+      </div>
+
+      <h2>Profile page (optional)</h2>
+      <div class="card">
+        <p class="sub">Your public page is <a class="mono" id="profile-link" href="#">…</a>. By default it is anonymous. You can add a name and photo if you want.</p>
+        <div class="item"><div class="grow"><h3 id="prof-lbl">Show a name and photo</h3><small>Only when your summary is public</small></div><button type="button" class="cb-switch" id="profile-switch" role="switch" aria-checked="false" aria-labelledby="prof-lbl"><span class="track" aria-hidden="true"></span></button></div>
+        <label class="field-label" for="prof-name">Name to show (a nickname is fine)</label>
+        <input class="field" id="prof-name" type="text" maxlength="60" autocomplete="off">
+        <label class="file-label" for="prof-photo" style="margin-top:10px">Photo (resized on this device; location data removed)
+          <input id="prof-photo" type="file" accept="image/*">
+        </label>
+        <label class="field-label" for="prof-alt">Describe the photo for screen readers</label>
+        <input class="field" id="prof-alt" type="text" maxlength="200" autocomplete="off">
+        <div id="prof-preview"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-ghost" id="prof-save">Save profile</button>
+          <button type="button" class="btn btn-ghost" id="prof-clear">Remove photo</button>
+        </div>
+      </div>
+
+      <h2>Public contact (optional)</h2>
+      <div class="card">
+        <p class="sub">CureBranch has no messaging. If you want people to reach you, list a public handle you already use.</p>
+        <label class="field-label" for="contact-in">Public handle</label>
+        <input class="field" id="contact-in" type="text" maxlength="100" autocomplete="off">
+        <button type="button" class="btn btn-ghost" id="contact-save" style="margin-top:8px">Save</button>
+      </div>
+
+      <h2>Your AI</h2>
+      <div class="card">
+        <p class="sub">You use and pay for your own AI. CureBranch stores no AI passwords or keys.</p>
+        <label class="field-label" for="ai-name">Which AI you use (for your notes)</label>
+        <input class="field" id="ai-name" type="text" maxlength="60" autocomplete="off">
+        <button type="button" class="btn btn-ghost" id="ai-save" style="margin-top:8px">Save</button>
+      </div>
+
+      <h2>Notifications (optional)</h2>
+      <div class="card">
+        <div class="item"><div class="grow"><h3 id="push-lbl">Tell me when my branch gets news</h3><small>Off unless you turn it on</small></div><button type="button" class="cb-switch" id="push-switch" role="switch" aria-checked="false" aria-labelledby="push-lbl"><span class="track" aria-hidden="true"></span></button></div>
+        <div id="push-out" aria-live="polite"></div>
+      </div>
+
+      <h2>Your data</h2>
+      <div class="card">
+        <button type="button" class="btn btn-ghost" id="dl-backup">Download my full backup</button>
+        <button type="button" class="btn btn-danger" id="delete-all" style="margin-top:8px">Delete everything on this device</button>
+        <p class="sub" style="margin:10px 0 0;font-size:.85rem">The backup holds your records and your signing key. Keep it private. Anything you made public may have been copied by others.</p>
+      </div>
+
+      <h2>Accessibility</h2>
+      <div class="card">
+        <button type="button" class="btn btn-ghost" id="open-a11y">Open accessibility settings</button>
+        <button type="button" class="btn btn-ghost" style="margin-top:8px" data-go="a11y">Read the accessibility statement</button>
+      </div>
+
+      <h2>Support the project</h2>
+      <div class="card"><p class="sub" style="margin:0" id="donate-text">Donations pay only for servers and outreach, through Open Collective, where every dollar is shown publicly. This app never handles money.</p></div>
+
+      <div class="card sky"><p class="sub" style="margin:0;font-size:.85rem">Open source, provided "as is", with no warranty. You own and are responsible for what you share. Information, not medical advice. Version <span class="mono" id="build-id"></span>.</p></div>
+    </section>
+
+    <!-- ACCESSIBILITY STATEMENT -->
+    <section class="screen" id="s-a11y" aria-labelledby="a11y-stmt-title">
+      <button type="button" class="back-btn" data-go="settings">‹ Back to Settings</button>
+      <h1 id="a11y-stmt-title">Accessibility</h1>
+      <div data-listen-mount="#s-a11y" data-listen-label="Listen to the accessibility statement"></div>
+      <p class="lead sub">We want everyone to be able to use this app, including people with vision, hearing, mobility, or reading differences.</p>
+      <h2>Our goal, in plain English</h2>
+      <p>We aim to meet WCAG 2.2 Level AA, a widely used checklist for accessible apps and websites. The app has not been formally audited or certified.</p>
+      <h2>How to listen</h2>
+      <p>Every screen has a Listen button. It uses your browser's free, built-in read-aloud and picks the most natural voice your device has. You can play, pause, stop, and change the speed. Screen readers such as VoiceOver, TalkBack, NVDA, JAWS and Narrator also work.</p>
+      <h2>How to change the look</h2>
+      <p>Open <strong>Accessibility</strong> from the top corner. You can make text larger (up to 200%), choose a font including OpenDyslexic, change spacing, pick a high-contrast or colorblind-safe theme or your own colors, reduce motion, underline links, and enlarge the focus ring. Your choices stay on this device.</p>
+      <h2>Feedback</h2>
+      <p>Report accessibility problems on the project's public issue tracker.</p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</div>
+</body>
+</html>

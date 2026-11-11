@@ -1,0 +1,5 @@
+CureBranch
+Copyright CureBranch contributors
+
+This product includes software developed by third parties under their own licenses;
+see app/vendor/LICENSES/ for idb-keyval, canonicalize, fhirclient (with jose and js-base64) and the bundled fonts.

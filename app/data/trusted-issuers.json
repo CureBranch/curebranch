@@ -1,0 +1,23 @@
+{
+  "note": "Issuers whose SMART Health Card signatures count as verified. Real issuers should come from a published directory (e.g. the VCI directory); see docs/open-choices.md. The entry below is an EXAMPLE issuer whose private key was thrown away after signing the example card.",
+  "issuers": [
+    {
+      "iss": "https://example-issuer.curebranch.invalid",
+      "name": "Example Issuer (EXAMPLE DATA)",
+      "example": true,
+      "jwks": {
+        "keys": [
+          {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "fsPOgJvAnPM-smMD44-97vvmQ1YpRQ5hq2Ebe3D7XRU",
+            "y": "QRQDto029nMUUAEKsohOI62h0-J6jBXeW7CrqS6lk2o",
+            "kid": "DPxTLfJiFTNUNKnHVYQlli04kgbpnSTb6lJAdUgtmps",
+            "use": "sig",
+            "alg": "ES256"
+          }
+        ]
+      }
+    }
+  ]
+}

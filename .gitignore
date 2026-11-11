@@ -1,0 +1,6 @@
+node_modules/
+dist/
+tests/browser/out/
+*.log
+.DS_Store
+__pycache__/

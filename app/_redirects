@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects. https://developers.cloudflare.com/pages/configuration/redirects/
+# Profile pages. my.curebranch.ai/<code> is mapped onto /p/<code> (see docs/deploy.md).
+/p/:code   /profile.html   200

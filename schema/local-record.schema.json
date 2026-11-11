@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:curebranch:schema:local-record:0.1",
+  "title": "CureBranch private local record",
+  "description": "Everything the patient has, kept ONLY on their own device (browser IndexedDB, or a file they download). Never uploaded by CureBranch. Raw records are stored as standard FHIR R4 Bundles so any FHIR tool can read them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "code",
+    "created",
+    "updated",
+    "privacy",
+    "afterDeath",
+    "sources",
+    "share"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[0-9a-hjkmnp-tv-z]{6,12}$",
+      "description": "Same random code as the public summary."
+    },
+    "example": {
+      "type": "boolean"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public"
+      ],
+      "properties": {
+        "public": {
+          "type": "boolean",
+          "description": "The one switch. false = nothing is published (default)."
+        }
+      }
+    },
+    "afterDeath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "choice"
+      ],
+      "properties": {
+        "choice": {
+          "enum": [
+            "keep-public",
+            "remove",
+            "person-decides"
+          ]
+        },
+        "person": {
+          "description": "The person the patient named to carry out the choice. Stays on this device only; never published.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "howToReach": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "stewardKeyHash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "stewardKeyGivenOn": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "importedAt",
+          "verification",
+          "bundle"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "fhir-bundle-file",
+              "smart-health-card",
+              "smart-on-fhir"
+            ]
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "importedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "method"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "verified",
+                  "unverified"
+                ]
+              },
+              "method": {
+                "enum": [
+                  "smart-health-card",
+                  "smart-on-fhir",
+                  "file-upload",
+                  "self-reported"
+                ]
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Plain-English reason for the status, e.g. 'Signature checked against issuer key'."
+              }
+            }
+          },
+          "bundle": {
+            "description": "The raw FHIR R4 Bundle exactly as imported.",
+            "type": "object",
+            "required": [
+              "resourceType"
+            ],
+            "properties": {
+              "resourceType": {
+                "const": "Bundle"
+              }
+            }
+          },
+          "example": {
+            "type": "boolean",
+            "description": "true if this source is made-up EXAMPLE data."
+          }
+        }
+      }
+    },
+    "share": {
+      "description": "Which parts of the summary the patient chose to publish. The patient decides each one.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cancerType": {
+          "type": "boolean"
+        },
+        "stageGroup": {
+          "type": "boolean"
+        },
+        "ageBand": {
+          "type": "boolean"
+        },
+        "markers": {
+          "type": "boolean"
+        },
+        "treatments": {
+          "type": "boolean"
+        },
+        "outcomes": {
+          "type": "boolean"
+        },
+        "publicContact": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": "boolean",
+          "description": "Show display name/photo on the public profile page. Default false (anonymous)."
+        }
+      }
+    },
+    "branchPath": {
+      "description": "Branch path the patient set or approved. If absent, the app suggests one from the records.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "branchPlacedBy": {
+      "enum": [
+        "rules",
+        "patient",
+        "patient-ai"
+      ]
+    },
+    "publicContact": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "ai": {
+      "description": "Which AI the patient uses. The patient pays for and runs their own AI; CureBranch stores no API keys.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 60
+        }
+      }
+    },
+    "editLog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "what"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "what": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "profile": {
+      "description": "Optional profile. Stays private unless share.profile is true AND privacy.public is true.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "photo": {
+          "$ref": "urn:curebranch:schema:public-summary:0.1#/properties/profile/properties/photo"
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Opt-in web push. Off by default.",
+      "properties": {
+        "pushOptIn": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

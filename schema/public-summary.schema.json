@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:curebranch:schema:public-summary:0.1",
+  "title": "CureBranch public summary",
+  "description": "The ONLY thing a patient ever publishes to the public tree. It is minimal on purpose: no names, no birth dates, no record numbers, no exact dates, no free text from records. Codes follow FHIR R4 / mCODE conventions where possible. Every optional field is included only if the patient chose to share it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "code",
+    "example",
+    "visibility",
+    "afterDeath",
+    "branch",
+    "verification",
+    "owner",
+    "updated"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "code": {
+      "description": "Random address code, e.g. 'k7x2m9' -> <public base URL>/k7x2m9. Crockford-style base32 in lower case (no i, l, o, u). Never derived from a name or record.",
+      "type": "string",
+      "pattern": "^[0-9a-hjkmnp-tv-z]{6,12}$"
+    },
+    "example": {
+      "description": "true for made-up EXAMPLE data. Example summaries must never be mixed into real tree statistics.",
+      "type": "boolean"
+    },
+    "visibility": {
+      "description": "The one privacy switch. 'private' means: remove this code from the public index. A private summary is only ever sent as a removal request.",
+      "enum": [
+        "public",
+        "private"
+      ]
+    },
+    "afterDeath": {
+      "$ref": "#/$defs/afterDeathPublic"
+    },
+    "branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "description": "Where the patient sits on the tree, from trunk to tip, e.g. ['lung', 'KRAS', 'G12C']. Suggested by rules or by the patient's own AI; the patient can change it.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          }
+        },
+        "cancerType": {
+          "$ref": "#/$defs/coding"
+        },
+        "placedBy": {
+          "enum": [
+            "rules",
+            "patient",
+            "patient-ai"
+          ]
+        }
+      }
+    },
+    "stageGroup": {
+      "description": "Coarse stage only (e.g. 'III'), if shared.",
+      "enum": [
+        "0",
+        "I",
+        "II",
+        "III",
+        "IV",
+        "unknown"
+      ]
+    },
+    "ageBand": {
+      "description": "10-year band only, if shared.",
+      "type": "string",
+      "pattern": "^(\\d{1,2}0-\\d{1,2}9|90\\+)$"
+    },
+    "markers": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gene",
+          "kind"
+        ],
+        "properties": {
+          "gene": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9-]{1,20}$",
+            "description": "HGNC gene symbol or biomarker name, e.g. KRAS, PD-L1, TMB."
+          },
+          "kind": {
+            "enum": [
+              "dna-variant",
+              "rna-expression",
+              "fusion",
+              "protein",
+              "biomarker"
+            ]
+          },
+          "change": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Short protein change (e.g. G12C) or level (e.g. high)."
+          },
+          "source": {
+            "enum": [
+              "dna",
+              "rna",
+              "ihc",
+              "other"
+            ]
+          }
+        }
+      }
+    },
+    "treatments": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "Generic drug or procedure name, never a brand-new free-text note."
+          },
+          "rxnorm": {
+            "type": "string",
+            "pattern": "^[0-9]{1,10}$"
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "startYear": {
+            "type": "integer",
+            "minimum": 1950,
+            "maximum": 2100
+          }
+        }
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "description": "Coarse disease status, mapped from mCODE CancerDiseaseStatus (LOINC 97509-4) where available.",
+            "enum": [
+              "no-evidence-of-disease",
+              "improving",
+              "stable",
+              "worsening",
+              "not-determined"
+            ]
+          },
+          "afterTreatment": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index into treatments[] this outcome follows, if known."
+          },
+          "monthsFromStart": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 600
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "method"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "verified",
+            "unverified"
+          ],
+          "description": "Only 'verified' summaries are counted in tree statistics. Unverified ones are shown but not counted."
+        },
+        "method": {
+          "enum": [
+            "smart-health-card",
+            "smart-on-fhir",
+            "file-upload",
+            "self-reported"
+          ]
+        },
+        "issuer": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Issuer URL of a SMART Health Card, or FHIR server base URL. Identifies the hospital/lab, not the patient."
+        },
+        "checkedOn": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "personKey": {
+      "description": "OPEN CHOICE (see docs/open-choices.md): an optional de-duplication key so one person counts once. Not generated by the app yet.",
+      "type": "string",
+      "maxLength": 100
+    },
+    "publicContact": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Optional public handle the patient chose to show (e.g. an X handle). Never required."
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publicKeyJwk"
+      ],
+      "properties": {
+        "publicKeyJwk": {
+          "description": "Patient's own ECDSA P-256 public key. Updates and removals must be signed by the matching private key, which never leaves the patient's device.",
+          "type": "object",
+          "required": [
+            "kty",
+            "crv",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "kty": {
+              "const": "EC"
+            },
+            "crv": {
+              "const": "P-256"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "signature": {
+      "description": "base64url ECDSA P-256 / SHA-256 signature (IEEE P1363 r||s) over the RFC 8785 canonical JSON of this object without the 'signature' field.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "profile": {
+      "description": "OPTIONAL profile, shown on the patient's random-code page ONLY if the patient opted in. Default is anonymous (this field absent).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Whatever name the patient chooses to show; may be a nickname."
+        },
+        "photo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mediaType",
+            "data"
+          ],
+          "description": "Small photo re-encoded on the patient's device (max 512 px), which also strips location/camera metadata.",
+          "properties": {
+            "mediaType": {
+              "enum": [
+                "image/jpeg",
+                "image/webp"
+              ]
+            },
+            "data": {
+              "type": "string",
+              "maxLength": 200000,
+              "pattern": "^[A-Za-z0-9+/=]+$",
+              "description": "base64"
+            },
+            "alt": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "coding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "system": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "display": {
+          "type": "string",
+          "maxLength": 120
+        }
+      }
+    },
+    "afterDeathPublic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "choice"
+      ],
+      "properties": {
+        "choice": {
+          "description": "What happens to this public summary after the patient dies. Carried out by the person the patient named, who holds the steward key.",
+          "enum": [
+            "keep-public",
+            "remove",
+            "person-decides"
+          ]
+        },
+        "stewardKeyHash": {
+          "description": "SHA-256 (hex, prefixed 'sha256:') of the secret steward key the patient gave to the person they named. Whoever can show the matching key may carry out the choice. The person's name is never published.",
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

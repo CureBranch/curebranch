@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "0.1",
+  "code": "k7x2m9",
+  "example": true,
+  "visibility": "public",
+  "afterDeath": {
+    "choice": "person-decides",
+    "stewardKeyHash": "sha256:0000000000000000000000000000000000000000000000000000000000000001"
+  },
+  "branch": {
+    "path": [
+      "Lung",
+      "KRAS",
+      "G12C"
+    ],
+    "placedBy": "rules",
+    "cancerType": {
+      "system": "http://hl7.org/fhir/sid/icd-10-cm",
+      "code": "C34.90",
+      "display": "Malignant neoplasm of unspecified part of unspecified bronchus or lung"
+    }
+  },
+  "verification": {
+    "status": "verified",
+    "method": "smart-health-card",
+    "issuer": "https://example-issuer.curebranch.invalid",
+    "checkedOn": "2026-11-01"
+  },
+  "owner": {
+    "publicKeyJwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "IL1Mw-tABmfN8G6gWAx97DeOLX27dPSv5oCMMaD2P5s",
+      "y": "eN7bVsMyF6DgLqyC2od8J6QqDjfxdc2wFOClUPzlZs4"
+    }
+  },
+  "updated": "2026-11-01",
+  "stageGroup": "III",
+  "ageBand": "60-69",
+  "markers": [
+    {
+      "gene": "KRAS",
+      "kind": "dna-variant",
+      "change": "G12C",
+      "source": "dna"
+    },
+    {
+      "gene": "TP53",
+      "kind": "dna-variant",
+      "change": "R273H",
+      "source": "dna"
+    },
+    {
+      "gene": "CD274",
+      "kind": "rna-expression",
+      "change": "high",
+      "source": "rna"
+    },
+    {
+      "gene": "PD-L1",
+      "kind": "biomarker",
+      "change": "high",
+      "source": "ihc"
+    },
+    {
+      "gene": "TMB",
+      "kind": "biomarker",
+      "change": "high",
+      "source": "other"
+    }
+  ],
+  "treatments": [
+    {
+      "name": "carboplatin",
+      "startYear": 2026
+    },
+    {
+      "name": "pembrolizumab",
+      "startYear": 2026
+    },
+    {
+      "name": "sotorasib",
+      "startYear": 2026
+    }
+  ],
+  "outcomes": [
+    {
+      "status": "improving",
+      "monthsFromStart": 3,
+      "afterTreatment": 1
+    },
+    {
+      "status": "stable",
+      "monthsFromStart": 6,
+      "afterTreatment": 2
+    }
+  ],
+  "signature": "mSNfM0YZs8VgGsQZ5JHQQLtqXNJrC464c1A3mLNb7NW-IrJlTML7fdzQqzM4-7QjLKKcLscvyNLA0G9So8xOGQ"
+}

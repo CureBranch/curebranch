@@ -1,0 +1,2323 @@
+{
+  "note": "EXAMPLE DATA. Made-up patients. Not medical information.",
+  "summaries": [
+    {
+      "schemaVersion": "0.1",
+      "code": "n5g8kv",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        },
+        {
+          "gene": "TP53",
+          "kind": "dna-variant",
+          "change": "R273H",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "carboplatin",
+          "startYear": 2025
+        },
+        {
+          "name": "pembrolizumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 11
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "lGouK5oSrs5B8Tqi3lzFEFqAFNhevc3vOTIslefsovA",
+          "y": "V7tP0W04rquhC1welMg_mlwwqprk0znwKJkg7cFzGfA"
+        }
+      },
+      "updated": "2026-07-15",
+      "personKey": "EXAMPLE-same-person",
+      "signature": "_OzvmzJVw8cyiYLTb9KkoP3vIFbQVUbBgC9dpKlLMxQJIP_nGWyusf5qiCjcKDNjoaksnZcnAmCtHBJAg7B1GA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "1j1815",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "II",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "sotorasib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 0,
+          "monthsFromStart": 16
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "WCAleRYcymRq7CfsiElCDbq3-dOBpyRWZFF3zeSsw-4",
+          "y": "dZBUhi1qnu1Fzqm8Z7o8gMCJoGSEl9XS37fdSlikcl8"
+        }
+      },
+      "updated": "2026-05-15",
+      "personKey": "EXAMPLE-same-person",
+      "signature": "zUDr7ihB_p7dcDco1f4_213N-yX7MQzjaAxK5U2fZxdsf_XHg-RLVQOrW7VO-ifIdzwVW-mVyIv6ljyMJukI1g"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "k7m69q",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "III",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        },
+        {
+          "gene": "TP53",
+          "kind": "dna-variant",
+          "change": "R273H",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "sotorasib",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 0,
+          "monthsFromStart": 13
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "LdjtaC0odG3ovqLuQIhB6r7Wf4OghMEZdmUzi_LJF7U",
+          "y": "FMF5FZSKOJhhQrjsYXx-veAYFx5ys8rWwO73pFNIPeI"
+        }
+      },
+      "updated": "2026-07-15",
+      "signature": "HyUqON3YD641Ruk-SBO_GcZjr-5DOmiFHRN0FfzM3VdECjIL-SRhYbb0IqobCc6heCxFcVkuDD69RCO_eS8Hug"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "dy430b",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "IV",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "adagrasib",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 0,
+          "monthsFromStart": 7
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "Kxz9enJg1i49PVueg2cMAGGHU-vG_7DCDRiz2vVGMKY",
+          "y": "Hg1M7iC3Q562TOpStaooTL5sfgiR0VM_iAp4idaoiH4"
+        }
+      },
+      "updated": "2026-02-15",
+      "signature": "7Rh8PMwRCGjBYreKUzAvIKyqAaE93ZxZhpmTgLopfCe8dOfGj5D4gvbOXOQKmQ1daNv7paJvwMeh1pkICbfXKA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "zjxdja",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        },
+        {
+          "gene": "TP53",
+          "kind": "dna-variant",
+          "change": "R273H",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "carboplatin",
+          "startYear": 2026
+        },
+        {
+          "name": "pembrolizumab",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "no-evidence-of-disease",
+          "afterTreatment": 1,
+          "monthsFromStart": 14
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "6ra_OtqGydqT9-Msl0qfjxfu4iA51JSVEPreFJ_eRhw",
+          "y": "79D9gflFbHR2g-YpRNipftvz7MF2WuP7fX7XnE77F_Y"
+        }
+      },
+      "updated": "2026-09-15",
+      "signature": "REQmi4yT5_nhAJ8Rz_cEQKttXjRVudQ1FcwTvUJbM9pzOlg3Mv_0SACbI5tTFKY72KEb5tTzOXKCQEnUXnhqHw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "3pasw2",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "II",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        },
+        {
+          "gene": "TP53",
+          "kind": "dna-variant",
+          "change": "R273H",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "carboplatin",
+          "startYear": 2025
+        },
+        {
+          "name": "pembrolizumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 1,
+          "monthsFromStart": 14
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "YlPv2x6zIEu5JCzfDNkA4amVfrZ8BPwgN2i4rnb1v40",
+          "y": "G49EGOUI3BUiBL1pmmOuY5OODArXf-IOwULNzdond7g"
+        }
+      },
+      "updated": "2026-05-15",
+      "signature": "FGgWldF2dvEsADR-ZjaJeqAZ89PLya6XiNAA3a2BFyeyTvYtb84xIAdz7wvPiiJL-bM168XxqPOAlA6CNLgKhA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "6mwasc",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "III",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "sotorasib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 0,
+          "monthsFromStart": 17
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "-XsN0VTFNlW0gs1lVdT9SBlS_PkSAQotgF5aU2rcnPc",
+          "y": "nhOFlNBatCkThFzToN2HSDPWA0g7v4-_tm_muq1S-g8"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "QAe4JuL56YHqRw86ZrA_6moPVyCMrBWuOLxc4qIihf_bmoYnU47vEtBx8KIDb1A8sZT7nHo-yK10Phb9zpTwIA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "1pp98a",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "carboplatin",
+          "startYear": 2025
+        },
+        {
+          "name": "pembrolizumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 5
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "5u6UNt31Vr1v4F8vYjpsinrXeh0V4TiOcItYVw9FuV8",
+          "y": "VSL_9cuj9XpRW5Wn8tNueGanPNRfX56PB7diOpu9Sus"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "w7lJJHOeMcJD-M1bfo1Z3Tn_LxPVgVq7QBx7oHsRRUNCmiYaN3QiW5NfNfLrvZ9dbDcRkpxZolnTw6OA_BiDwg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "ncawaf",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "KRAS",
+          "G12C"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "III",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12C",
+          "source": "dna"
+        },
+        {
+          "gene": "TP53",
+          "kind": "dna-variant",
+          "change": "R273H",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "carboplatin",
+          "startYear": 2025
+        },
+        {
+          "name": "pembrolizumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 7
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "yBcNhKo5H8XaDAbbQAWL1Pm1r1v8bQcSvkmj-LznvMQ",
+          "y": "m1dEK6wrZUmPN1K5WFBq31YfyLRSZinqTZkJtgzKS0c"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "lPVTsN8fE09lqC_qeVOeiqbEBMlMSJPoez0d2xcifBHjat6Wev-S_wsxpaFoMjujtT5NukkqxB49fwZHty5KGQ"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "3a1j6f",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 0,
+          "monthsFromStart": 4
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "EXR33YymBhdAon3OvAhS1cngl06u_-9wz2pE_dj5sy4",
+          "y": "0wNil5v9XQo-266f0v56UJSrYxb6b0NcRyyxgvXj5dg"
+        }
+      },
+      "updated": "2026-06-15",
+      "signature": "qNYJxXAFi93ycBzE_a0Sm-BBCoHM8VWyhmjIrHL09DnQnJojqkP13O3hudH-vwq5ye7L6t12MJ6Xlv9du-oIjg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "4ks6ch",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "IV",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2026
+        },
+        {
+          "name": "carboplatin",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "no-evidence-of-disease",
+          "afterTreatment": 1,
+          "monthsFromStart": 2
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "9iSH65_WFSJDvFZnRakzTIBu_NVipEq3Pau4sLXegMI",
+          "y": "_U2ZPENfRwmWhloDihbwepP5C_cNMpkzW7ECOKj-eO0"
+        }
+      },
+      "updated": "2026-02-15",
+      "signature": "B3j9GJdYVGtU6WCSe_yEsA78g413oWoa9rTjmMktz8kx1VcQWwkP8dC7JklxS8Fk_W8kiDY3lbkxNf8A-I7MDA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "ztmtvk",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2026
+        },
+        {
+          "name": "carboplatin",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 18
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "m6wx0-0c9TKris_Li6ku47GUlfT7Ni73zlwGqHj0K9w",
+          "y": "MecWtwIyAXkvXnb7E8kdCiYhzO_Yov0nseccVIrc-J0"
+        }
+      },
+      "updated": "2026-04-15",
+      "signature": "kZ_jK-BpYYhlwmBGl9T-GH-bFswdpCC_JHcA-AWu6iZUWYNecIYaZ_KGY-E-y1sT8xyXvoD1OeL4pAUwlQvcew"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "02mqyw",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "II",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2024
+        },
+        {
+          "name": "carboplatin",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 2
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "6m4BioOnB_s6OqHktbSAUelS66v_D4iOtQDKUObrO1E",
+          "y": "0sblUJsb6mkstt0p-lENIUDNcl1kRaxvzqVHPXSQ5dE"
+        }
+      },
+      "updated": "2026-05-15",
+      "signature": "kLy256asmjalOL4o9J7ffLtMLQjpvPdhV-ArJV7up32R6-7R9Dd3qTenULubXjl3naxUM6G6an0Bq7VsNReTyA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "s6ngef",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "III",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2026
+        },
+        {
+          "name": "carboplatin",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 11
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "file-upload"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "Ot3Vb_L4MxwbxcmF3i_GQQY9tdkRmibt-N5BDRW8xSA",
+          "y": "XjaqgAgh_NJt66tJ1oLMAhOrOBN7ahZdUhnLfJ4e4FU"
+        }
+      },
+      "updated": "2026-06-15",
+      "signature": "HiSgWqeiKL8rEie6Hky8k9rKHLekWv4giXTAOn7cGYI6SS7fuIjd_F_WOjHB82ghKNyOTOi-KvpyWHSthXYA-Q"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "404y2v",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "EGFR",
+          "Exon 19 deletion"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "II",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "EGFR",
+          "kind": "dna-variant",
+          "change": "Exon 19 deletion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "osimertinib",
+          "startYear": 2025
+        },
+        {
+          "name": "carboplatin",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 8
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "jEWG4C7B3vtg3odJi6Wv_cVVeACcXDZKjV9-_wJfl_M",
+          "y": "DQ-RB4YKsgaBp4WJXs-yFK7f4lMXOcjCq63myqjfbAw"
+        }
+      },
+      "updated": "2026-08-15",
+      "signature": "t_3Vlt6RCd_8guFDB9PYx8Lspgs_fFBn6M7YSidSxJ3eZx6_X8M0Vhbux-p1z1LDMCkG3nbeOXB4NJ2ZVgc2Xw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "rnshsg",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "ALK",
+          "Fusion"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "II",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "ALK",
+          "kind": "fusion",
+          "change": "Fusion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "lorlatinib",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 0,
+          "monthsFromStart": 14
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "arDq07Mg70xWmFwN8ZuVreCAuphXc2e0mZLSyx02srI",
+          "y": "3H0kJzHv6z16jU2PUkQPbcd0Rkb5aHoU38xpvQJPh7g"
+        }
+      },
+      "updated": "2026-06-15",
+      "signature": "uFWjD2soe8jreZ8x7xJmSrb2OIFd2j2ymYFVIlv9y-F7bQBJjiS4Bnohe8F_ikAD-aj0N6o_qCwrgrrVJXFytw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "a9th6y",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "ALK",
+          "Fusion"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "III",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "ALK",
+          "kind": "fusion",
+          "change": "Fusion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "lorlatinib",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 0,
+          "monthsFromStart": 14
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "O8OsCQVbQ0epJWlYfR0h0D4c93IAil6iLQJNKaQb6GY",
+          "y": "AV19atqRjuVSJoXPLGmpiQark9QrDdcgkdhWvrsH9DA"
+        }
+      },
+      "updated": "2026-09-15",
+      "signature": "02m3pyFfbRZnzI-UyNqg8cP-q07puzXVg0tU5xVaojP9KiTPS5lYGOMeeN_frKAD8ATC3uIsLSJqzYPvKXcaIQ"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "hnhhyz",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Lung",
+          "ALK",
+          "Fusion"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "ALK",
+          "kind": "fusion",
+          "change": "Fusion",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "alectinib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 0,
+          "monthsFromStart": 8
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "DEKI9ero85NhPgEOssdTFXIemOo_-S7ocWorB1d8xJ4",
+          "y": "0cbPBThmT6wFBd46pvcu1TGohs8p1tJK1PmnUSrSWnw"
+        }
+      },
+      "updated": "2026-04-15",
+      "signature": "OP6U0_e5lJUC5XLfHN6j-dw5VCB8fn7ZUs2XR3vc4xTcANV1N3CLk_muh6Gjmm4Mwa-n8ZSTXqx17j8Swguf8g"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "htkvp4",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "III",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFOX",
+          "startYear": 2025
+        },
+        {
+          "name": "bevacizumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 1,
+          "monthsFromStart": 15
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "xQZlcU-hefI30hS56PkBiRU-orpjfqa5EadUrbWajms",
+          "y": "0qnbVUXHYdXzipUt9c0IqMvMRXv_X-U0XVJN4IDEMP4"
+        }
+      },
+      "updated": "2026-08-15",
+      "signature": "sdiI-r8rBFy02hWGK0gMwygfim0ap1fawXuyv08tWazbgbg-ufNJhpkbD9TWZdydr4KV3QnVz8rfgwd51wvmQA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "hf2fwn",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFOX",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 0,
+          "monthsFromStart": 2
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "file-upload"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "LoEvm-fsqP5LUY02MOrs4WlEQbMod0P2_nrIk9fM7D8",
+          "y": "AeR53CzpJDITUYcEp-MJwTL9GYA0wIp80v4zOihIMT4"
+        }
+      },
+      "updated": "2026-01-15",
+      "signature": "IZYLkLSjy_Kfo5u9XGdwm2zZcvRjeDsyC1tplBm1_gRnMol48Jrrr6HcXinTyLOKyo54aoNllSVRKZk7Gq2aVw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "tn218p",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFOX",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 0,
+          "monthsFromStart": 8
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "file-upload"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "FZWwUuHtgU7P5do_O_a4lJk90yLDUsjGZ1VX7FDzjNo",
+          "y": "p1QivtGrzZXE6pSFQHDi0zHbhTUetwCM98zBT0XTep8"
+        }
+      },
+      "updated": "2026-07-15",
+      "signature": "HnyP1LQo4sXWI8IDx5WHX6meRuv_qAEahV5_RhbIv3_tLIiQWv18UhwQJ0C0ppza-nJ8jOZn9itXhSlOR1YEVw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "8qgfj3",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFOX",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 0,
+          "monthsFromStart": 2
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "UlSrct0Epbqkh_zByucSd7vQkQWxoaZFWDqAQ_oJD18",
+          "y": "5fgXB1qaEXqHmKFazwz0syhrViOqIiofIPni5-IsVOI"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "aS3qVG3BlDdPTeIqUYZYHVMR7x4nSuiUAsoJqaO8UUxmGBtwg_ZadsJjrSBQ4PqBfxz9dPJuXDBhic3wIj6fEg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "tam1qs",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFOX",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 0,
+          "monthsFromStart": 3
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "MfcnMn9o5vsu1-ggRh8sdKyny0-986wJAl3B1mNGu4k",
+          "y": "iktdHSqAkCYTxY4qmo0O1KW0Wh_U24N-I3wr3RtFBYk"
+        }
+      },
+      "updated": "2026-05-15",
+      "signature": "Q_WqlAkltzwJnNSGAzFRGmTSJid_DqmZ5Sk0MllCnsYkVRvQMBJBSyLda9kTQ3SaCbo0yI2OkjgL9C7rc66eZQ"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "y54hn6",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "II",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "encorafenib",
+          "startYear": 2026
+        },
+        {
+          "name": "cetuximab",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 1,
+          "monthsFromStart": 11
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rgdzFQCU_L4L4b35U_GZHZ07GNgO72Cz0W7UHadJ89Y",
+          "y": "OaTGQRVSS0O0_wgXcotHBlK3wnrPSGXkFEePN4z001c"
+        }
+      },
+      "updated": "2026-10-15",
+      "signature": "rUvb_sHLFvGyj2gZRvqAuzS4eRxvuAceaPsJkPLcmRZikIxXIdaX0IoVvha_-fEjT5NQqpDrtoT9hNvi1PMLYg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "yj91ap",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "encorafenib",
+          "startYear": 2026
+        },
+        {
+          "name": "cetuximab",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "improving",
+          "afterTreatment": 1,
+          "monthsFromStart": 13
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "AS6RTyaHDCTJYqAizduo0LkplbYa9NNvSVkRra22uQI",
+          "y": "XYxPkHIUO1tfxsnAdJ6ZLVc0yrPRKdYQ896rCnDBvxA"
+        }
+      },
+      "updated": "2026-02-15",
+      "signature": "809CXK4tL_3iAi5fIUTI4E5bUM5og2r4wIViPHfzoqwhqMB20TB8k7WhMpTG-GGVr9LlTrC3700IZSg5o4BJrg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "z6fgkf",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Colorectal",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "encorafenib",
+          "startYear": 2024
+        },
+        {
+          "name": "cetuximab",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 5
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "y-wTRGcjpMSESHiSlrpHrpCBCNmG64qRDOBWDxSi78Q",
+          "y": "D-ZHKAWLk0jAwEWKGoLgs_duOhYAXHPkAB4Efmt6W_4"
+        }
+      },
+      "updated": "2026-08-15",
+      "signature": "Uz8PSQcFkysOG0leNWH9GwRW7qlx92B5nDFVLgMSfhvP68-g9jTyOHxH40wr7La7exPPyMTNb2fQZL1UNOTJ_w"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "f1vbd8",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "dabrafenib",
+          "startYear": 2025
+        },
+        {
+          "name": "trametinib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 1,
+          "monthsFromStart": 15
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "J-29CepaaFFhL6mDafX4speIXwxq3hnmhFyLblPFsGo",
+          "y": "tAdVNO66qGQrNFzcp0A4PqsYT42HTNiJaR2_wvrj084"
+        }
+      },
+      "updated": "2026-09-15",
+      "signature": "B8LX6zH9EfOv7hbwHxLjs5bF1ILggo-Yn0AYyC2ZBgk0EK5SWgW-6zgacFN0XgDt3W98lDt2idx2ubIj7njmMw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "fgfej0",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "dabrafenib",
+          "startYear": 2025
+        },
+        {
+          "name": "trametinib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 15
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "S1MSYTsQbDi6EsuGvBrV5tLEG34_Pi_acm-8XsiuxLs",
+          "y": "ti_LDbBjNTcRQNfAt97BatQRNNHFy1Et6JWcVltsjrw"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "D7AbVbeoIrdPlkZhVN691cykQwccIipy5_sQpWH02LgRDOPrHwwRbzF6NUGHZgPemcVqfdi29kuHCBGMY-6F6g"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "1jfeer",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "III",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "nivolumab",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "no-evidence-of-disease",
+          "afterTreatment": 0,
+          "monthsFromStart": 10
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "UfZS4WGiI53IfLg7aEZXoNwnQNK7a3bzMkQ3oOdfyOU",
+          "y": "lnJfyn4vlgrJ8Zq3IAjhbvwZse7TfrsBcNALsp9AGMA"
+        }
+      },
+      "updated": "2026-10-15",
+      "signature": "rAWEPtKTL_5m1E8iqOV_qamtnuO93nQwu7qC3Bc9PDhto4uMzuLjwpEkpwgMsnWBeZ-ZJwaVJJQ5yNe3WRDOWQ"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "nhkvnz",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "dabrafenib",
+          "startYear": 2025
+        },
+        {
+          "name": "trametinib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "no-evidence-of-disease",
+          "afterTreatment": 1,
+          "monthsFromStart": 4
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "10Cu8dOoTZf2GHwB-DY5lPU3xRWkKfsrNlBKI_yZYfI",
+          "y": "wCng_oFP1UBSv4JHmCp4vJvUHXswRDXRYqpz8-AfDE0"
+        }
+      },
+      "updated": "2026-10-15",
+      "signature": "dpVRmZb0nI6vhpzXTtyy8ish-qme_mG8lZgCthbKP3M90FmnTlcr7cs5AFO22T2FsFC2HqpJ88Up2rw5VWixSA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "nratex",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "BRAF",
+          "V600E"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "II",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "BRAF",
+          "kind": "dna-variant",
+          "change": "V600E",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "dabrafenib",
+          "startYear": 2025
+        },
+        {
+          "name": "trametinib",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "no-evidence-of-disease",
+          "afterTreatment": 1,
+          "monthsFromStart": 2
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "file-upload"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "vqALIw9NAeiwNR-uuHITU4AC7YISj9UaT5ppy236jwo",
+          "y": "hjeOTihxg6eIKEjjWq9kBMNAvKkFi0P8ibt87DxS82A"
+        }
+      },
+      "updated": "2026-03-15",
+      "signature": "nqYGI_It4SC5CSsd_yrsfxhEWkGE_xHEXQ2Ri9KHfJQizHKJULxq5b3SIzPbanLW6COoiOh6Pkhnq9FvbfI6zg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "zdsq0n",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "NRAS",
+          "Q61R"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "III",
+      "ageBand": "70-79",
+      "markers": [
+        {
+          "gene": "NRAS",
+          "kind": "dna-variant",
+          "change": "Q61R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "nivolumab",
+          "startYear": 2025
+        },
+        {
+          "name": "ipilimumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 8
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "8_zhSRTr5-J1N0BEYVvPbO_RsLzax8VV4mDIWLlOStY",
+          "y": "QAUUqz7num5ogma_S3TF7eQj9sgBqm5zLa1Y4FgJJho"
+        }
+      },
+      "updated": "2026-07-15",
+      "signature": "dDF-8Icimiia6v33TVpbYburSFKgcCXXGZUUSKYElH4uItOonHY8cpqokGjBRXq8jWntbI9E76gKHcD7QvMyvA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "z5k2ms",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "NRAS",
+          "Q61R"
+        ],
+        "placedBy": "patient"
+      },
+      "stageGroup": "IV",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "NRAS",
+          "kind": "dna-variant",
+          "change": "Q61R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "nivolumab",
+          "startYear": 2025
+        },
+        {
+          "name": "ipilimumab",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 1,
+          "monthsFromStart": 5
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "98QCsYkUmy2uDRjdN7rlkPoJQ7RSx8ITKbb0t7mbW9Y",
+          "y": "TM1eyK6OORmEuvMZe3SvRwSRxZ0sESts5ux0YT7f7UI"
+        }
+      },
+      "updated": "2026-02-15",
+      "signature": "70znApB2qeMp8VUB-UEXZCHU41fw9PJw3zvJGsIDVZdeFCb2v3_ZmObhZMeqhDMk6wPN2_FJwVj0yjysxRgNoA"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "hmwr01",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Melanoma",
+          "NRAS",
+          "Q61R"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "II",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "NRAS",
+          "kind": "dna-variant",
+          "change": "Q61R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "nivolumab",
+          "startYear": 2026
+        },
+        {
+          "name": "ipilimumab",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 3
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "9hSInzwS5V2x8zt-TtPKCXRpziFxEgQY0lRb9NeNA_s",
+          "y": "Ow2NO3tAF-tTLvhJdn4lPX7lTxfOGrKwUGr5MBbJu7o"
+        }
+      },
+      "updated": "2026-07-15",
+      "signature": "FxUl3wxzuU5jjEs2b2xmkBmVLUYh4-AacCWXiY-FiH4QUTK85YfkJIVrceYPBDXX5HIpd3FdrJXI77L57bi0Zw"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "b6qm1m",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Breast",
+          "PIK3CA",
+          "H1047R"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "III",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "PIK3CA",
+          "kind": "dna-variant",
+          "change": "H1047R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "alpelisib",
+          "startYear": 2025
+        },
+        {
+          "name": "fulvestrant",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 1,
+          "monthsFromStart": 9
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "v0AC-4V28nBbKUW1dfsZ8GLwmPT8aeLaLqbnC9ArNpM",
+          "y": "i85EccAZHy1GQ_BSv8cWFUhL7iotYYBoo7I9M7ydBEI"
+        }
+      },
+      "updated": "2026-02-15",
+      "signature": "7zN5_0s-SkkTxYE2bVS7qpcRkI440MdJ0--1HBn4uBjYqAYpUgqFEHRU10BNzM2VvYbeHfHoiOdSW6ac3zmp4g"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "9xydka",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Breast",
+          "PIK3CA",
+          "H1047R"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "PIK3CA",
+          "kind": "dna-variant",
+          "change": "H1047R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "alpelisib",
+          "startYear": 2026
+        },
+        {
+          "name": "fulvestrant",
+          "startYear": 2026
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 1,
+          "monthsFromStart": 18
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "A_ltKQGlJ0Wgq6blWjZWsHWBARd0ElPH2WqPr09NgFY",
+          "y": "YYxN6nD87RddZQJpYq051mb2HoQAPS4yAaAm_HXfy8w"
+        }
+      },
+      "updated": "2026-10-15",
+      "signature": "9ScXj9lFbs4jqDryioBYSJgjNBmpJJzH1RVx9bnWkjbsCy_xf4XvHlVp4thCnNdtOp0A8u1wfzdBJpXVmvyqHg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "zgz0mk",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "person-decides"
+      },
+      "branch": {
+        "path": [
+          "Breast",
+          "PIK3CA",
+          "H1047R"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "IV",
+      "ageBand": "50-59",
+      "markers": [
+        {
+          "gene": "PIK3CA",
+          "kind": "dna-variant",
+          "change": "H1047R",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "alpelisib",
+          "startYear": 2024
+        },
+        {
+          "name": "fulvestrant",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 1,
+          "monthsFromStart": 7
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "G3emeidVk_Z3V3ABy_ptksXMU0_N8iUk7khxckBTFB0",
+          "y": "YhC31urWV0KRNTQaa1ptE7Q3tgx2w_XnJiUJKl1u2Hs"
+        }
+      },
+      "updated": "2026-04-15",
+      "signature": "-95o_oMeyd2YqZRdGNImO4osnQ_wPzHEKlJsSLyASaZZIUnewnzJHBfyqv-PXL4_sBG2UXum6ZkASXD46f5tBg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "magbe5",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "remove"
+      },
+      "branch": {
+        "path": [
+          "Pancreas",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "IV",
+      "ageBand": "60-69",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFIRINOX",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "not-determined",
+          "afterTreatment": 0,
+          "monthsFromStart": 12
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "method": "self-reported"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "f6dqa-09tGXzi5huiWj-LLKdG4R9qBGR1vz6Tg3jGzI",
+          "y": "WsMD4mf23Idahm-gmlRcDsHAysoKrz3mO5R-JXaedlQ"
+        }
+      },
+      "updated": "2026-05-15",
+      "signature": "TDBHtXUV4woDEGo5IQjl0YmjqthIeW6ZncONmybJvuD05iVBqtRE3aBTZSL6bBo-1B3wVKnGORNfYFpnCCNxCQ"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "nmd50p",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Pancreas",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "rules"
+      },
+      "stageGroup": "II",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFIRINOX",
+          "startYear": 2025
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "worsening",
+          "afterTreatment": 0,
+          "monthsFromStart": 7
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-health-card",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "qAB9XiyzTAfJKD2msjyGpzeOu_ojpj1zIDL1faeJpk8",
+          "y": "iD16nALLX5L0Cp4lGaIL-c1QLhEmjXmLDbeJ7KC-wPA"
+        }
+      },
+      "updated": "2026-05-15",
+      "signature": "dJ6iG32IRkZGcS0eZzAK9Z7aPsaUAMsN73eUInA-el0drLgN8fw-ei0HJYdymoYeR728xvKjfCdHLgKNXlehxg"
+    },
+    {
+      "schemaVersion": "0.1",
+      "code": "68kabk",
+      "example": true,
+      "visibility": "public",
+      "afterDeath": {
+        "choice": "keep-public"
+      },
+      "branch": {
+        "path": [
+          "Pancreas",
+          "KRAS",
+          "G12D"
+        ],
+        "placedBy": "patient-ai"
+      },
+      "stageGroup": "II",
+      "ageBand": "40-49",
+      "markers": [
+        {
+          "gene": "KRAS",
+          "kind": "dna-variant",
+          "change": "G12D",
+          "source": "dna"
+        }
+      ],
+      "treatments": [
+        {
+          "name": "FOLFIRINOX",
+          "startYear": 2024
+        }
+      ],
+      "outcomes": [
+        {
+          "status": "stable",
+          "afterTreatment": 0,
+          "monthsFromStart": 17
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "smart-on-fhir",
+        "checkedOn": "2026-11-01"
+      },
+      "owner": {
+        "publicKeyJwk": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "geoMQYPXSJV0kAaPskj2iOJphXvlANQhC0Lt6LyCU3w",
+          "y": "0a1j_8RvE-MbMKJxF9bHzs0-b1_NFgo2tO0_OfO3hCw"
+        }
+      },
+      "updated": "2026-10-15",
+      "signature": "k7R4EQfDJvJmqP7xiF65L1yrkYriz8fhwLHyQvTuPMbdX-f_U5RO-OAmgYCV7lweIBAjtgXZmUHcobSpaOQNYw"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "curebranch",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source, patient-owned cancer knowledge tree. Static, local-first web app plus open data format.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "vendor": "node tools/vendor.mjs",
+    "serve": "npm run build:test && python3 tests/browser/server.py dist 8787",
+    "test": "node --test tests/unit/*.test.js",
+    "test:browser": "npm run build:test && python3 tests/browser/verify.py && python3 tests/browser/update_flow.py",
+    "make-examples": "node tools/make-examples.mjs",
+    "build": "node tools/stamp-build.mjs",
+    "build:test": "CB_BUILD_ID=localtest node tools/stamp-build.mjs"
+  },
+  "dependencies": {
+    "canonicalize": "^2.1.0",
+    "fhirclient": "^3.0.1",
+    "idb-keyval": "^6.2.2",
+    "@fontsource/inter": "^5.2.0",
+    "@fontsource/fraunces": "^5.2.0",
+    "@fontsource/atkinson-hyperlegible": "^5.2.0",
+    "@fontsource/source-serif-4": "^5.2.0",
+    "@fontsource/opendyslexic": "^5.2.0"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "axe-core": "^4.10.3"
+  }
+}
