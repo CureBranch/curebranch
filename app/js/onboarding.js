@@ -27,7 +27,7 @@ export const AFTER_WORDS = Object.freeze({
   "keep-public": "Make it public",
   "person-decides": "Let the person I name decide",
 });
-export const AI_CHOICES = Object.freeze(["ChatGPT", "Claude", "Gemini", "Copilot", "Another AI", "I don't use an AI"]);
+export const AI_CHOICES = Object.freeze(["ChatGPT", "Claude", "Gemini", "Grok", "Copilot", "Another AI", "I don't use an AI"]);
 
 /** Max size of one photo or file kept on the device by the guide (bytes). */
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;

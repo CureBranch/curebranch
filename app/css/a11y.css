@@ -578,7 +578,7 @@ html[data-cb-theme="hc-light"] .example{
   .a11y-launch{padding:8px}
 }
 
-.a11y-launch.compact > span:not(.sr-only){
+@media (max-width:799px){.a11y-launch.compact > span:not(.sr-only){
   position:absolute;
   width:1px;height:1px;
   padding:0;margin:-1px;
@@ -586,5 +586,5 @@ html[data-cb-theme="hc-light"] .example{
   clip:rect(0,0,0,0);
   white-space:nowrap;
   border:0;
-}
-.a11y-launch.compact{padding:8px}
+}}
+@media (max-width:799px){.a11y-launch.compact{padding:8px}}

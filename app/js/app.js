@@ -6,7 +6,6 @@ import { getOrCreateRecord, saveRecord, ownerKeys, ownerPublicJwk, backupBlob, d
 import { extractJwsList, verifyHealthCard } from "./shc.js";
 import { extractFacts, suggestBranch } from "./fhir.js";
 import { buildSummary, signSummary, DEFAULT_SHARE } from "./summary.js";
-import { buildTree, collect, treatmentStats } from "./tree.js";
 import { livingTreeSvg, parsePathKey } from "./living-tree.js";
 import { newStewardKey, stewardKeyHash, todayISO } from "./codes.js";
 import { startSmartConnect, finishSmartConnectIfReturning } from "./smart.js";
@@ -17,6 +16,7 @@ import { matchWords } from "./consistency.js";
 import { setPrivacyLevel, statusWords, levelName, isPublicLevel, privacyLevel } from "./privacy.js";
 import { mountPrivacyPicker, refreshPickers } from "./privacy-ui.js";
 import { noteFirstShare } from "./recognition.js";
+import { loadPublicData, cancerById, publicTreeRoot, exploreListHtml, navHtml, wireNav, markCurrent, cancerPageHtml, sourcesPageHtml, branchPublicHtml } from "./public-data.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -27,7 +27,6 @@ const afterWords = (r) => (r.onboarding && r.onboarding.afterDeathChosen ? AFTER
 const SHARE_LABELS = { cancerType: "Cancer type", stageGroup: "Stage (e.g. III)", ageBand: "Age range (e.g. 60-69)", markers: "Tumor markers (DNA and RNA)", treatments: "Treatments and the year started", outcomes: "How it went", publicContact: "My public contact handle", profile: "My name and photo (profile page)" };
 
 let record = null;
-let example = { summaries: [] };
 let pickedPath = null; // branch picked on the tree picture (this visit only)
 let toastTimer;
 
@@ -51,9 +50,25 @@ function download(name, blob) {
 }
 
 // ---------- navigation ----------
-const TITLES = { home: "Home", import: "Import", repo: "My record", tree: "The tree", settings: "Settings", start: "How it works", a11y: "Accessibility" };
-function go(name, focusId) {
-  if (!TITLES[name]) name = "home";
+const TITLES = { home: "Home", import: "Import", repo: "My record", tree: "The tree", settings: "Settings", start: "How it works", a11y: "Accessibility", cancer: "Cancer tree", sources: "Sources and licenses" };
+let currentCancer = null;
+function go(route, focusId) {
+  let [name, ...rest] = String(route || "").split("/");
+  let hash = name;
+  if (name === "cancer") {
+    const c = cancerById(rest[0]);
+    if (!c) name = "tree";
+    else {
+      currentCancer = c;
+      $("#cancer-body").innerHTML = cancerPageHtml(c);
+      hash = `cancer/${c.id}`;
+      if (rest[1] && !focusId) focusId = rest[1];
+    }
+  }
+  if (name === "sources") $("#sources-body").innerHTML = sourcesPageHtml();
+  if (!TITLES[name]) name = hash = "home";
+  closeNav(false);
+  markCurrent($("#cancer-nav"), name === "cancer" ? currentCancer.id : null);
   if (window.CureBranchA11y) CureBranchA11y.stopSpeech();
   $$(".screen").forEach((s) => s.classList.toggle("active", s.id === "s-" + name));
   const tabFor = { start: "home", a11y: "settings" }[name] || name;
@@ -62,11 +77,16 @@ function go(name, focusId) {
     b.classList.toggle("on", on);
     if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
   });
-  document.title = `CureBranch: ${TITLES[name]}`;
+  document.title = `CureBranch: ${name === "cancer" ? currentCancer.name : TITLES[name]}`;
   window.scrollTo(0, 0);
-  if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
+  if (location.hash !== "#" + hash) history.replaceState(null, "", "#" + hash);
   const target = focusId ? document.getElementById(focusId) : $("#s-" + name + " h1");
-  if (target) { if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: !focusId }); }
+  if (target) {
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: !focusId });
+    if (focusId) target.scrollIntoView({ block: "center" });
+    const det = target.closest("details"); if (det) det.open = true;
+  }
   render(true);
 }
 document.addEventListener("click", (e) => {
@@ -74,6 +94,44 @@ document.addEventListener("click", (e) => {
   if (!b || b.disabled) return;
   e.preventDefault();
   go(b.dataset.go, b.dataset.focus);
+});
+
+// ---------- cancer-tree navigation: left column on wide screens, a drawer on phones ----------
+const wideNav = () => window.matchMedia("(min-width: 1024px)").matches;
+function openNav() {
+  const nav = $("#sidenav"); if (!nav || wideNav()) return;
+  nav.classList.add("open");
+  nav.setAttribute("role", "dialog"); nav.setAttribute("aria-modal", "true");
+  $("#nav-backdrop").hidden = false;
+  $("#nav-toggle").setAttribute("aria-expanded", "true");
+  ["#screens", "#tabs", ".topbar"].forEach((q) => { const el = $(q); if (el) el.inert = true; });
+  document.documentElement.classList.add("nav-open");
+  $("#nav-search").focus();
+}
+function closeNav(returnFocus = true) {
+  const nav = $("#sidenav"); if (!nav || !nav.classList.contains("open")) return;
+  nav.classList.remove("open"); nav.removeAttribute("role"); nav.removeAttribute("aria-modal");
+  $("#nav-backdrop").hidden = true;
+  $("#nav-toggle").setAttribute("aria-expanded", "false");
+  ["#screens", "#tabs", ".topbar"].forEach((q) => { const el = $(q); if (el) el.inert = false; });
+  document.documentElement.classList.remove("nav-open");
+  if (returnFocus) $("#nav-toggle").focus();
+}
+function initNav() {
+  const setH = () => document.documentElement.style.setProperty("--chrome-h", `${$(".chrome").offsetHeight}px`);
+  setH(); new ResizeObserver(setH).observe($(".chrome"));
+  const host = $("#cancer-nav");
+  host.innerHTML = navHtml();
+  wireNav(host);
+  $("#nav-toggle").addEventListener("click", () => ($("#sidenav").classList.contains("open") ? closeNav() : openNav()));
+  $("#nav-close").addEventListener("click", () => closeNav());
+  $("#nav-backdrop").addEventListener("click", () => closeNav());
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#sidenav").classList.contains("open")) { e.preventDefault(); closeNav(); } });
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", () => closeNav(false));
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-open-wizard]");
+  if (b) { e.preventDefault(); openWizard({ restart: !needsOnboarding(record) }); }
 });
 
 // ---------- rendering ----------
@@ -84,18 +142,6 @@ function branchPath() {
 
 function statusLine(st) {
   return Object.entries(st.status).map(([k, v]) => `${v} ${STATUS_WORDS[k] || k}`).join(" · ");
-}
-
-function workedHtml(path) {
-  const root = buildTree(example.summaries);
-  let node = root;
-  for (const p of path || []) { if (!node.children.has(p)) break; node = node.children.get(p); }
-  const stats = treatmentStats(collect(node)).slice(0, 4);
-  if (!stats.length) return `<div class="card"><p class="sub" style="margin:0">No example summaries on this branch yet.</p></div>`;
-  return `<p class="sub">${esc(node === root ? "Whole tree" : path.slice(0, path.indexOf(node.name) + 1).join(" › "))}: ${node.counted} counted of ${node.shown} shown.</p>` +
-    stats.map((s) => `<div class="card"><span class="example">Example data</span>
-      <h3 style="margin-top:8px">${esc(s.name)}</h3>
-      <p class="sub stat" style="margin:0">${s.people} ${s.people === 1 ? "person" : "people"} tried it. Afterwards: ${esc(statusLine(s))}.</p></div>`).join("");
 }
 
 function renderHome() {
@@ -120,7 +166,7 @@ function renderHome() {
        <button type="button" class="btn btn-primary" data-go="tree" style="margin-top:8px">View my branch</button>`
     : `<h2>Find your branch</h2><p class="sub">Import your records to see where you sit on the tree. You can try it with example records first.</p>
        <button type="button" class="btn btn-primary" data-go="import">Import records</button>`;
-  $("#home-worked").innerHTML = workedHtml(path || ["Lung", "KRAS", "G12C"]);
+  $("#home-worked").innerHTML = branchPublicHtml(path || ["Lung"]);
   $("#after-status").textContent = afterWords(record);
 }
 
@@ -177,28 +223,21 @@ async function renderSummary() {
 }
 
 function renderTree() {
-  const root = buildTree(example.summaries);
-  const nodeHtml = (node, depth) => {
-    const kids = [...node.children.values()].sort((a, b) => b.shown - a.shown);
-    const counts = `<span class="counts">${node.shown} shown · ${node.counted} counted</span>`;
-    const stats = treatmentStats(collect(node)).slice(0, 3);
-    const statHtml = stats.length ? `<div class="leaf">${stats.map((s) => `<p class="sub" style="margin:0 0 4px"><strong>${esc(s.name)}</strong>: ${s.people} tried. ${esc(statusLine(s))}.</p>`).join("")}</div>` : "";
-    return `<li><details ${depth === 0 ? "open" : ""}><summary>${esc(node.name)} ${counts}</summary>${statHtml}${kids.length ? `<ul>${kids.map((k) => nodeHtml(k, depth + 1)).join("")}</ul>` : ""}</details></li>`;
-  };
-  $("#tree-list").innerHTML = nodeHtml(root, 0);
+  $("#tree-list").innerHTML = exploreListHtml();
   const mine = branchPath();
-  $("#living-tree").innerHTML = livingTreeSvg(buildTree(example.summaries), {
+  $("#living-tree").innerHTML = livingTreeSvg(publicTreeRoot(), {
     mine, selected: pickedPath, interactive: true, idPrefix: "lt-main",
-    label: `The tree, drawn as a living tree. Each big limb is a cancer type and each leafy tip is a branch of patients.${mine ? ` Your branch, ${mine.join(", then ")}, has a golden flower.` : ""} Pick a limb or a tip to see what people on it tried.`,
+    words: (h) => `${h.path.join(", then ")}. ${h.tip && h.path.length > 1 ? "Gene often mutated in this cancer. " : ""}0 patients have shared here so far.`,
+    label: `The tree, drawn as a living tree. Each big limb is a cancer type, sized by new cases a year, and each leafy tip is a gene often mutated in it.${mine ? ` Your branch, ${mine.join(", then ")}, has a golden flower.` : ""} Pick a limb or a tip to see published data for it.`,
   });
   renderBranchPanel();
 }
 
 function renderBranchPanel() {
   const mine = branchPath();
-  const path = pickedPath || mine || ["Lung", "KRAS", "G12C"];
-  const title = pickedPath ? "Branch you picked" : mine ? "My branch" : "Example branch";
-  $("#panel-branch").innerHTML = `<h2>${title}</h2><p class="sub">${esc(path.join(" › "))}</p>${workedHtml(path)}`;
+  const path = pickedPath || mine || ["Lung"];
+  const title = pickedPath ? "Branch you picked" : mine ? "My branch" : "Published data: Lung";
+  $("#panel-branch").innerHTML = `<h2>${title}</h2><p class="sub">${esc(path.join(" › "))}</p>${branchPublicHtml(path)}`;
   $("#lt-caption").textContent = pickedPath ? `Showing ${pickedPath.join(" › ")} below.` : "Tap or pick a limb or a leafy tip to see that branch below.";
 }
 
@@ -492,11 +531,12 @@ async function resizePhoto(file) {
 async function main() {
   wire();
   record = await getOrCreateRecord();
-  try { example = await (await fetch("/data/example-summaries.json")).json(); } catch { example = { summaries: [] }; }
+  await loadPublicData();
+  initNav();
   const returned = await finishSmartConnectIfReturning();
   if (returned) { await addSource(returned); }
-  const start = location.hash.replace("#", "");
-  go(TITLES[start] ? start : (returned ? "import" : "home"));
+  const start = decodeURIComponent(location.hash.replace("#", ""));
+  go(TITLES[start.split("/")[0]] ? start : (returned ? "import" : "home"));
   if (returned) go("import");
   initPwa({ bannerHost: $("#banners") });
   $$("[data-privacy-picker]").forEach((el) => mountPrivacyPicker(el, {

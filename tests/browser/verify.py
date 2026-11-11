@@ -24,8 +24,8 @@ DIST = REPO / "dist"
 PORT = 37111
 BASE = f"http://127.0.0.1:{PORT}"
 AXE = (REPO / "node_modules/axe-core/axe.min.js").read_text()
-WIDTHS = [320, 390, 768, 1280]
-SCREENS = ["home", "start", "import", "repo", "tree", "settings", "a11y"]
+WIDTHS = [320, 390, 768, 1024, 1280, 1440]
+SCREENS = ["home", "start", "import", "repo", "tree", "settings", "a11y", "cancer/lung", "cancer/aml", "cancer/tumor-agnostic", "sources"]
 THEMES = ["default", "hc-dark", "hc-light", "cb-blue", "cb-purple"]
 results = {"overflow": [], "axe": [], "flows": [], "console": []}
 STATE = {}
@@ -292,7 +292,7 @@ def run_axe(pg, label):
     if r: fails.append(f"axe {label}: {[(v['id'], v['n'], v['t']) for v in r]}")
 
 def tree_flow(b):
-    """Lifelike tree picture: every branch tip is a labelled button; click and keyboard both pick it."""
+    """Lifelike tree picture from published data: every tip is a labelled button; click and keyboard both pick it."""
     ctx = b.new_context(viewport={"width": 390, "height": 900})
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: results["console"].append(f"pageerror: {e}"))
@@ -300,22 +300,90 @@ def tree_flow(b):
     if wizard_open(pg): finish_wizard(pg)
     go(pg, "tree")
     info = pg.evaluate("""() => { const h = [...document.querySelectorAll('#living-tree .lt-hit')];
-      return { n: h.length, tips: h.filter(x => x.classList.contains('lt-tip')).length,
-        ok: h.every(x => x.getAttribute('role') === 'button' && x.tabIndex === 0 && /shown, \\d+ counted/.test(x.getAttribute('aria-label'))),
+      return { n: h.length, tips: h.filter(x => x.classList.contains('lt-tip')).map(x => x.dataset.ltPath),
+        ok: h.every(x => x.getAttribute('role') === 'button' && x.tabIndex === 0 && /0 patients have shared here so far/.test(x.getAttribute('aria-label'))),
         svg: !!document.querySelector('#living-tree svg.lt-svg[role=group][aria-label]') }; }""")
-    tips = len({tuple(s["branch"]["path"]) for s in json.loads((DIST / "data/example-summaries.json").read_text())["summaries"]})
-    check("tree picture: one labelled button per patient branch tip", info["svg"] and info["ok"] and info["tips"] == tips, str(info))
-    pg.click('#living-tree .lt-tip[data-lt-path="Melanoma/BRAF/V600E"] .lt-hit-area', force=True)
-    st = pg.evaluate("""() => ({ pressed: document.querySelector('#living-tree [data-lt-path="Melanoma/BRAF/V600E"]').getAttribute('aria-pressed'),
-      panel: document.querySelector('#panel-branch').textContent, cap: document.querySelector('#lt-caption').textContent })""")
-    check("tree picture: clicking a tip picks that branch", st["pressed"] == "true" and "Melanoma › BRAF › V600E" in st["panel"] and "Melanoma" in st["cap"], str(st)[:300])
+    data = json.loads((DIST / "data/public-cancer-data.json").read_text())
+    check("tree picture: built from published data, every tip a labelled button with 0 patients", info["svg"] and info["ok"] and len(info["tips"]) >= 12, str(info)[:300])
+    check("tree: no example patients shown publicly", "EXAMPLE" not in pg.inner_text("#s-tree") and "Example data" not in pg.inner_text("#s-tree"))
+    tip = next(t for t in info["tips"] if t.startswith("Lung/"))
+    pg.click(f'#living-tree .lt-tip[data-lt-path="{tip}"] .lt-hit-area', force=True)
+    st = pg.evaluate(f"""() => ({{ pressed: document.querySelector('#living-tree [data-lt-path="{tip}"]').getAttribute('aria-pressed'),
+      panel: document.querySelector('#panel-branch').textContent, cap: document.querySelector('#lt-caption').textContent }})""")
+    gene = tip.split("/")[1]
+    check("tree picture: clicking a tip shows published data for that gene", st["pressed"] == "true" and f"Lung › {gene}" in st["panel"] and f"{gene} is mutated in" in st["panel"]
+          and "Patient-shared branches here: 0" in st["panel"] and "Source:" in st["panel"], str(st)[:300])
     pg.focus('#living-tree [data-lt-path="Breast"]'); pg.keyboard.press("Enter"); pg.wait_for_timeout(100)
-    st = pg.evaluate("""() => ({ pressed: document.querySelector('#living-tree [data-lt-path="Breast"]').getAttribute('aria-pressed'),
-      old: document.querySelector('#living-tree [data-lt-path="Melanoma/BRAF/V600E"]').getAttribute('aria-pressed'),
-      focus: document.activeElement && document.activeElement.dataset.ltPath, panel: document.querySelector('#panel-branch h2').textContent })""")
+    st = pg.evaluate(f"""() => ({{ pressed: document.querySelector('#living-tree [data-lt-path="Breast"]').getAttribute('aria-pressed'),
+      old: document.querySelector('#living-tree [data-lt-path="{tip}"]').getAttribute('aria-pressed'),
+      focus: document.activeElement && document.activeElement.dataset.ltPath, panel: document.querySelector('#panel-branch h2').textContent }})""")
     check("tree picture: Enter on a focused limb picks it and keeps focus", st == {"pressed": "true", "old": "false", "focus": "Breast", "panel": "Branch you picked"}, str(st))
     pg.click("#tab-explore"); pg.focus('#living-tree [data-lt-path="Lung"]'); pg.keyboard.press(" "); pg.wait_for_timeout(100)
     check("tree picture: Space picks too and shows the branch tab", pg.evaluate("!document.querySelector('#panel-branch').hidden && document.querySelector('#panel-branch').textContent.includes('Lung')"))
+    check("published data: every figure has a source, licence and retrieval date",
+          all(all(k in f for k in ("source", "retrieved", "url")) for c in data["cancers"] for f in ((c.get("seer") or {}).get("figures") or {}).values())
+          and all(d["setId"] and d["retrieved"] for c in data["cancers"] for t in c["therapies"] for d in t["drugs"])
+          and all(g["retrieved"] and g["studyId"] for c in data["cancers"] for g in c["genomics"])
+          and all(c["patientBranches"]["shared"] == 0 for c in data["cancers"])
+          and set(data["sources"]) == {"seer", "cbioportal", "openfda", "ctgov"} and all(s["license"] for s in data["sources"].values()))
+    ctx.close()
+
+def nav_flow(b):
+    """Cancer-tree navigation: a left column on desktop, a drawer on phones; searchable; desktop uses the full width."""
+    data = json.loads((DIST / "data/public-cancer-data.json").read_text())
+    ctx = b.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    if wizard_open(pg): finish_wizard(pg)
+    go(pg, "home")
+    d = pg.evaluate("""() => { const r = s => document.querySelector(s).getBoundingClientRect();
+      return { nav: r('#sidenav').width, navVis: getComputedStyle(document.querySelector('#sidenav')).display !== 'none', main: r('#screens').width,
+        layout: r('.layout').width, toggle: getComputedStyle(document.querySelector('#nav-toggle')).display, links: document.querySelectorAll('#cancer-nav .nl-link').length,
+        groups: document.querySelectorAll('#cancer-nav .nl-group').length, a11yText: getComputedStyle(document.querySelector('.topbar .a11y-launch span')).width }; }""")
+    check("desktop 1440: full-width layout (main column at least 1000px, layout at least 1400px)", d["main"] >= 1000 and d["layout"] >= 1400, str(d))
+    check("desktop 1440: left navigation always shown, no menu button", d["navVis"] and 240 <= d["nav"] <= 360 and d["toggle"] == "none", str(d))
+    check("nav: lists every cancer tree, grouped", d["links"] == len(data["cancers"]) and d["groups"] == len({c["group"] for c in data["cancers"]}), str(d))
+    check("accessibility button: visible 'Accessibility' text on desktop, name includes it", d["a11yText"] not in ("1px", "0px")
+          and "Accessibility" in pg.get_attribute(".topbar .a11y-launch", "aria-label") and pg.evaluate("document.querySelector('.topbar .a11y-launch').getBoundingClientRect().height") >= 44)
+    pg.fill("#nav-search", "EGFR"); pg.wait_for_timeout(400)
+    vis = pg.evaluate("[...document.querySelectorAll('#cancer-nav [data-nl-item]:not([hidden]) .nl-link')].map(a => a.textContent)")
+    check("nav search: EGFR finds lung cancer and filters the list", "Lung cancer" in vis and len(vis) < len(data["cancers"]) and "match" in pg.inner_text("#nav-search-status"), str(vis))
+    pg.fill("#nav-search", "zzzz"); pg.wait_for_timeout(400)
+    check("nav search: no match is announced", "No cancer trees match" in pg.inner_text("#nav-search-status"))
+    pg.fill("#nav-search", ""); pg.wait_for_timeout(400)
+    pg.click('#cancer-nav .nl-toggle[aria-controls="nls-lung"]')
+    check("nav: expand button shows subtypes and genes", pg.get_attribute('#cancer-nav .nl-toggle[aria-controls="nls-lung"]', "aria-expanded") == "true" and pg.is_visible("#nls-lung") and "Lung adenocarcinoma" in pg.inner_text("#nls-lung"))
+    pg.click('#cancer-nav [data-nl-cancer="lung"]'); pg.wait_for_timeout(300)
+    t = pg.inner_text("#s-cancer")
+    lung = next(c for c in data["cancers"] if c["id"] == "lung")
+    nc = f'{lung["seer"]["figures"]["newCases"]["value"]:,}'
+    check("cancer page: real SEER figure with source shown", pg.is_visible("#s-cancer") and "Lung cancer" in pg.inner_text("#cancer-title") and nc in t and "Source: SEER" in t and "retrieved" in t, t[:300])
+    check("cancer page: FDA drugs, trials, genes and a sources section", "FDA-approved drugs" in t and "recruiting studies" in t and "Tumors with a mutation" in t and "Sources and licenses" in t and "ODbL" in t)
+    check("cancer page: patient-shared branches start at 0, no example patients", "Patient-shared branches: 0" in t and "EXAMPLE" not in t)
+    check("nav: current cancer marked", pg.get_attribute('#cancer-nav [data-nl-cancer="lung"]', "aria-current") == "page" and pg.evaluate("location.hash") == "#cancer/lung")
+    gene = lung["genomics"][0]["genes"][1]["gene"]
+    pg.click('#cancer-nav .nl-toggle[aria-controls="nls-lung"]') if not pg.is_visible("#nls-lung") else None
+    pg.click(f'#nls-lung a[data-go="cancer/lung/g-lung-{gene}"]'); pg.wait_for_timeout(300)
+    check("nav: gene link moves focus to that gene's row", pg.evaluate("document.activeElement.id") == f"g-lung-{gene}", pg.evaluate("document.activeElement.id"))
+    ctx.close()
+    # phone: drawer
+    ctx = b.new_context(viewport={"width": 390, "height": 844})
+    pg = ctx.new_page()
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    if wizard_open(pg): finish_wizard(pg)
+    go(pg, "home")
+    check("phone: nav hidden until the menu button is used", not pg.is_visible("#sidenav") and pg.is_visible("#nav-toggle") and pg.get_attribute("#nav-toggle", "aria-expanded") == "false")
+    pg.click("#nav-toggle"); pg.wait_for_timeout(200)
+    st = pg.evaluate("""() => ({ open: document.querySelector('#sidenav').classList.contains('open'), exp: document.querySelector('#nav-toggle').getAttribute('aria-expanded'),
+      modal: document.querySelector('#sidenav').getAttribute('aria-modal'), focus: document.activeElement.id, inert: document.querySelector('#screens').inert })""")
+    check("phone: drawer opens as a modal, focus in search, page behind inert", st == {"open": True, "exp": "true", "modal": "true", "focus": "nav-search", "inert": True}, str(st))
+    r = pg.evaluate(OVERFLOW_JS)
+    check("phone: open drawer causes no sideways scrolling", r["overflow"] <= 1 and not r["offenders"], str(r))
+    run_axe(pg, "390px nav-drawer")
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(150)
+    check("phone: Escape closes the drawer and returns focus", not pg.is_visible("#sidenav") and pg.evaluate("document.activeElement.id") == "nav-toggle" and not pg.evaluate("document.querySelector('#screens').inert"))
+    pg.click("#nav-toggle"); pg.click('#cancer-nav [data-nl-cancer="breast"]'); pg.wait_for_timeout(300)
+    check("phone: picking a cancer closes the drawer and opens its page", not pg.is_visible("#sidenav") and "Breast cancer" in pg.inner_text("#cancer-title"))
     ctx.close()
 
 def main():
@@ -325,6 +393,7 @@ def main():
         b = p.chromium.launch()
         wizard_flow(b)
         tree_flow(b)
+        nav_flow(b)
         # ---------- flows ----------
         ctx = b.new_context(viewport={"width": 390, "height": 844})
         pg = ctx.new_page()

@@ -10,7 +10,7 @@
 - **You decide everything.** You pick one of 4 sharing levels: Private (device only), Basic public summary, Detailed public, or Full public. Nothing is preselected. Moving to a lower level stops sharing from then on, and the app says plainly that what was already shared stays out there. You also choose what happens to that summary after you die, and you name the person who carries it out.
 - **No names, ever.** A public summary lives at a random address like `my.curebranch.ai/k7x2m9`. It never includes your name, birthday or record numbers. A name or photo appears only if you turn that on yourself.
 - **Only checked records count.** Records signed by a hospital or lab (SMART Health Cards), or pulled straight from a hospital portal (SMART on FHIR), count in the tree's numbers. Everything else is shown but not counted. One person counts once.
-- **Bring your own AI.** If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini or any other) and pay for it yourself. CureBranch never runs AI on your data and stores no AI keys.
+- **Bring your own AI.** If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini, Grok, Copilot or any other) and pay for it yourself. CureBranch never runs AI on your data and stores no AI keys.
 - **No money involved.** No prizes, no fees, no donations. The tree only shares information, and the code never touches money.
 - **Information, not medical advice.** See [DISCLAIMER.md](DISCLAIMER.md).
 
@@ -55,7 +55,7 @@ There's no shared network yet. The numbers come from `app/js/recognition-source.
 | `schema/` | The open data format: JSON Schemas for the **public summary** and the **private local record**, plus EXAMPLE files. |
 | `docs/` | How it works ([architecture](docs/architecture.md)), [deploying](docs/deploy.md), the [update flow](docs/pwa.md), [accessibility](docs/accessibility.md), [images](docs/images.md), and [open choices](docs/open-choices.md). |
 | `tests/` | Unit tests (Node) and browser tests (Playwright + axe-core). |
-| `tools/` | Small scripts: copy libraries in, make example data, make icons, stamp a build. |
+| `tools/` | Small scripts: copy libraries in, make example data, make icons, stamp a build, fetch the published cancer data (`fetch-public-data.mjs`). |
 
 ## Try it on your computer
 
@@ -81,6 +81,7 @@ npm run test:browser           # every screen and setup-guide step at 320/390/76
 - **Code: Apache License 2.0** ([LICENSE](LICENSE)). Anyone, including companies and hospitals, can use, change and ship it. It includes an explicit patent grant, which matters in health tech, and it matches the licenses of the libraries we use.
 - **Data format and example data: CC0 1.0** ([schema/LICENSE-CC0.txt](schema/LICENSE-CC0.txt)). The schema and examples are public domain, so any app, hospital or researcher can adopt the format without asking or giving credit. A data format spreads best with no strings attached. (CC BY 4.0 would require credit; see [docs/open-choices.md](docs/open-choices.md).)
 - **Patients' own summaries** belong to the patients. The license a published summary carries is an open choice listed in [docs/open-choices.md](docs/open-choices.md).
+- **Published cancer data** (`app/data/public-cancer-data.json`) keeps its sources' terms: SEER (public domain), cBioPortal TCGA PanCancer Atlas (ODbL 1.0, with citations), openFDA (CC0) and ClinicalTrials.gov (its terms, with attribution). Every figure names its source, licence and retrieval date, and each cancer page shows it. See [docs/data-sources.md](docs/data-sources.md). Patient-shared branch counts start at 0; no made-up patients are shown publicly.
 - Third-party pieces keep their own licenses: idb-keyval, canonicalize and fhirclient (Apache-2.0), jose (MIT) and js-base64 (BSD-3-Clause) inside the fhirclient bundle; Primer Primitives and Octicons (MIT); fonts Mona Sans, Atkinson Hyperlegible, Source Serif 4 and OpenDyslexic (SIL Open Font License 1.1); the home photo "Through the leaves" (CC0, see `app/img/CREDITS.txt`). Copies are in `app/vendor/LICENSES/`. axe-core (MPL-2.0) and Ajv (MIT) are used only for testing and are not shipped.
 
 ## Built on proven open tools

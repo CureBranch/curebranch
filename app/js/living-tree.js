@@ -64,8 +64,11 @@ function qtan(p0, c, p1, t) {
 export function livingTreeSvg(root, opts = {}) {
   const { mine = null, selected = null, glow = false, interactive = false, label = "Tree picture.", labels = true } = opts;
   const P = (opts.idPrefix || "lt") + "-";
+  // Size by node.weight when given (published data: new cases per year), else by patients shown.
+  const W8 = (n) => (typeof n.weight === "number" ? n.weight : n.shown);
+  const words = opts.words || ((h) => `${h.path.join(", then ")}. ${h.node.shown} shown, ${h.node.counted} counted.`);
   // Pick the limbs to draw (largest first), keep the patient's own branch even if small.
-  let tops = [...root.children.values()].sort((a, b) => b.shown - a.shown || a.name.localeCompare(b.name)).slice(0, MAX_LIMBS);
+  let tops = [...root.children.values()].sort((a, b) => W8(b) - W8(a) || a.name.localeCompare(b.name)).slice(0, MAX_LIMBS);
   if (mine && mine.length) {
     let top = root.children.get(mine[0]);
     if (!top) { top = { name: mine[0], shown: 0, counted: 0, children: new Map(), summaries: [] }; }
@@ -79,7 +82,7 @@ export function livingTreeSvg(root, opts = {}) {
   // Biggest limbs in the middle, smaller ones toward the sides, alternating left/right.
   const order = [];
   tops.forEach((t, i) => { if (i % 2) order.push(t); else order.unshift(t); });
-  const total = Math.max(1, tops.reduce((s, t) => s + Math.max(1, t.shown), 0));
+  const total = Math.max(1, tops.reduce((s, t) => s + Math.max(1, W8(t)), 0));
   const rng = mulberry32(hashStr(tops.map((t) => t.name).join("|") || "curebranch"));
   const rr = (a, b) => a + (b - a) * rng();
   const pick = (arr) => arr[Math.floor(rng() * arr.length)];
@@ -137,7 +140,7 @@ export function livingTreeSvg(root, opts = {}) {
   const nL = order.length || 1;
   const spreadDeg = nL === 1 ? 0 : Math.min(128, 40 + nL * 18);
   function grow(node, path, p0, ang, L, w0, depth, limb) {
-    const kids = [...node.children.values()].sort((a, b) => b.shown - a.shown || a.name.localeCompare(b.name));
+    const kids = [...node.children.values()].sort((a, b) => W8(b) - W8(a) || a.name.localeCompare(b.name));
     const w1 = Math.max(2.2, w0 * (kids.length ? 0.74 : 0.5));
     const onMine = isOnPath(path, mine);
     const b = addBranch(p0, ang, L, w0, w1, { bend: (ang > 0 ? 1 : -1) * Math.min(28, Math.abs(ang) * 0.4 + 12) * (depth === 1 ? 1 : 0.6), limb, mine: onMine, bark: depth === 1 });
@@ -150,7 +153,7 @@ export function livingTreeSvg(root, opts = {}) {
       twig(at, ang * 0.7 + side * rr(30, 55), L * rr(0.35, 0.5), Math.max(1.5, (w0 + (w1 - w0) * t) * 0.45), depth === 1 ? 2 : 1, limb, rng() < 0.4);
     }
     if (!kids.length) {
-      const R = 24 + 7 * Math.sqrt(Math.max(1, node.shown));
+      const R = typeof node.weight === "number" ? 30 : 24 + 7 * Math.sqrt(Math.max(1, node.shown));
       cluster(b.p1.x, b.p1.y, R * 1.15, false, limb, -1);
       cluster(b.p1.x, b.p1.y, R, true, limb, 1);
       hits.push({ x: b.p1.x, y: b.p1.y, path, node, limb, tip: true, R });
@@ -160,7 +163,7 @@ export function livingTreeSvg(root, opts = {}) {
     const k = kids.length;
     const sp = k === 1 ? 0 : Math.min(84, 30 + 18 * (k - 1));
     kids.forEach((kid, i) => {
-      const share = Math.sqrt(Math.max(1, kid.shown) / Math.max(1, node.shown));
+      const share = Math.sqrt(Math.max(1, W8(kid)) / Math.max(1, W8(node)));
       const a = ang * 0.82 + (k === 1 ? rr(-10, 10) : -sp / 2 + (sp * i) / (k - 1)) + rr(-5, 5);
       grow(kid, [...path, kid.name], b.p1, a, L * rr(0.58, 0.7), Math.max(2.4, w1 * Math.max(0.55, share)), depth + 1, limb);
     });
@@ -171,7 +174,7 @@ export function livingTreeSvg(root, opts = {}) {
     if (Math.abs(ang) < 12) ang = (ang < 0 || (ang === 0 && rng() < 0.5) ? -1 : 1) * rr(12, 18); // no straight poles: the middle limb leans
     const tt = 0.72 + 0.28 * (1 - Math.abs(ang) / 80) + rr(-0.03, 0.03);
     const p0 = qpt(trunk.p0, trunk.c, trunk.p1, Math.min(1, tt));
-    const share = Math.sqrt(Math.max(1, t.shown) / total);
+    const share = Math.sqrt(Math.max(1, W8(t)) / total);
     const L = 108 + 40 * share + rr(-6, 6);
     limbOrigins[i] = p0;
     grow(t, [t.name], p0, ang * 1.05, L, Math.max(7, trunkW1 * 0.95 * Math.max(0.42, share)), 1, i);
@@ -283,10 +286,11 @@ export function livingTreeSvg(root, opts = {}) {
 
   // Interactive parts: one button per patient branch (tips) and per cancer type (limb fork).
   const labelsSvg = [];
+  const limbLabels = [];
   for (const h of fHits) {
     const isMine = !!mine && isOnPath(h.path, mine) && (h.tip ? h.path.length === mine.length : true);
     const isSel = !!selected && selected.length === h.path.length && isOnPath(h.path, selected);
-    const words = `${h.path.join(", then ")}. ${h.node.shown} shown, ${h.node.counted} counted.${isMine && h.tip ? " This is your branch." : ""}`;
+    const label = `${words(h)}${isMine && h.tip ? " This is your branch." : ""}`;
     const r = h.tip ? Math.max(30, h.R * 0.75) : 26;
     let inner = "";
     if (h.tip && isMine) {
@@ -299,11 +303,11 @@ export function livingTreeSvg(root, opts = {}) {
     inner += `<circle class="lt-hit-area" cx="${f1(h.x)}" cy="${f1(h.y)}" r="${f1(r)}"/>`;
     const cls = `lt-hit${h.tip ? " lt-tip" : " lt-limb"}${isMine ? " lt-is-mine" : ""}${isSel ? " lt-selected" : ""}`;
     const attrs = interactive
-      ? ` role="button" tabindex="0" aria-pressed="${isSel}" aria-label="${esc(words)}" data-lt-path="${esc(pathKey(h.path))}"`
+      ? ` role="button" tabindex="0" aria-pressed="${isSel}" aria-label="${esc(label)}" data-lt-path="${esc(pathKey(h.path))}"`
       : ` aria-hidden="true"`;
     if (interactive || (h.tip && isMine)) add(groupsHit, h.limb, `<g class="${cls}"${attrs}>${inner}</g>`);
-    if (labels && !h.tip) labelsSvg.push(`<text class="lt-label" x="${f1(h.x)}" y="${f1(h.y + 30)}" text-anchor="middle" aria-hidden="true">${esc(h.node.name.slice(0, 14))}</text>`);
-    if (labels && h.tip && h.path.length === 1) labelsSvg.push(`<text class="lt-label" x="${f1(h.x)}" y="${f1(h.y + h.R + 18)}" text-anchor="middle" aria-hidden="true">${esc(h.node.name.slice(0, 14))}</text>`);
+    if (labels && !h.tip) limbLabels.push({ x: h.x, y: h.y + 30, t: h.node.name.slice(0, 14) });
+    if (labels && h.tip && h.path.length === 1) limbLabels.push({ x: h.x, y: h.y + h.R + 18, t: h.node.name.slice(0, 14) });
     if (labels && h.tip && (isMine || isSel) && h.path.length > 1) {
       const y = Math.max(22, h.y - Math.max(30, h.R * 0.75) - 8);
       const txt = (isMine ? "Your branch: " : "") + h.path.slice(1).join(" ").slice(0, 22);
@@ -312,6 +316,15 @@ export function livingTreeSvg(root, opts = {}) {
     }
   }
 
+  // Keep limb names from overlapping: push a label down until it clears the ones already placed.
+  const placed = [];
+  for (const L of limbLabels.sort((p, q) => p.y - q.y)) {
+    const half = L.t.length * 6.2 + 4;
+    L.x = Math.min(W - half, Math.max(half, L.x));
+    for (let k = 0; k < 6 && placed.some((o) => Math.abs(o.x - L.x) < o.half + half && Math.abs(o.y - L.y) < 24); k++) L.y += 24;
+    placed.push({ ...L, half });
+    labelsSvg.push(`<text class="lt-label" x="${f1(L.x)}" y="${f1(L.y)}" text-anchor="middle" aria-hidden="true">${esc(L.t)}</text>`);
+  }
   const defs = `<defs>
 <linearGradient id="${P}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6ebf3"/><stop offset=".7" stop-color="#eef6ef"/><stop offset="1" stop-color="#f3f7ea"/></linearGradient>
 <radialGradient id="${P}sun" cx=".18" cy=".1" r=".55"><stop offset="0" stop-color="#fffbe6" stop-opacity=".95"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></radialGradient>

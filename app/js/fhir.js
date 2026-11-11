@@ -22,6 +22,10 @@ const L = {
 
 // Coarse cancer type from ICD-10 prefix. Extend freely; this is a lookup table, not advice.
 const ICD10_TYPES = [
+  [/^C92\.0/, "AML"], [/^C92\.1/, "CML"], [/^C91\.0/, "ALL"], [/^C91\.1/, "CLL"], [/^C81/, "Hodgkin lymphoma"],
+  [/^C0\d|^C1[0-4]/, "Head and neck"], [/^C15/, "Esophagus"], [/^C17/, "Small intestine"], [/^C21/, "Anus"],
+  [/^C23|^C24/, "Liver"], [/^C32/, "Larynx"], [/^C4[01]/, "Bone"], [/^C45/, "Mesothelioma"], [/^C49/, "Soft tissue sarcoma"],
+  [/^C51/, "Vulva"], [/^C53/, "Cervix"], [/^C54|^C55/, "Uterus"], [/^C62/, "Testis"], [/^C69/, "Uveal melanoma"], [/^C73/, "Thyroid"],
   [/^C34/, "Lung"], [/^C1[89]|^C20/, "Colorectal"], [/^C43/, "Melanoma"], [/^C50/, "Breast"],
   [/^C61/, "Prostate"], [/^C25/, "Pancreas"], [/^C56/, "Ovary"], [/^C16/, "Stomach"],
   [/^C22/, "Liver"], [/^C64/, "Kidney"], [/^C67/, "Bladder"], [/^C71/, "Brain"],
@@ -32,9 +36,15 @@ const SNOMED_TYPES = {
   "372244006": "Melanoma", "254837009": "Breast", "399068003": "Prostate", "363418001": "Pancreas",
 };
 const TEXT_TYPES = [
+  [/uveal|ocular melanoma/i, "Uveal melanoma"], [/osteosarcoma|ewing|bone cancer/i, "Bone"], [/mesothelioma/i, "Mesothelioma"],
   [/lung|nsclc|sclc/i, "Lung"], [/colo|rect/i, "Colorectal"], [/melanoma/i, "Melanoma"],
   [/breast/i, "Breast"], [/prostat/i, "Prostate"], [/pancrea/i, "Pancreas"], [/ovar/i, "Ovary"],
-  [/lymphoma/i, "Lymphoma"], [/leuk/i, "Leukemia"], [/myeloma/i, "Myeloma"], [/glioma|glioblastoma|brain/i, "Brain"],
+  [/hodgkin/i, "Hodgkin lymphoma"], [/lymphoma/i, "Lymphoma"], [/acute myeloid|\baml\b/i, "AML"], [/chronic myeloid|\bcml\b/i, "CML"],
+  [/acute lymphoblastic|acute lymphocytic|\ball\b(?= leuk)/i, "ALL"], [/chronic lymphocytic|\bcll\b/i, "CLL"], [/leuk/i, "Leukemia"],
+  [/thyroid/i, "Thyroid"], [/cervi/i, "Cervix"], [/endometri|uter/i, "Uterus"],
+  [/esophag/i, "Esophagus"], [/gastric|stomach/i, "Stomach"], [/hepatocell|liver|cholangio|bile duct/i, "Liver"], [/kidney|renal cell/i, "Kidney"],
+  [/bladder|urothelial/i, "Bladder"], [/testi/i, "Testis"], [/head and neck|oral|tongue|pharyn/i, "Head and neck"], [/laryn/i, "Larynx"],
+  [/sarcoma|gist|gastrointestinal stromal/i, "Soft tissue sarcoma"], [/myeloma/i, "Myeloma"], [/glioma|glioblastoma|brain/i, "Brain"],
 ];
 
 // Genes listed first become the second level of the suggested branch. Order is only a

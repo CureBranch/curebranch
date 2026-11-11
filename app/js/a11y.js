@@ -555,8 +555,9 @@
   }
 
   function launchButtonHTML(extraClass) {
-    return '<button type="button" class="a11y-launch' + (extraClass ? " " + extraClass : "") + '" aria-haspopup="dialog" aria-controls="a11y-panel" aria-label="Open accessibility settings">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="M5 10h14M7 10v3l-2 7M17 10v3l2 7M12 10v11M9 14h6"/></svg>' +
+    // Octicons "accessibility" figure (MIT), the common accessibility symbol. The visible word is part of the name (WCAG 2.5.3).
+    return '<button type="button" class="a11y-launch' + (extraClass ? " " + extraClass : "") + '" aria-haspopup="dialog" aria-controls="a11y-panel" aria-label="Accessibility settings">' +
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.974 8.114a3.573 3.573 0 1 0-3.947 0c-.302.21-.57.467-.79.762H3.708a.75.75 0 1 0 0 1.5h4.885a2.93 2.93 0 0 0-.026.188l-.814 7.267-.499 4.142a.75.75 0 1 0 1.49.18l.42-3.486h5.67l.42 3.485a.75.75 0 0 0 1.49-.18l-.5-4.142-.813-7.266a3.502 3.502 0 0 0-.026-.188h4.885a.75.75 0 1 0 0-1.5h-5.527a3.466 3.466 0 0 0-.79-.762Zm.099-2.979a2.073 2.073 0 1 1-4.146 0 2.073 2.073 0 0 1 4.146 0Zm-.131 5.596.72 6.436H9.338l.72-6.436a1.954 1.954 0 0 1 3.884 0Z"></path></svg>' +
       '<span>Accessibility</span></button>';
   }
 

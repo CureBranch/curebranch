@@ -26,6 +26,7 @@
 <div class="app" id="app">
   <div class="chrome">
   <header class="topbar">
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="sidenav"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"></path></svg><span>Cancer trees</span></button>
     <div class="brand"><span class="mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32" focusable="false"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M16 5.5c6.6 3.2 9.4 10.6 0 21-9.4-10.4-6.6-17.8 0-21Z" class="lf" fill="#fff"/><path d="M16 26.2V12.5M16 17.6l3.6-3.6M16 21.8l-3.8-3.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></span><span class="brand-name">CureBranch</span></div>
     <div class="topbar-end"><span data-a11y-launch="compact"></span></div>
   </header>
@@ -40,6 +41,11 @@
 
   <div id="banners"></div>
 
+  <div class="layout">
+  <aside class="sidenav" id="sidenav" aria-labelledby="sidenav-title">
+    <nav class="navlist" id="cancer-nav" aria-label="Cancer trees"></nav>
+  </aside>
+  <div class="nav-backdrop" id="nav-backdrop" hidden></div>
   <main class="screens" id="screens" tabindex="-1">
 
     <!-- HOME -->
@@ -59,6 +65,12 @@
         </div>
       </div>
 
+      <div class="home-greet">
+        <p class="home-hello" id="home-hello">Welcome</p>
+        <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="#">…</a></p>
+      </div>
+      <div class="home-cols">
+        <div class="home-col">
       <section class="sec" id="home-steps" aria-labelledby="home-steps-h">
         <h2 id="home-steps-h">3 easy steps</h2>
         <ol class="box list">
@@ -67,31 +79,11 @@
           <li><div class="row-item"><span class="tile t-orange" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8.533.133 5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667l5.25-1.68a1.748 1.748 0 0 1 1.066 0Zm-.61 1.429.001.001-5.25 1.68a.251.251 0 0 0-.174.237V7c0 1.36.275 2.666 1.057 3.859.784 1.194 2.121 2.342 4.366 3.298a.196.196 0 0 0 .154 0c2.245-.957 3.582-2.103 4.366-3.297C13.225 9.666 13.5 8.358 13.5 7V3.48a.25.25 0 0 0-.174-.238l-5.25-1.68a.25.25 0 0 0-.153 0ZM9.5 6.5c0 .536-.286 1.032-.75 1.3v2.45a.75.75 0 0 1-1.5 0V7.8A1.5 1.5 0 1 1 9.5 6.5Z"></path></svg></span><span class="grow"><b>3. Your choices</b><small>What happens after you're gone, and your own AI if you want one.</small></span></div></li>
         </ol>
       </section>
-
-      <div class="home-greet">
-        <p class="home-hello" id="home-hello">Welcome</p>
-        <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="#">…</a></p>
-      </div>
-
-      <div class="card privacy-card">
-        <div class="row">
-          <span class="tile t-green" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8.533.133 5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667l5.25-1.68a1.748 1.748 0 0 1 1.066 0Zm-.61 1.429.001.001-5.25 1.68a.251.251 0 0 0-.174.237V7c0 1.36.275 2.666 1.057 3.859.784 1.194 2.121 2.342 4.366 3.298a.196.196 0 0 0 .154 0c2.245-.957 3.582-2.103 4.366-3.297C13.225 9.666 13.5 8.358 13.5 7V3.48a.25.25 0 0 0-.174-.238l-5.25-1.68a.25.25 0 0 0-.153 0ZM9.5 6.5c0 .536-.286 1.032-.75 1.3v2.45a.75.75 0 0 1-1.5 0V7.8A1.5 1.5 0 1 1 9.5 6.5Z"></path></svg></span>
-          <div class="grow">
-            <p class="status-line" id="privacy-title">Sharing: not chosen yet</p>
-            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared until you pick a level. Your records stay on this device.</p>
-          </div>
-        </div>
-        <button type="button" class="btn btn-ghost" data-go="settings" data-focus="privacy-h" id="privacy-change" style="margin-top:12px">Change how much I share</button>
-      </div>
-
-      <div class="card tint" id="home-branch"></div>
-
       <section class="sec" aria-labelledby="home-worked-h">
-        <h2 id="home-worked-h">What others on your branch reported</h2>
-        <p class="sub">Counts from <strong>example</strong> verified summaries only. Information, not medical advice.</p>
+        <h2 id="home-worked-h">What published research says about your branch</h2>
+        <p class="sub">Real public figures with their sources. Patient-shared branches start at zero. Information, not medical advice.</p>
         <div id="home-worked"></div>
       </section>
-
       <section class="sec" aria-labelledby="home-qa-h">
         <h2 id="home-qa-h">Quick actions</h2>
         <ul class="box list">
@@ -102,7 +94,19 @@
           <li><a class="row-item" href="/how-it-started.html"><span class="tile t-pink" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z"></path></svg></span><span class="grow"><b>How it started</b><small>Why CureBranch exists.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
         </ul>
       </section>
-
+        </div>
+        <div class="home-col">
+      <div class="card privacy-card">
+        <div class="row">
+          <span class="tile t-green" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8.533.133 5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667l5.25-1.68a1.748 1.748 0 0 1 1.066 0Zm-.61 1.429.001.001-5.25 1.68a.251.251 0 0 0-.174.237V7c0 1.36.275 2.666 1.057 3.859.784 1.194 2.121 2.342 4.366 3.298a.196.196 0 0 0 .154 0c2.245-.957 3.582-2.103 4.366-3.297C13.225 9.666 13.5 8.358 13.5 7V3.48a.25.25 0 0 0-.174-.238l-5.25-1.68a.25.25 0 0 0-.153 0ZM9.5 6.5c0 .536-.286 1.032-.75 1.3v2.45a.75.75 0 0 1-1.5 0V7.8A1.5 1.5 0 1 1 9.5 6.5Z"></path></svg></span>
+          <div class="grow">
+            <p class="status-line" id="privacy-title">Sharing: not chosen yet</p>
+            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared until you pick a level. Your records stay on this device.</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost" data-go="settings" data-focus="privacy-h" id="privacy-change" style="margin-top:12px">Change how much I share</button>
+      </div>
+      <div class="card tint" id="home-branch"></div>
       <div class="card">
         <div class="row">
           <span class="tile t-gray" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path></svg></span>
@@ -113,7 +117,6 @@
         </div>
         <button type="button" class="btn btn-ghost" data-go="settings" data-focus="after-death" style="margin-top:12px">Change this</button>
       </div>
-
       <section class="sec" aria-labelledby="home-trust-h">
         <h2 id="home-trust-h">Built on trust</h2>
         <ul class="box list">
@@ -122,7 +125,9 @@
           <li><div class="row-item"><span class="tile t-pink" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z"></path></svg></span><span class="grow"><b>Free for patients and families</b><small>No fees, no ads. Information, not medical advice.</small></span></div></li>
         </ul>
       </section>
-      <p class="disc">Information, not medical advice. Tree figures are EXAMPLE DATA until a real public index exists.</p>
+        </div>
+      </div>
+      <p class="disc">Information, not medical advice. Tree figures come from published sources (SEER, cBioPortal, FDA labels, ClinicalTrials.gov), each cited. Patient-shared branches start at zero. <a href="#sources" data-go="sources">Sources and licenses</a></p>
     </section>
 
     <!-- HOW IT WORKS (not a tab) -->
@@ -132,7 +137,7 @@
       <div data-listen-mount="#s-start" data-listen-label="Listen to how it works"></div>
       <ol class="stack">
         <li><strong>Your records stay with you.</strong> You import them into this app. They are saved only in this browser on this device.</li>
-        <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini or any other). CureBranch never runs AI on your data.</li>
+        <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini, Grok, Copilot or any other). CureBranch never runs AI on your data.</li>
         <li><strong>You pick how much to share, from 4 levels.</strong> Private (device only), Basic public summary, Detailed public, or Full public. Nothing is picked for you. Anything public is shown under a random code like <span class="mono">k7x2m9</span>, never your name, birthday, street address or record numbers. You can move to a lower level any time, but what was already shared stays out there.</li>
         <li><strong>Only checked records count.</strong> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
         <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a person to carry it out.</li>
@@ -225,20 +230,23 @@
     <section class="screen" id="s-tree" aria-labelledby="tree-title">
       <h1 id="tree-title">The tree</h1>
       <div data-listen-mount="#s-tree"></div>
-      <p class="notice"><strong>EXAMPLE DATA.</strong> These are made-up patients so you can see how the tree works.</p>
-      <figure class="lt-figure">
+      <p class="notice ok"><strong>Published data.</strong> Each limb is a cancer type, sized by U.S. new cases a year (SEER). Each tip is a gene often mutated in it (TCGA via cBioPortal). Patient-shared branches: 0 so far. <a href="#sources" data-go="sources">Sources</a></p>
+      <div class="tree-layout">
+      <div class="tree-pic"><figure class="lt-figure">
         <div id="living-tree"></div>
         <figcaption id="lt-caption" aria-live="polite">Tap or pick a limb or a leafy tip to see that branch below.</figcaption>
-      </figure>
+      </figure></div>
+      <div class="tree-side">
       <div class="seg" role="tablist" aria-label="Tree views">
         <button type="button" class="on" role="tab" aria-selected="true" id="tab-branch" data-treeseg="branch" aria-controls="panel-branch">My branch</button>
         <button type="button" role="tab" aria-selected="false" id="tab-explore" data-treeseg="explore" aria-controls="panel-explore" tabindex="-1">Explore</button>
       </div>
       <div id="panel-branch" class="treeseg" role="tabpanel" aria-labelledby="tab-branch"></div>
       <div id="panel-explore" class="treeseg" role="tabpanel" aria-labelledby="tab-explore" hidden>
-        <p class="sub">Each line shows how many summaries are <strong>shown</strong> and how many are <strong>counted</strong>. Only verified records are counted, and each person counts once.</p>
+        <p class="sub">Every cancer tree, grouped by part of the body, with published figures. Patient-shared branches are counted once people share: only verified records count, and each person counts once.</p>
         <ul class="tree-list" id="tree-list"></ul>
       </div>
+      </div></div>
       <div class="card sky"><p class="sub" style="margin:0">Bring anything you find to your care team. Patterns in shared data aren't proof that a treatment will work for you.</p></div>
     </section>
 
@@ -353,7 +361,19 @@
       <h2>Feedback</h2>
       <p>Report accessibility problems on the project's public issue tracker.</p>
     </section>
+    <!-- CANCER TREE PAGE (filled from data/public-cancer-data.json) -->
+    <section class="screen" id="s-cancer" aria-labelledby="cancer-title">
+      <div data-listen-mount="#s-cancer" data-listen-label="Listen to this page"></div>
+      <div id="cancer-body"><h1 id="cancer-title">Cancer tree</h1></div>
+      <p class="disc">Information, not medical advice. Published figures describe large groups of people and cannot predict what will happen to one person.</p>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="screen" id="s-sources" aria-labelledby="sources-title">
+      <div id="sources-body"><h1 id="sources-title">Sources and licenses</h1></div>
+    </section>
   </main>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

@@ -6,3 +6,10 @@ see app/vendor/LICENSES/ for idb-keyval, canonicalize, fhirclient (with jose and
 Primer Primitives and Octicons (MIT; Primer design tokens and icons, used without any GitHub
 logos or marks) and the bundled fonts, including Mona Sans (SIL Open Font License 1.1).
 The home photo is public domain (CC0); see app/img/CREDITS.txt.
+
+Published cancer data in app/data/public-cancer-data.json comes from: SEER Cancer Stat Facts,
+National Cancer Institute (public domain); cBioPortal for Cancer Genomics, TCGA PanCancer Atlas
+studies (ODC Open Database License 1.0; cite Cerami et al. 2012, Gao et al. 2013, de Bruijn et al.
+2023 and the TCGA Research Network); openFDA drug labels, U.S. FDA (CC0 1.0); and ClinicalTrials.gov,
+U.S. National Library of Medicine (used under its terms and conditions, with attribution). Each
+figure carries its source, licence and retrieval date. See docs/data-sources.md.

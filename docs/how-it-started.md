@@ -13,7 +13,7 @@ CureBranch is a free, open-source project. One person started it after losing hi
 1. **Your records come from official places.** You connect your hospital portal, like MyChart. Records that come straight from a hospital or lab are marked *verified*.
 2. **Your records stay private, on your device.** They are saved only on your own phone or computer. CureBranch has no server that keeps your records.
 3. **You pick how much to share: 4 levels.** 1) Private: only on your device. 2) Basic: ranges like Stage 3 and age 60 to 69. 3) Detailed: adds exact age and dates. 4) Full: adds your city and full treatment details. Nothing is picked for you. Never your name, birthday, street address or record numbers. Just a random code like k7x2m9. You can move to a lower level any time; that stops sharing from then on, but what was already shared stays out there.
-4. **AI finds people like you.** Your own AI, like ChatGPT or Claude, can compare your branch with others. It shows what worked for people whose cancer looks most like yours. You bring that to your doctors.
+4. **AI finds people like you.** Your own AI, like ChatGPT, Claude, Gemini or Grok, can compare your branch with others. It shows what worked for people whose cancer looks most like yours. You bring that to your doctors.
 5. **The tree grows.** Every shared summary is a branch. Branches split where cancers are different and join where they are alike. The more people join, the more everyone can learn.
 
 **[Start the easy setup guide](https://curebranch.ai/?setup=1)**
