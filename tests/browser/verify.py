@@ -6,9 +6,14 @@
    (unverified), tampered card (unverified); data survives a reload (IndexedDB)
  * public switch, summary preview, profile page (anonymous by default, name when opted in)
  * offline: app reloads with the network off once the service worker is installed
+ * setup guide (first-run wizard): opens on first visit, one step at a time, consent gate,
+   guided hospital-portal connect (demo stub), supporting photo linked to the official record
+   with the consistency check (matches / mismatch), resume after reload, re-run from Settings,
+   saved record matches schema/local-record.schema.json; every wizard step also gets the
+   overflow (320-1280 px, 200% text) and axe (all themes) checks
  * no console errors / CSP violations
 """
-import json, sys, re
+import json, sys, re, subprocess
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from server import start
@@ -23,6 +28,7 @@ WIDTHS = [320, 390, 768, 1280]
 SCREENS = ["home", "start", "import", "repo", "tree", "settings", "a11y"]
 THEMES = ["default", "hc-dark", "hc-light", "cb-blue", "cb-purple"]
 results = {"overflow": [], "axe": [], "flows": [], "console": []}
+STATE = {}
 fails = []
 
 OVERFLOW_JS = """() => {
@@ -62,6 +68,176 @@ def go(pg, screen):
     pg.evaluate("s => window.CureBranchApp.go(s)", screen)
     pg.wait_for_timeout(250)
 
+WZ_STEPS = ["welcome", "profile", "records", "privacy", "after", "ai", "done"]
+PNG_1PX = bytes.fromhex("89504e470d0a1a0a0000000d4948445200000001000000010806000000"
+                        "1f15c4890000000d49444154789c6360f8cfc0f01f0005fe02fea72d8c5c0000000049454e44ae426082")
+LONG_NAME = "a-very-long-file-name-with-no-spaces-at-all-from-the-hospital-portal-2026-11-11.png"
+
+def wizard_open(pg):
+    return pg.evaluate("!document.querySelector('#wizard').hidden")
+
+def connect_demo(pg, portal="mychart"):
+    pg.check(f"input[name=wz-portal][value={portal}]")
+    n = pg.evaluate("window.CureBranchApp.getRecord().sources.length")
+    pg.click("#wz-connect")
+    wait_js(pg, f"window.CureBranchApp.getRecord().sources.length === {n + 1}")
+    pg.wait_for_timeout(150)
+
+def attach_photo(pg, name=LONG_NAME):
+    n = pg.evaluate("(window.CureBranchApp.getRecord().files || []).length")
+    pg.locator("#wz-files [data-attach-for]").first.set_input_files(files=[{"name": name, "mimeType": "image/png", "buffer": PNG_1PX}])
+    wait_js(pg, f"(window.CureBranchApp.getRecord().files || []).length === {n + 1}")
+    pg.wait_for_timeout(150)
+
+def fill_claim(pg, date, test, vals):
+    fid = pg.evaluate("window.CureBranchApp.getRecord().files.slice(-1)[0].id")
+    pg.fill(f"[id='wz-cl-date-{fid}']", date); pg.fill(f"[id='wz-cl-type-{fid}']", test); pg.fill(f"[id='wz-cl-vals-{fid}']", vals)
+    pg.click(f"[data-wz-check='{fid}']"); pg.wait_for_timeout(250)
+    return fid
+
+def finish_wizard(pg, on_step=None, show_errors=False, fill_records=False):
+    """Walk the setup guide with simple answers. on_step(step_id) runs on each step (overflow / axe).
+    fill_records: connect the demo portal, attach a photo and show a mismatch flag, so every part is on screen."""
+    wait_js(pg, "!document.querySelector('#wizard').hidden")
+    for sid in WZ_STEPS:
+        wait_js(pg, f"!document.querySelector('#wz-{sid}').hidden")
+        if sid == "welcome" and show_errors and not pg.is_checked("#wz-consent"):
+            pg.click("#wz-next"); pg.wait_for_timeout(100)
+        if sid == "records" and fill_records:
+            if not pg.evaluate("window.CureBranchApp.getRecord().sources.length"): connect_demo(pg)
+            else: pg.check("input[name=wz-portal][value=mychart]")
+            if not pg.evaluate("(window.CureBranchApp.getRecord().files || []).length"):
+                attach_photo(pg); fill_claim(pg, "2026-05-01", "PD-L1", "10%")
+        if sid == "ai": pg.check("input[name=wz-ai][value=Grok]")
+        if on_step: on_step(sid)
+        if sid == "welcome": pg.check("#wz-consent")
+        if sid == "after" and not pg.evaluate("!!document.querySelector('input[name=wz-afterdeath]:checked')"):
+            pg.check("input[name=wz-afterdeath][value=keep-private]")
+        pg.click("#wz-next")
+    wait_js(pg, "document.querySelector('#wizard').hidden")
+    pg.wait_for_timeout(200)
+
+def wizard_flow(b):
+    """The setup guide, end to end, the way a patient would use it (390 px phone)."""
+    ctx = b.new_context(viewport={"width": 390, "height": 844})
+    pg = ctx.new_page()
+    pg.on("console", lambda m: results["console"].append(f"{m.type}: {m.text}") if m.type in ("error", "warning") else None)
+    pg.on("pageerror", lambda e: results["console"].append(f"pageerror: {e}"))
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    check("wizard: opens by itself on first visit", wizard_open(pg) and not pg.is_visible("#tabs"))
+    check("wizard: step 1 of 7, 7 progress dots, current one marked", pg.inner_text("#wz-count") == "Step 1 of 7"
+          and pg.locator("#wz-dots li").count() == 7 and pg.locator("#wz-dots li[aria-current=step]").count() == 1)
+    check("wizard: a Listen button on every step", pg.evaluate("[...document.querySelectorAll('#wizard .wz-step')].every(s => s.querySelectorAll('.listen-bar [data-act=play]').length === 1)"))
+    check("wizard: Back hidden on step 1", not pg.is_visible("#wz-back"))
+    check("wizard: consent video slot + disclaimer shown", pg.is_visible("#wz-video") and "not medical advice" in pg.inner_text("#wz-welcome"))
+    pg.click("#wz-next"); pg.wait_for_timeout(150)
+    check("wizard: can't go on without 'I watched and understand'", pg.inner_text("#wz-count") == "Step 1 of 7"
+          and "check the box" in pg.inner_text("#wz-consent-err") and pg.evaluate("document.activeElement.id") == "wz-consent")
+    pg.check("#wz-consent"); pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-profile').hidden")
+    rec = pg.evaluate("window.CureBranchApp.getRecord()")
+    check("wizard: consent saved with time and video version", rec["onboarding"]["consent"]["watchedAndUnderstood"] is True and rec["onboarding"]["consent"]["videoVersion"] == "placeholder")
+    code = pg.inner_text("#wz-code")
+    check("wizard: private code shown, matches the record, no account", re.fullmatch(r"[0-9a-hjkmnp-tv-z]{6}", code) and code == rec["code"], code)
+    check("wizard: focus moves to the step heading", pg.evaluate("document.activeElement.id") == "wz-h-profile")
+    pg.click("#wz-new-code"); pg.wait_for_timeout(200)
+    code2 = pg.inner_text("#wz-code")
+    check("wizard: 'different code' makes and saves a new one", code2 != code and pg.evaluate("window.CureBranchApp.getRecord().code") == code2)
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-records').hidden")
+    check("records step: is 'Connect your hospital portal'", "Connect your hospital portal" in pg.inner_text("#wz-h-records"))
+    check("records step: skippable", pg.inner_text("#wz-next") == "Skip for now")
+    check("records step: no standalone photo/file upload before an official record", pg.locator("#wz-records input[type=file]").count() == 0)
+    check("records step: portal choices offered", pg.locator("input[name=wz-portal]").count() == 4 and not pg.is_visible("#wz-connect-card"))
+    pg.click("#wz-connect") if pg.is_visible("#wz-connect") else None
+    pg.check("input[name=wz-portal][value=mychart]"); pg.wait_for_timeout(100)
+    check("records step: guided steps + demo-mode notice after picking a portal", pg.is_visible("#wz-connect-card") and pg.is_visible("#wz-demo-note")
+          and "Log in to your portal" in pg.inner_text("#wz-connect-card") and pg.locator("#wz-records input[type=password]").count() == 0)
+    hits_before = len(STATE["hits"])
+    pg.click("#wz-connect"); wait_js(pg, "window.CureBranchApp.getRecord().sources.length === 1"); pg.wait_for_timeout(200)
+    src = pg.evaluate("window.CureBranchApp.getRecord().sources[0]")
+    check("demo portal connect: official record, verified, EXAMPLE, origin saved", src["kind"] == "smart-on-fhir" and src["verification"]["status"] == "verified"
+          and src["example"] is True and src["origin"] == {"connectedVia": "demo-stub", "portal": "mychart", "portalName": "MyChart (Epic)"}, json.dumps(src.get("origin")))
+    check("demo portal connect: shows as EXAMPLE demo record", "EXAMPLE demo record" in pg.inner_text("#wz-files"))
+    check("demo portal connect: only this site's own example file was fetched", all(h.startswith("/data/") or h.startswith("/js/") or h == "/version.json" for h in STATE["hits"][hits_before:]), str(STATE["hits"][hits_before:]))
+    check("supporting upload appears only under the official record", pg.locator("#wz-files [data-attach-for]").count() == 1)
+    attach_photo(pg, "photo-of-my-pathology-report-page-1.png")
+    rec = pg.evaluate("window.CureBranchApp.getRecord()")
+    f = rec["files"][0]
+    stored = pg.evaluate("""async () => { const db = await new Promise((ok, no) => { const r = indexedDB.open('curebranch'); r.onsuccess = () => ok(r.result); r.onerror = no; });
+      return await new Promise((ok) => { const g = db.transaction('local').objectStore('local').get('file:' + window.CureBranchApp.getRecord().files[0].id); g.onsuccess = () => ok(g.result ? g.result.size : -1); }); }""")
+    check("supporting photo: kept on this device (IndexedDB), linked, labeled", stored == len(PNG_1PX) and f["linkedSourceId"] == src["id"] and f["role"] == "supporting-from-patient"
+          and "Supporting, from patient" in pg.inner_text("#wz-files"), f"stored={stored} {json.dumps(f)}")
+    check("supporting photo: starts unchecked", f["matchStatus"] == "unchecked" and "Not checked yet" in pg.inner_text("#wz-files"))
+    fill_claim(pg, "2026-05-01", "PD-L1", "10%")
+    f = pg.evaluate("window.CureBranchApp.getRecord().files[0]")
+    t = pg.inner_text("#wz-files")
+    check("consistency check: mismatch flagged in plain English, ignored by AI", f["matchStatus"] == "mismatch" and f["ignoreForAiMatching"] is True
+          and "doesn't match your hospital record" in t and "AI matching will ignore it" in t and "2026-03-20" in t, t[:400])
+    check("consistency check: flag gets focus (announced)", pg.evaluate("document.activeElement.id").startswith("wz-cl-flag-"))
+    fill_claim(pg, "2026-03-20", "PD-L1", "70%")
+    f = pg.evaluate("window.CureBranchApp.getRecord().files[0]")
+    check("consistency check: correct details -> matches", f["matchStatus"] == "matches" and f["ignoreForAiMatching"] is False and "Matches your hospital record" in pg.inner_text("#wz-files"))
+    check("records step: Next once a record is in", pg.inner_text("#wz-next") == "Next")
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-privacy').hidden")
+    check("wizard: privacy reminder shown", "Only share what you'd be OK with the world knowing someday." in pg.inner_text("#wz-privacy"))
+    check("wizard: starts private", pg.get_attribute("#wz-privacy [data-privacy-switch]", "aria-checked") == "false")
+    pg.reload(wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.wait_for_timeout(300)
+    check("wizard: resumes at the same step after closing the app", wizard_open(pg) and pg.inner_text("#wz-count") == "Step 4 of 7")
+    pg.click("#wz-privacy [data-privacy-switch]"); pg.wait_for_timeout(300)
+    check("wizard: one switch turns public on", pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is True and "On:" in pg.inner_text("#wz-priv-state"))
+    pg.click("#wz-privacy [data-privacy-switch]"); pg.wait_for_timeout(300)
+    check("wizard: and off again", pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is False)
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-after').hidden")
+    check("wizard: no after-death choice is picked for the patient", pg.evaluate("!document.querySelector('input[name=wz-afterdeath]:checked')"))
+    pg.click("#wz-next"); pg.wait_for_timeout(150)
+    check("wizard: must pick an after-death choice", pg.inner_text("#wz-count") == "Step 5 of 7" and "pick one" in pg.inner_text("#wz-after-err"))
+    pg.check("input[name=wz-afterdeath][value=remove]")
+    pg.fill("#wz-person", "EXAMPLE Trusted Person"); pg.fill("#wz-person-reach", "555-0100 (EXAMPLE)")
+    pg.click("#wz-back"); wait_js(pg, "!document.querySelector('#wz-privacy').hidden")
+    check("wizard: Back keeps what was typed", pg.evaluate("window.CureBranchApp.getRecord().afterDeath.person.name") == "EXAMPLE Trusted Person")
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-after').hidden")
+    pg.check("input[name=wz-afterdeath][value=remove]")
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-ai').hidden")
+    check("wizard: AI step is skippable", pg.inner_text("#wz-next") == "Skip for now" and not pg.is_visible("#wz-ai-steps"))
+    pg.check("input[name=wz-ai][value=Grok]"); pg.wait_for_timeout(100)
+    check("wizard: picking an AI shows the guided steps", pg.is_visible("#wz-ai-steps") and "Open Grok" in pg.inner_text("#wz-ai-steps"))
+    check("wizard: no AI key field anywhere", pg.locator("#wizard input[type=password]").count() == 0)
+    pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-done').hidden")
+    t = pg.inner_text("#wz-summary")
+    check("wizard: done screen sums up every choice", all(x in t for x in [code2, "2 items", "Private", "Delete my summary", "EXAMPLE Trusted Person", "Grok"]), t)
+    check("wizard: done screen says it can be changed in Settings", "Settings" in pg.inner_text("#wz-done"))
+    pg.click("#wz-next"); wait_js(pg, "document.querySelector('#wizard').hidden"); pg.wait_for_timeout(300)
+    check("wizard: finishing lands on Home", pg.is_visible("#s-home") and pg.inner_text("#after-status") == "Delete my summary")
+    rec = pg.evaluate("window.CureBranchApp.getRecord()")
+    out = REPO / "tests/browser/out"; out.mkdir(exist_ok=True)
+    (out / "wizard-record.json").write_text(json.dumps(rec, indent=2))
+    v = subprocess.run(["node", "--input-type=module", "-e", """
+      import { readFileSync } from 'node:fs'; import Ajv2020 from 'ajv/dist/2020.js'; import addFormats from 'ajv-formats';
+      const J = (p) => JSON.parse(readFileSync(p, 'utf8')); const ajv = new Ajv2020({ allErrors: true, strict: false }); addFormats(ajv);
+      ajv.addSchema(J('schema/public-summary.schema.json')); const v = ajv.compile(J('schema/local-record.schema.json'));
+      if (!v(J('tests/browser/out/wizard-record.json'))) { console.log(JSON.stringify(v.errors)); process.exit(1); }"""], cwd=REPO, capture_output=True, text=True)
+    check("wizard: saved record matches local-record.schema.json", v.returncode == 0, v.stdout + v.stderr)
+    check("wizard: completion saved, steps done", rec["onboarding"].get("completedAt") and rec["onboarding"]["stepsDone"] == WZ_STEPS and rec["onboarding"]["portal"] == "mychart")
+    pg.reload(wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.wait_for_timeout(300)
+    check("wizard: does not reopen once finished", not wizard_open(pg))
+    go(pg, "repo"); pg.wait_for_timeout(300)
+    t = pg.inner_text("#files-list")
+    check("record screen lists the supporting photo with its label and check result", "photo-of-my-pathology-report-page-1.png" in t and "Supporting, from patient" in t and "Matches your hospital record" in t, t)
+    go(pg, "settings"); pg.click("#rerun-wizard"); pg.wait_for_timeout(300)
+    check("settings: 'Run the setup guide again' reopens at step 1", wizard_open(pg) and pg.inner_text("#wz-count") == "Step 1 of 7")
+    check("re-run keeps earlier consent", pg.is_checked("#wz-consent"))
+    for _ in range(4): pg.click("#wz-next"); pg.wait_for_timeout(150)
+    check("re-run keeps earlier answers", pg.is_checked("input[name=wz-afterdeath][value=remove]") and pg.input_value("#wz-person") == "EXAMPLE Trusted Person")
+    pg.click("#wz-later"); pg.wait_for_timeout(300)
+    check("'Finish later' closes the guide", not wizard_open(pg) and pg.is_visible("#s-home"))
+    pg.reload(wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.wait_for_timeout(300)
+    check("'Finish later' then reopen: back at the same step", wizard_open(pg) and pg.inner_text("#wz-count") == "Step 5 of 7")
+    pg.click("#wz-later"); pg.wait_for_timeout(200)
+    go(pg, "repo"); pg.wait_for_timeout(200)
+    pg.once("dialog", lambda d: d.accept()); pg.locator("[data-remove-source]").first.click(); pg.wait_for_timeout(400)
+    rec = pg.evaluate("window.CureBranchApp.getRecord()")
+    check("removing the official record also removes its supporting photo", not rec["sources"] and not rec.get("files"))
+    ctx.close()
+
 def run_axe(pg, label):
     pg.evaluate(AXE)
     r = pg.evaluate("""async () => { const r = await axe.run(document, {runOnly:{type:'tag', values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}});
@@ -71,8 +247,10 @@ def run_axe(pg, label):
 
 def main():
     httpd, state = start(DIST, PORT)
+    STATE.update(hits=state.setdefault("hits", []))
     with sync_playwright() as p:
         b = p.chromium.launch()
+        wizard_flow(b)
         # ---------- flows ----------
         ctx = b.new_context(viewport={"width": 390, "height": 844})
         pg = ctx.new_page()
@@ -80,6 +258,7 @@ def main():
         pg.on("pageerror", lambda e: results["console"].append(f"pageerror: {e}"))
         pg.goto(BASE + "/", wait_until="networkidle")
         wait_js(pg, "window.CureBranchApp")
+        finish_wizard(pg)
         code = pg.evaluate("window.CureBranchApp.getRecord().code")
         check("random code format", re.fullmatch(r"[0-9a-hjkmnp-tv-z]{6}", code), code)
         check("dedication present", "In honor of my dad, whose son wishes AI had come a few months sooner." in pg.inner_text("#s-home"))
@@ -186,6 +365,17 @@ def main():
             scales = [100, 200] if w in (320, 390) else [100]
             for sc in scales:
                 pg.evaluate(f"CureBranchA11y.set({{textScale:{sc}}})")
+                if not wizard_open(pg): pg.evaluate("window.CureBranchApp.openWizard({restart: true})")
+                def wz_overflow(sid, w=w, sc=sc):
+                    r = pg.evaluate(OVERFLOW_JS)
+                    results["overflow"].append({"w": w, "scale": sc, "screen": "wizard-" + sid, **r})
+                    if r["overflow"] > 1 or r["offenders"]: fails.append(f"overflow w={w} scale={sc} wizard-{sid}: {r}")
+                    if sid == "welcome":
+                        pg.evaluate("CureBranchA11y.openPanel()"); pg.wait_for_timeout(150)
+                        r = pg.evaluate(OVERFLOW_JS); results["overflow"].append({"w": w, "scale": sc, "screen": "wizard-a11y-panel", **r})
+                        if r["overflow"] > 1: fails.append(f"overflow w={w} scale={sc} wizard a11y-panel: {r}")
+                        pg.evaluate("CureBranchA11y.closePanel()")
+                finish_wizard(pg, on_step=wz_overflow, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
                     if s == "tree":
@@ -211,6 +401,9 @@ def main():
             pg.wait_for_timeout(600)
             for th in THEMES:
                 pg.evaluate(f"CureBranchA11y.set({{theme:'{th}', customOn:false}})")
+                if not wizard_open(pg): pg.evaluate("window.CureBranchApp.openWizard({restart: true})")
+                pg.evaluate("document.querySelector('#wz-consent').checked = false")
+                finish_wizard(pg, on_step=lambda sid, w=w, th=th: run_axe(pg, f"{w}px {th} wizard-{sid}"), show_errors=True, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
                     if s == "tree": pg.click("#tab-explore")

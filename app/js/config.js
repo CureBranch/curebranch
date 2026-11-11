@@ -21,6 +21,14 @@ export const CONFIG = {
   // Public tree index. There is no live index yet; the app shows EXAMPLE data.
   PUBLIC_INDEX_URL: "",
 
+  // Plain-English consent video shown on step 1 of the setup guide. Empty = a placeholder
+  // box until the real video exists. Host the file on this same site (e.g. "/media/consent.mp4")
+  // so it works offline and stays inside the Content-Security-Policy. Captions: a .vtt file.
+  // Bump CONSENT_VIDEO_VERSION when the video changes, so people are asked to watch it again.
+  CONSENT_VIDEO_URL: "",
+  CONSENT_VIDEO_CAPTIONS: "",
+  CONSENT_VIDEO_VERSION: "placeholder",
+
   // Donations (servers and outreach only) go through Open Collective. The project
   // code never handles money. Fill in once the collective exists.
   DONATE_URL: "",

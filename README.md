@@ -14,6 +14,20 @@
 - **No prize money.** The tree only shares information. Donations go through Open Collective and pay only for servers and outreach (merch, ads, and paid advocates who say they're paid). The code never touches money.
 - **Information, not medical advice.** See [DISCLAIMER.md](DISCLAIMER.md).
 
+## First-run setup guide
+
+The first time someone opens the app, a full-screen guide walks them through setup. It shows one question per step, with big buttons, Back and Next, progress dots, and a Listen button on every step. Every answer is saved on the device right away. If they close the app, they come back to the same step, and they can run the guide again from **Settings**. There's no account and no password.
+
+1. **Welcome.** A slot for the plain-English consent video (`CONSENT_VIDEO_URL` in `app/js/config.js`; a placeholder until it exists), the main points of the disclaimer, and an "I watched and understand" box that must be ticked.
+2. **Private profile.** A random code like `k7x2m9`, kept on this device.
+3. **Connect your hospital portal.** Records come only from official sources (SMART on FHIR portals such as MyChart), marked verified. Until `SMART_CLIENT_ID` is set, **Connect** runs a demo stub (`app/js/portal-stub.js`) that adds made-up EXAMPLE records, with no login and no real data. Photos and files can only be attached to an official record, are labeled "supporting, from patient", and are never counted. The patient can say what a photo shows (date, test type, key results). `app/js/consistency.js` checks that against the linked record and sets `matchStatus` to `matches`, `mismatch` or `unchecked`. A mismatch gets a plain-English flag and `ignoreForAiMatching: true`. This step can be skipped.
+4. **Private or public.** One switch, with "only share what you'd be OK with the world knowing someday".
+5. **After you're gone.** Keep private, delete, make public, or let the person decide, plus the trusted person's name (kept on this device only).
+6. **Your own AI.** Optional guided steps. CureBranch never asks for or stores AI keys.
+7. **Done.** A summary of every choice, all changeable in Settings.
+
+Progress and answers are stored in the local record (`onboarding`, `files`, and `sources[].origin` in `schema/local-record.schema.json`).
+
 ## What's in this folder
 
 | Path | What it is |
@@ -40,7 +54,7 @@ Tests:
 ```sh
 npm test                       # unit tests: schemas, FHIR reading, card signatures, tree counting
 pip install playwright && python3 -m playwright install chromium
-npm run test:browser           # every screen at 320/390/768/1280 px, axe-core, import flows, offline, update flow
+npm run test:browser           # every screen and setup-guide step at 320/390/768/1280 px, axe-core, import + guide flows, offline, update flow
 ```
 
 ## Licenses (and why)

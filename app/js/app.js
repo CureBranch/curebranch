@@ -2,7 +2,7 @@
 // (a) fetching this site's own example files and (b) fetching a SMART Health Card
 // issuer's public keys, and (c) a hospital portal the PATIENT chooses to connect.
 import { CONFIG } from "./config.js";
-import { getOrCreateRecord, saveRecord, ownerKeys, ownerPublicJwk, backupBlob, deleteEverything } from "./store.js";
+import { getOrCreateRecord, saveRecord, ownerKeys, ownerPublicJwk, backupBlob, deleteEverything, getFile, deleteFile } from "./store.js";
 import { extractJwsList, verifyHealthCard } from "./shc.js";
 import { extractFacts, suggestBranch } from "./fhir.js";
 import { buildSummary, signSummary, DEFAULT_SHARE } from "./summary.js";
@@ -10,12 +10,16 @@ import { buildTree, collect, treatmentStats } from "./tree.js";
 import { newStewardKey, stewardKeyHash, todayISO } from "./codes.js";
 import { startSmartConnect, finishSmartConnectIfReturning } from "./smart.js";
 import { initPwa, pushOptIn, pushOptOut } from "./pwa.js";
+import { AFTER_WORDS, needsOnboarding, chooseAfterDeath, removeSource } from "./onboarding.js";
+import { initWizard, openWizard, refreshWizard } from "./wizard.js";
+import { matchWords } from "./consistency.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const STATUS_WORDS = { "no-evidence-of-disease": "no sign of cancer", improving: "improving", stable: "stable", worsening: "worse", "not-determined": "unclear", "not-reported": "not reported" };
-const AFTER = { "keep-public": "Keep my summary public", remove: "Remove my summary", "person-decides": "Let the person I name decide" };
+const AFTER = AFTER_WORDS;
+const afterWords = (r) => (r.onboarding && r.onboarding.afterDeathChosen ? AFTER[r.afterDeath.choice] : "Not chosen yet");
 const SHARE_LABELS = { cancerType: "Cancer type", stageGroup: "Stage (e.g. III)", ageBand: "Age range (e.g. 60-69)", markers: "Tumor markers (DNA and RNA)", treatments: "Treatments and the year started", outcomes: "How it went", publicContact: "My public contact handle", profile: "My name and photo (profile page)" };
 
 let record = null;
@@ -102,7 +106,7 @@ function renderHome() {
     : `<h2>Find your branch</h2><p class="sub">Import your records to see where you sit on the tree. You can try it with example records first.</p>
        <button type="button" class="btn btn-primary" data-go="import">Import records</button>`;
   $("#home-worked").innerHTML = workedHtml(path || ["Lung", "KRAS", "G12C"]);
-  $("#after-status").textContent = AFTER[record.afterDeath.choice];
+  $("#after-status").textContent = afterWords(record);
 }
 
 function renderPrivacy() {
@@ -112,6 +116,7 @@ function renderPrivacy() {
   $("#privacy-help").textContent = on
     ? "A short summary, under your random code, can be shared. Your records stay on this device."
     : "Nothing is shared. Your records stay on this device.";
+  refreshWizard();
 }
 
 function renderRepo() {
@@ -121,6 +126,14 @@ function renderRepo() {
         <div class="grow"><h3>${esc(s.fileName || s.kind)}</h3><small>${s.verification.status === "verified" ? "Verified" : "Unverified"} · ${esc(s.verification.detail || s.verification.method)}</small>
         <button type="button" class="link" data-remove-source="${esc(s.id)}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit">Remove this record</button></div></div>`).join("")
     : `<p class="sub" style="margin:0">No records yet. <a class="link" href="#import" data-go="import">Import records</a></p>`;
+  const files = record.files || [];
+  $("#files-list").innerHTML = files.length
+    ? files.map((f) => `<div class="item"><div class="dot" aria-hidden="true">${f.kind === "photo" ? "▣" : "▤"}</div>
+        <div class="grow"><h3>${esc(f.name)}</h3><small><span class="chip amber">Supporting, from patient</span> ${f.kind === "photo" ? "Photo" : "File"} for ${esc((record.sources.find((x) => x.id === f.linkedSourceId) || {}).fileName || "a record")} · kept on this device · not counted</small>
+        <p class="notice ${f.matchStatus === "mismatch" ? "err" : f.matchStatus === "matches" ? "ok" : ""}" style="margin:6px 0">${esc(matchWords(f))}${(f.mismatchReasons || []).map((x) => " " + esc(x)).join("")}</p>
+        <div class="row" style="gap:16px"><button type="button" class="link" data-open-file="${esc(f.id)}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit">Save a copy</button>
+        <button type="button" class="link" data-remove-file="${esc(f.id)}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit">Remove</button></div></div></div>`).join("")
+    : `<p class="sub" style="margin:0">None yet. You can add a supporting photo or file to a record from your hospital in the setup guide (Settings, then Run the setup guide again).</p>`;
   const f = facts();
   $("#facts").innerHTML = record.sources.length ? `
     <p style="margin:0 0 6px"><strong>Cancer type:</strong> ${esc(f.cancerType ? f.cancerType.label : "not found")}${f.stageGroup ? ` · <strong>Stage:</strong> ${esc(f.stageGroup)}` : ""}${f.ageBand ? ` · <strong>Age range:</strong> ${esc(f.ageBand)}` : ""}</p>
@@ -165,7 +178,7 @@ function renderTree() {
 }
 
 function renderSettings(fillInputs) {
-  $$('input[name="afterdeath"]').forEach((r) => { r.checked = r.value === record.afterDeath.choice; });
+  $$('input[name="afterdeath"]').forEach((r) => { r.checked = !!(record.onboarding && record.onboarding.afterDeathChosen) && r.value === record.afterDeath.choice; });
   const p = record.afterDeath.person || {};
   // Text fields are only filled when the screen is opened, so a re-render never wipes what someone is typing.
   if (fillInputs) {
@@ -228,14 +241,14 @@ export async function importText(text, fileName) {
   if (t.startsWith("{")) { try { obj = JSON.parse(t); } catch { throw new Error("This file isn't valid JSON."); } }
   if (obj && obj.resourceType === "Bundle") {
     const isExample = JSON.stringify(obj.meta || {}).includes("EXAMPLE");
-    return addSource({ id: crypto.randomUUID(), kind: "fhir-bundle-file", fileName, importedAt: new Date().toISOString(), example: isExample || undefined,
+    return addSource({ id: crypto.randomUUID(), kind: "fhir-bundle-file", fileName, importedAt: new Date().toISOString(), example: isExample || undefined, origin: { connectedVia: "file-upload" },
       verification: { status: "unverified", method: "file-upload", detail: "Plain FHIR files have no hospital signature, so they are shown but not counted." }, bundle: obj });
   }
   const jwsList = extractJwsList(t);
   const trust = await getTrustList();
   for (const jws of jwsList) {
     const r = await verifyHealthCard(jws, { trustList: trust });
-    await addSource({ id: crypto.randomUUID(), kind: "smart-health-card", fileName, importedAt: new Date().toISOString(), example: r.example || undefined,
+    await addSource({ id: crypto.randomUUID(), kind: "smart-health-card", fileName, importedAt: new Date().toISOString(), example: r.example || undefined, origin: { connectedVia: "smart-health-card" },
       verification: { ...r.verification }, bundle: r.bundle });
   }
 }
@@ -273,10 +286,28 @@ function wire() {
     const rm = e.target.closest("[data-remove-source]");
     if (!rm) return;
     if (!confirm("Remove this record from this device?")) return;
-    record.sources = record.sources.filter((s) => s.id !== rm.dataset.removeSource);
+    for (const fid of removeSource(record, rm.dataset.removeSource)) await deleteFile(fid);
     await saveRecord(record, "Removed a record");
     render();
   });
+  document.addEventListener("click", async (e) => {
+    const op = e.target.closest("[data-open-file]");
+    const rm = e.target.closest("[data-remove-file]");
+    if (op) {
+      const meta = (record.files || []).find((f) => f.id === op.dataset.openFile);
+      const blob = meta && await getFile(meta.id);
+      if (blob) download(meta.name, blob); else toast("That file is no longer on this device.");
+    }
+    if (rm) {
+      if (!confirm("Remove this photo or file from this device?")) return;
+      await deleteFile(rm.dataset.removeFile);
+      record.files = (record.files || []).filter((f) => f.id !== rm.dataset.removeFile);
+      if (!record.files.length) delete record.files;
+      await saveRecord(record, "Removed a photo or file");
+      render();
+    }
+  });
+  $("#rerun-wizard").addEventListener("click", () => openWizard({ restart: true }));
   document.addEventListener("change", async (e) => {
     const cb = e.target.closest("[data-share]");
     if (!cb) return;
@@ -309,7 +340,7 @@ function wire() {
   });
 
   $$('input[name="afterdeath"]').forEach((r) => r.addEventListener("change", async () => {
-    record.afterDeath.choice = r.value;
+    chooseAfterDeath(record, r.value);
     await saveRecord(record, `After-death choice: ${AFTER[r.value]}`);
     toast("Saved."); render();
   }));
@@ -385,6 +416,7 @@ function wire() {
     record = await getOrCreateRecord();
     toast("Deleted. You have a fresh, empty record with a new code.");
     go("home");
+    openWizard();
   });
   $("#open-a11y").addEventListener("click", () => window.CureBranchA11y && CureBranchA11y.openPanel());
 
@@ -427,6 +459,19 @@ async function main() {
   go(TITLES[start] ? start : (returned ? "import" : "home"));
   if (returned) go("import");
   initPwa({ bannerHost: $("#banners") });
-  window.CureBranchApp = { importText, go, getRecord: () => record };
+  initWizard({
+    getRecord: () => record,
+    save: (r, what) => saveRecord(r, what),
+    addSource: (src) => addSource(src),
+    onOpen: () => { const slot = $("#wz-banners"); if (slot) slot.appendChild($("#banners")); },
+    onClose: ({ finished }) => {
+      $(".chrome").after($("#banners"));
+      go("home");
+      if (finished) toast("All set. You can change any of this in Settings.");
+      else toast("Saved. The guide will open where you left off next time.");
+    },
+  });
+  window.CureBranchApp = { importText, go, getRecord: () => record, openWizard };
+  if (needsOnboarding(record)) await openWizard(); // also after coming back from a portal login: resumes at that step
 }
 main();

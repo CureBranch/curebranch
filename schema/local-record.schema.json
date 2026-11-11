@@ -57,10 +57,12 @@
       "properties": {
         "choice": {
           "enum": [
-            "keep-public",
+            "keep-private",
             "remove",
+            "keep-public",
             "person-decides"
-          ]
+          ],
+          "description": "keep-private: nothing is ever published. remove: ask for the public summary to be deleted. keep-public: make (or keep) the summary public. person-decides: the named person decides."
         },
         "person": {
           "description": "The person the patient named to carry out the choice. Stays on this device only; never published.",
@@ -163,6 +165,41 @@
           "example": {
             "type": "boolean",
             "description": "true if this source is made-up EXAMPLE data."
+          },
+          "origin": {
+            "description": "Where the record came from, in the patient's words: which portal and how it was connected. 'demo-stub' = made-up EXAMPLE records from the stand-in connection.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "connectedVia"
+            ],
+            "properties": {
+              "connectedVia": {
+                "enum": [
+                  "smart-on-fhir",
+                  "smart-health-card",
+                  "file-upload",
+                  "demo-stub"
+                ]
+              },
+              "portal": {
+                "enum": [
+                  "mychart",
+                  "oracle-health",
+                  "apple-health",
+                  "other"
+                ]
+              },
+              "portalName": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "fhirServer": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 300
+              }
+            }
           }
         }
       }
@@ -269,6 +306,210 @@
       "properties": {
         "pushOptIn": {
           "type": "boolean"
+        }
+      }
+    },
+    "files": {
+      "description": "Supporting photos and files from the patient (for example a photo of a paper report). Allowed ONLY when linked to an official imported record (linkedSourceId), and always labeled 'supporting, from patient'. Only this metadata is in the record; the bytes are kept in a separate entry in the same on-device store. Never uploaded, never in the public summary, never counted in the tree.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "linkedSourceId",
+          "role",
+          "name",
+          "mediaType",
+          "size",
+          "kind",
+          "addedAt",
+          "matchStatus"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "linkedSourceId": {
+            "type": "string",
+            "description": "id of the official (verified) source this file supports."
+          },
+          "role": {
+            "const": "supporting-from-patient"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "mediaType": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "kind": {
+            "enum": [
+              "photo",
+              "document"
+            ]
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verification": {
+            "const": "unverified"
+          },
+          "claims": {
+            "description": "What the patient says the photo or file shows. Checked against the linked official record.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "testType": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "keyValues": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "string",
+                  "maxLength": 80
+                }
+              }
+            }
+          },
+          "matchStatus": {
+            "enum": [
+              "matches",
+              "mismatch",
+              "unchecked"
+            ],
+            "description": "Result of comparing claims with the linked official record (app/js/consistency.js). unchecked = nothing entered yet."
+          },
+          "mismatchReasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "description": "Plain-English reasons shown to the patient when matchStatus is mismatch."
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ignoreForAiMatching": {
+            "type": "boolean",
+            "description": "true when matchStatus is mismatch: AI matching must not use this file."
+          }
+        }
+      }
+    },
+    "onboarding": {
+      "description": "Progress and answers from the first-run setup guide, so the patient can stop and pick up later, or run it again from Settings. Stays on this device.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "step"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "step": {
+          "enum": [
+            "welcome",
+            "profile",
+            "records",
+            "privacy",
+            "after",
+            "ai",
+            "done"
+          ],
+          "description": "The step to reopen at."
+        },
+        "stepsDone": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "welcome",
+              "profile",
+              "records",
+              "privacy",
+              "after",
+              "ai",
+              "done"
+            ]
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "records",
+              "ai"
+            ]
+          }
+        },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "watchedAndUnderstood",
+            "at"
+          ],
+          "properties": {
+            "watchedAndUnderstood": {
+              "const": true,
+              "description": "The patient ticked 'I watched and understand' on the welcome step."
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "videoVersion": {
+              "type": "string",
+              "maxLength": 60,
+              "description": "Which consent video they saw ('placeholder' until a real one exists)."
+            }
+          }
+        },
+        "afterDeathChosen": {
+          "type": "boolean",
+          "description": "true once the patient picked an after-death choice themselves (the starting value is not a choice)."
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "restartedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "portal": {
+          "enum": [
+            "mychart",
+            "oracle-health",
+            "apple-health",
+            "other"
+          ],
+          "description": "The portal the patient picked on the 'Connect your hospital portal' step."
         }
       }
     }

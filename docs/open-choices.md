@@ -49,10 +49,13 @@ Today the public switch defaults to **private**, and when it's turned on, every 
 Surgery and radiation (FHIR `Procedure`) aren't read yet. Adding them makes the tree richer, but procedure codes vary a lot between hospitals.
 
 ## 9. Consent video
-The mockup had a short recorded consent clip. Options: build it (camera, local storage, hash + timestamp); replace with a typed statement; or skip. Video is the strongest proof but also the most personal data to keep.
+The mockup had a short recorded consent clip. Options: build it (camera, local storage, hash + timestamp); replace with a typed statement; or skip. Video is the strongest proof but also the most personal data to keep. **Update:** the setup guide now has a slot for a plain-English video that the patient *watches* (`CONSENT_VIDEO_URL`), plus an "I watched and understand" box. It stores the time and video version, but no recording of the patient. The video itself still needs to be made.
 
 ## 10. Direct AI connection
 Today patients copy a prompt into their own AI. Option: let them paste an API key to call their AI from the browser. Easier for them, but then their key sits in the browser, and CureBranch would need per-provider code.
+
+## 10b. Demo portal and supporting-photo check
+Until a SMART client ID exists, the guide's **Connect** runs a demo stub with made-up EXAMPLE records (marked verified so the flow can be shown). The supporting-photo check is simple text and date matching against the linked record (with 1 day of leeway on dates), not AI or OCR. Open questions: should mismatched photos be hidden as well as ignored by AI, and should the check also read the photo itself (OCR, on the device)?
 
 ## 11. Website vs app on one domain
 Today the app is at the root of `curebranch.ai`. Options: website at `curebranch.ai` and app at `app.curebranch.ai` (clean split, two projects), or one project with the app under `/app` (one deploy, slightly more routing).

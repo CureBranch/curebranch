@@ -347,8 +347,9 @@
         "choice": {
           "description": "What happens to this public summary after the patient dies. Carried out by the person the patient named, who holds the steward key.",
           "enum": [
-            "keep-public",
+            "keep-private",
             "remove",
+            "keep-public",
             "person-decides"
           ]
         },

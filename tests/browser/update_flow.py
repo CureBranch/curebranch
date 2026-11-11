@@ -117,6 +117,8 @@ def main():
         # 4. focused text field inside the early window
         deploy("buildA")
         ctx, pg = fresh(b); open_controlled(pg)
+        if not pg.evaluate("document.querySelector('#wizard').hidden"):
+            pg.click("#wz-later"); time.sleep(0.3)   # close the first-run setup guide
         pg.evaluate("window.CureBranchApp.go('import'); document.querySelector('#shc-text').focus()")
         deploy("buildB"); state["hits"].clear(); state["navs"] = []
         pg.evaluate("window.CureBranchUpdate.check()")
