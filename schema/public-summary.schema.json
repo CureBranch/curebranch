@@ -36,6 +36,14 @@
         "private"
       ]
     },
+    "detailLevel": {
+      "enum": [
+        "basic",
+        "detailed",
+        "full"
+      ],
+      "description": "Sharing level the patient picked (2 basic, 3 detailed, 4 full). Absent on private summaries."
+    },
     "afterDeath": {
       "$ref": "#/$defs/afterDeathPublic"
     },
@@ -84,6 +92,41 @@
       "description": "10-year band only, if shared.",
       "type": "string",
       "pattern": "^(\\d{1,2}0-\\d{1,2}9|90\\+)$"
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 130,
+      "description": "Exact age in years. Detailed or Full level only."
+    },
+    "stageDetail": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "Exact stage text, e.g. 'Stage IIIA'. Detailed or Full level only."
+    },
+    "diagnosisDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Detailed or Full level only."
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Full level only. City / state / country; never street, postal code or other address lines.",
+      "properties": {
+        "city": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "state": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "country": {
+          "type": "string",
+          "maxLength": 40
+        }
+      }
     },
     "markers": {
       "type": "array",
@@ -154,6 +197,26 @@
             "type": "integer",
             "minimum": 1950,
             "maximum": 2100
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Detailed or Full level only."
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Full level only."
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "Full level only (FHIR MedicationStatement/Administration status)."
+          },
+          "dosage": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Full level only. Dose instructions as written in the official record."
           }
         }
       }
@@ -187,6 +250,11 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 600
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Detailed or Full level only."
           }
         }
       }
@@ -316,6 +384,39 @@
           }
         }
       }
+    },
+    "recognition": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Only what the patient switched on. Never names or contact details.",
+      "properties": {
+        "helpedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "badges": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "first-share",
+              "verified",
+              "helped-10",
+              "founding"
+            ]
+          }
+        },
+        "showBranch": {
+          "type": "boolean"
+        },
+        "acceptsNotes": {
+          "type": "boolean"
+        },
+        "example": {
+          "type": "boolean"
+        }
+      }
     }
   },
   "$defs": {
@@ -347,10 +448,12 @@
         "choice": {
           "description": "What happens to this public summary after the patient dies. Carried out by the person the patient named, who holds the steward key.",
           "enum": [
-            "keep-public",
+            "keep-private",
             "remove",
+            "keep-public",
             "person-decides"
-          ]
+          ],
+          "default": "keep-private"
         },
         "stewardKeyHash": {
           "description": "SHA-256 (hex, prefixed 'sha256:') of the secret steward key the patient gave to the person they named. Whoever can show the matching key may carry out the choice. The person's name is never published.",

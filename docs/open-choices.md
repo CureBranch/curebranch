@@ -43,16 +43,25 @@ They come straight from the hospital, but can't be re-checked later by others.
 - **8 characters**: about 1 trillion; collisions basically never happen; a bit harder to read aloud.
 
 ## 7. Default for the share checkboxes
-Today the public switch defaults to **private**, and when it's turned on, every coarse fact is included except contact and profile. Option: start with every box unchecked. That's more cautious, but people may publish empty summaries.
+Today no sharing level is preselected (nothing is shared until the patient picks one of the 4 levels), and at any public level every coarse fact is included except contact and profile. Option: start with every box unchecked. That's more cautious, but people may publish empty summaries.
 
 ## 8. Treatments other than medicines
 Surgery and radiation (FHIR `Procedure`) aren't read yet. Adding them makes the tree richer, but procedure codes vary a lot between hospitals.
 
 ## 9. Consent video
-The mockup had a short recorded consent clip. Options: build it (camera, local storage, hash + timestamp); replace with a typed statement; or skip. Video is the strongest proof but also the most personal data to keep.
+The mockup had a short recorded consent clip. Options: build it (camera, local storage, hash + timestamp); replace with a typed statement; or skip. Video is the strongest proof but also the most personal data to keep. **Update:** the setup guide now has a slot for a plain-English video that the patient *watches* (`CONSENT_VIDEO_URL`), plus an "I watched and understand" box. It stores the time and video version, but no recording of the patient. The video itself still needs to be made.
 
 ## 10. Direct AI connection
 Today patients copy a prompt into their own AI. Option: let them paste an API key to call their AI from the browser. Easier for them, but then their key sits in the browser, and CureBranch would need per-provider code.
+
+## 10b. Demo portal and supporting-photo check
+Until a SMART client ID exists, the guide's **Connect** runs a demo stub with made-up EXAMPLE records (marked verified so the flow can be shown). The supporting-photo check is simple text and date matching against the linked record (with 1 day of leeway on dates), not AI or OCR. Open questions: should mismatched photos be hidden as well as ignored by AI, and should the check also read the photo itself (OCR, on the device)?
+
+## 10c. What "Full public (everything)" includes
+Level 4 adds city, state and country, plus full treatment details. It still leaves out name, birthday, street address, postal code, phone, email and record numbers, because those identify a person directly and aren't needed for matching. A name and photo can still appear through the separate profile switch. Open question: should Full also allow a birthday or postal code if the patient asks for it?
+
+## 10d. Recognition network
+The "helped" counter, the glow and the thank-you notes run on a local stub until a shared network exists. Open questions: who runs the note relay, and how to stop spam without accounts (for example rate limits per signed key)?
 
 ## 11. Website vs app on one domain
 Today the app is at the root of `curebranch.ai`. Options: website at `curebranch.ai` and app at `app.curebranch.ai` (clean split, two projects), or one project with the app under `/app` (one deploy, slightly more routing).

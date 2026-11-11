@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "0.1",
+  "code": "k7x2m9",
+  "example": true,
+  "visibility": "public",
+  "afterDeath": {
+    "choice": "person-decides",
+    "stewardKeyHash": "sha256:0000000000000000000000000000000000000000000000000000000000000001"
+  },
+  "branch": {
+    "path": [
+      "Lung",
+      "KRAS",
+      "G12C"
+    ],
+    "placedBy": "rules",
+    "cancerType": {
+      "system": "http://hl7.org/fhir/sid/icd-10-cm",
+      "code": "C34.90",
+      "display": "Malignant neoplasm of unspecified part of unspecified bronchus or lung"
+    }
+  },
+  "verification": {
+    "status": "verified",
+    "method": "smart-health-card",
+    "issuer": "https://example-issuer.curebranch.invalid",
+    "checkedOn": "2026-11-01"
+  },
+  "owner": {
+    "publicKeyJwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "xKHYwvum0B5IC4KPW03zqsPHQV-QKlJGuis7mmg7VpY",
+      "y": "XiM_JIJp-oHCgUWvD6HtSq_qpqllnl59lNxOjd498PE"
+    }
+  },
+  "updated": "2026-11-01",
+  "stageGroup": "III",
+  "ageBand": "60-69",
+  "markers": [
+    {
+      "gene": "KRAS",
+      "kind": "dna-variant",
+      "change": "G12C",
+      "source": "dna"
+    },
+    {
+      "gene": "TP53",
+      "kind": "dna-variant",
+      "change": "R273H",
+      "source": "dna"
+    },
+    {
+      "gene": "CD274",
+      "kind": "rna-expression",
+      "change": "high",
+      "source": "rna"
+    },
+    {
+      "gene": "PD-L1",
+      "kind": "biomarker",
+      "change": "high",
+      "source": "ihc"
+    },
+    {
+      "gene": "TMB",
+      "kind": "biomarker",
+      "change": "high",
+      "source": "other"
+    }
+  ],
+  "treatments": [
+    {
+      "name": "carboplatin",
+      "startYear": 2026,
+      "startDate": "2026-05-04",
+      "status": "active"
+    },
+    {
+      "name": "pembrolizumab",
+      "startYear": 2026,
+      "startDate": "2026-05-04",
+      "status": "active"
+    },
+    {
+      "name": "sotorasib",
+      "startYear": 2026,
+      "startDate": "2026-09-01",
+      "status": "active"
+    }
+  ],
+  "outcomes": [
+    {
+      "status": "improving",
+      "date": "2026-08-12",
+      "monthsFromStart": 3,
+      "afterTreatment": 1
+    },
+    {
+      "status": "stable",
+      "date": "2026-10-20",
+      "monthsFromStart": 6,
+      "afterTreatment": 2
+    }
+  ],
+  "age": 65,
+  "stageDetail": "Stage IIIA",
+  "diagnosisDate": "2026-03-02",
+  "location": {
+    "city": "Exampleville",
+    "state": "OH",
+    "country": "US"
+  },
+  "detailLevel": "full",
+  "recognition": {
+    "helpedCount": 12,
+    "badges": [
+      "first-share",
+      "verified",
+      "helped-10",
+      "founding"
+    ],
+    "showBranch": true,
+    "acceptsNotes": true,
+    "example": true
+  },
+  "signature": "hOwCSjzLNkmJVpOZf4ttankJBefu1oNkmyuJXXkvjU5TGBfVqViFNFd_Lx1P3VZxpJDkeaAwC3vY5itlYAS2mw"
+}

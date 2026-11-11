@@ -10,9 +10,9 @@
           {
             "kty": "EC",
             "crv": "P-256",
-            "x": "fsPOgJvAnPM-smMD44-97vvmQ1YpRQ5hq2Ebe3D7XRU",
-            "y": "QRQDto029nMUUAEKsohOI62h0-J6jBXeW7CrqS6lk2o",
-            "kid": "DPxTLfJiFTNUNKnHVYQlli04kgbpnSTb6lJAdUgtmps",
+            "x": "Ci4SGnR4tsZp3Ps2ktISyA37SESbrsE2bIqYEw8Qfz4",
+            "y": "D-zYR1HvaMfe3DEw-BBuStPwKEsiKec_noEIpDDpYig",
+            "kid": "a1wqE2QpYmBhKl30dfGV-V0UWFfEcJMCDSF55YvqM7w",
             "use": "sig",
             "alg": "ES256"
           }

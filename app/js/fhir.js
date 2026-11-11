@@ -95,6 +95,17 @@ function stageFrom(text) {
   return m ? m[1].toUpperCase() : null;
 }
 
+/** Exact age in whole years (shared only at the Detailed or Full level). */
+export function ageYears(birthDate, on = new Date()) {
+  if (!birthDate) return null;
+  const b = new Date(birthDate);
+  if (isNaN(b)) return null;
+  let age = on.getFullYear() - b.getFullYear();
+  const md = on.getMonth() - b.getMonth();
+  if (md < 0 || (md === 0 && on.getDate() < b.getDate())) age--;
+  return age >= 0 && age < 130 ? age : null;
+}
+
 export function ageBand(birthDate, on = new Date()) {
   if (!birthDate) return null;
   const b = new Date(birthDate);
@@ -130,11 +141,11 @@ export function extractFacts(bundles, { on = new Date() } = {}) {
 
   const patient = all("Patient")[0];
   const conditions = all("Condition");
-  let cancer = null, stage = null;
+  let cancer = null, stage = null, stageText = null, diagnosisDate = null;
   for (const c of conditions) {
     const t = cancerTypeOf(c);
-    if (t && !cancer) cancer = t;
-    for (const s of c.stage || []) stage = stage || stageFrom(ccText(s.summary));
+    if (t && !cancer) { cancer = t; diagnosisDate = (c.onsetDateTime || (c.onsetPeriod && c.onsetPeriod.start) || c.recordedDate || "").slice(0, 10) || null; }
+    for (const s of c.stage || []) { stage = stage || stageFrom(ccText(s.summary)); stageText = stageText || ccText(s.summary) || null; }
   }
 
   const obs = all("Observation");
@@ -160,6 +171,7 @@ export function extractFacts(bundles, { on = new Date() } = {}) {
     }
     if (hasCode(o.code, LOINC, L.stageClinical) || hasCode(o.code, LOINC, L.stagePath) || /stage group/i.test(codeText)) {
       stage = stage || stageFrom(ccText(o.valueCodeableConcept) || o.valueString);
+      stageText = stageText || ccText(o.valueCodeableConcept) || o.valueString || null;
       continue;
     }
     if (hasCode(o.code, LOINC, L.diseaseStatus) || hasCode(o.code, LOINC, L.responseLegacy) || /disease status|response to/i.test(codeText)) {
@@ -191,17 +203,21 @@ export function extractFacts(bundles, { on = new Date() } = {}) {
     const when = whenOf(m);
     const prev = byName.get(name.toLowerCase());
     if (!prev || (when && (!prev.when || when < prev.when))) {
-      byName.set(name.toLowerCase(), { name, rxnorm: rx ? rx.code : undefined, when });
+      const end = (m.effectivePeriod && m.effectivePeriod.end) || null;
+      const dosage = ((m.dosage || m.dosageInstruction || [])[0] || {}).text || undefined;
+      byName.set(name.toLowerCase(), { name, rxnorm: rx ? rx.code : undefined, when, end, status: m.status, dosage });
     }
   }
   const tAll = [...byName.values()].sort((a, b) => String(a.when || "").localeCompare(String(b.when || "")));
   const treatments = tAll.map((t) => ({ name: t.name, rxnorm: t.rxnorm, startYear: t.when ? Number(t.when.slice(0, 4)) : undefined }));
 
   const firstStart = tAll.find((t) => t.when);
+  const day = (d) => (d && /^\d{4}-\d{2}-\d{2}/.test(d) ? d.slice(0, 10) : undefined);
+  const addr = patient && (patient.address || [])[0];
   const outcomes = outcomesRaw
     .sort((a, b) => String(a.when || "").localeCompare(String(b.when || "")))
     .map((o) => {
-      const out = { status: o.status };
+      const out = { status: o.status, date: day(o.when) };
       if (o.when && firstStart) {
         const months = Math.round((new Date(o.when) - new Date(firstStart.when)) / (30.44 * 864e5));
         if (months >= 0) out.monthsFromStart = months;
@@ -219,6 +235,15 @@ export function extractFacts(bundles, { on = new Date() } = {}) {
     markers,
     treatments: treatments.map((t) => JSON.parse(JSON.stringify(t))),
     outcomes,
+    // Extra detail, published only if the patient picks the Detailed or Full level.
+    detail: JSON.parse(JSON.stringify({
+      age: patient ? ageYears(patient.birthDate, on) : null,
+      stageText: stageText ? String(stageText).slice(0, 40) : undefined,
+      diagnosisDate: day(diagnosisDate),
+      // City / state / country only. Street, postal code and other address lines are never extracted.
+      location: addr ? { city: addr.city, state: addr.state, country: addr.country } : undefined,
+      treatments: tAll.map((t) => ({ name: t.name, startDate: day(t.when), endDate: day(t.end), status: t.status, dosage: t.dosage ? String(t.dosage).slice(0, 200) : undefined })),
+    })),
     counts: { patients: all("Patient").length, conditions: conditions.length, observations: obs.length, medications: meds.length },
   };
 }

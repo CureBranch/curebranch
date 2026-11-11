@@ -16,10 +16,10 @@ function loadLib() {
 }
 
 /** Starts the portal login. The patient's browser goes to the hospital and comes back. */
-export function startSmartConnect() {
+export function startSmartConnect(issFromGuide) {
   if (!CONFIG.SMART_CLIENT_ID) return { notSetUp: true };
   // TODO(UI): replace with a searchable list of hospital endpoints (Epic publishes one).
-  const iss = window.prompt("Your hospital's FHIR address (your hospital or the open.epic endpoint list has it):");
+  const iss = issFromGuide || window.prompt("Your hospital's FHIR address (your hospital or the open.epic endpoint list has it):");
   if (!iss) return { cancelled: true };
   loadLib().then((FHIR) => FHIR.oauth2.authorize({
     clientId: CONFIG.SMART_CLIENT_ID, scope: CONFIG.SMART_SCOPE, iss, redirectUri: location.origin + "/",
@@ -45,6 +45,7 @@ export async function finishSmartConnectIfReturning() {
   history.replaceState(null, "", location.pathname + location.hash);
   return {
     id: crypto.randomUUID(), kind: "smart-on-fhir", fileName: "Hospital portal", importedAt: new Date().toISOString(),
+    origin: { connectedVia: "smart-on-fhir", fhirServer: client.state.serverUrl },
     verification: { status: "verified", method: "smart-on-fhir", issuer: client.state.serverUrl,
       detail: "Pulled directly from your hospital's server after you logged in." },
     bundle: { resourceType: "Bundle", type: "collection", entry: resources.filter((r) => r && r.resourceType).map((resource) => ({ resource })) },

@@ -9,7 +9,7 @@
     "vendor": "node tools/vendor.mjs",
     "serve": "npm run build:test && python3 tests/browser/server.py dist 8787",
     "test": "node --test tests/unit/*.test.js",
-    "test:browser": "npm run build:test && python3 tests/browser/verify.py && python3 tests/browser/update_flow.py",
+    "test:browser": "npm run build:test && python3 tests/browser/verify.py && python3 tests/browser/update_flow.py && python3 tests/browser/ghpages.py",
     "make-examples": "node tools/make-examples.mjs",
     "build": "node tools/stamp-build.mjs",
     "build:test": "CB_BUILD_ID=localtest node tools/stamp-build.mjs"

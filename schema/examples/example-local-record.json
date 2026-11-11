@@ -5,7 +5,40 @@
   "created": "2026-11-01T12:00:00.000Z",
   "updated": "2026-11-01T12:00:00.000Z",
   "privacy": {
-    "public": true
+    "public": true,
+    "level": "basic",
+    "highestShared": "basic",
+    "history": [
+      {
+        "level": "basic",
+        "at": "2026-11-01T12:00:00.000Z"
+      }
+    ]
+  },
+  "recognition": {
+    "showOnProfile": {
+      "helped": true,
+      "branch": true,
+      "badges": true
+    },
+    "acceptNotes": true,
+    "shareCardIncludeCode": false,
+    "firstSharedAt": "2026-11-01T12:00:00.000Z",
+    "stats": {
+      "helpedCount": 12,
+      "foundingNumber": 42,
+      "nearby": [
+        {
+          "at": "2026-11-01T10:00:00.000Z",
+          "path": [
+            "Lung",
+            "KRAS"
+          ]
+        }
+      ],
+      "example": true,
+      "checkedAt": "2026-11-01T12:00:00.000Z"
+    }
   },
   "afterDeath": {
     "choice": "person-decides",
@@ -22,6 +55,9 @@
       "kind": "smart-health-card",
       "fileName": "example-health-card.smart-health-card",
       "importedAt": "2026-11-01T12:00:00.000Z",
+      "origin": {
+        "connectedVia": "smart-health-card"
+      },
       "verification": {
         "status": "verified",
         "method": "smart-health-card",
@@ -65,6 +101,17 @@
                 }
               ],
               "birthDate": "1961-05-14",
+              "address": [
+                {
+                  "line": [
+                    "1 EXAMPLE Street"
+                  ],
+                  "city": "Exampleville",
+                  "state": "OH",
+                  "postalCode": "00000",
+                  "country": "US"
+                }
+              ],
               "identifier": [
                 {
                   "system": "urn:example:mrn",
@@ -631,6 +678,50 @@
   },
   "notifications": {
     "pushOptIn": false
+  },
+  "files": [
+    {
+      "id": "file-1",
+      "linkedSourceId": "src-1",
+      "role": "supporting-from-patient",
+      "name": "EXAMPLE photo of a paper report.jpg",
+      "mediaType": "image/jpeg",
+      "size": 245760,
+      "kind": "photo",
+      "addedAt": "2026-11-01T12:00:00.000Z",
+      "verification": "unverified",
+      "claims": {
+        "date": "2026-03-20",
+        "testType": "PD-L1",
+        "keyValues": [
+          "70%"
+        ]
+      },
+      "matchStatus": "matches",
+      "checkedAt": "2026-11-01T12:00:00.000Z",
+      "ignoreForAiMatching": false
+    }
+  ],
+  "onboarding": {
+    "version": 1,
+    "step": "done",
+    "stepsDone": [
+      "welcome",
+      "profile",
+      "records",
+      "privacy",
+      "after",
+      "ai",
+      "done"
+    ],
+    "consent": {
+      "watchedAndUnderstood": true,
+      "at": "2026-11-01T12:00:00.000Z",
+      "videoVersion": "placeholder"
+    },
+    "afterDeathChosen": true,
+    "startedAt": "2026-11-01T12:00:00.000Z",
+    "completedAt": "2026-11-01T12:00:00.000Z"
   },
   "editLog": [
     {

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https:; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="cb-build" content="__BUILD_ID__">
 <title>CureBranch</title>
@@ -50,11 +52,11 @@
       <div class="card privacy-card">
         <div class="row">
           <div class="grow">
-            <p class="status-line" id="privacy-title">Your summary is private</p>
-            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared. Your records stay on this device.</p>
+            <p class="status-line" id="privacy-title">Sharing: not chosen yet</p>
+            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared until you pick a level. Your records stay on this device.</p>
           </div>
-          <button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="privacy-title"><span class="track" aria-hidden="true"></span></button>
         </div>
+        <button type="button" class="btn" data-go="settings" data-focus="privacy-h" id="privacy-change" style="margin-top:8px">Change how much I share</button>
       </div>
 
       <div class="card tint" id="home-branch"></div>
@@ -73,11 +75,11 @@
 
       <div class="card sky">
         <h2>After you're gone</h2>
-        <p class="sub" style="margin:0 0 8px">Current choice: <strong id="after-status">Keep my summary public</strong></p>
+        <p class="sub" style="margin:0 0 8px">Current choice: <strong id="after-status">Not chosen yet</strong></p>
         <button type="button" class="btn btn-ghost" data-go="settings" data-focus="after-death">Change this</button>
       </div>
 
-      <p class="dedication" style="font-style:italic;margin:16px 0">In honor of my dad, whose son wishes AI had come a few months sooner. Let tomorrow be decided by patients and their own medical records. Here's to you, Dad.</p>
+      <p style="margin:16px 0"><a class="link" href="/how-it-started.html">How it started</a></p>
       <p class="disc">Information, not medical advice. Tree figures are EXAMPLE DATA until a real public index exists.</p>
     </section>
 
@@ -89,7 +91,7 @@
       <ol class="stack">
         <li><strong>Your records stay with you.</strong> You import them into this app. They are saved only in this browser on this device.</li>
         <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (Grok, ChatGPT, Claude or any other). CureBranch never runs AI on your data.</li>
-        <li><strong>A tiny public summary, only if you say so.</strong> One switch. When it's on, a short summary (cancer type, markers, treatments, how it went) is shared under a random code like <span class="mono">k7x2m9</span>. Never your name, birthday or record numbers.</li>
+        <li><strong>You pick how much to share, from 4 levels.</strong> Private (device only), Basic public summary, Detailed public, or Full public. Nothing is picked for you. Anything public is shown under a random code like <span class="mono">k7x2m9</span>, never your name, birthday, street address or record numbers. You can move to a lower level any time, but what was already shared stays out there.</li>
         <li><strong>Only checked records count.</strong> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
         <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a person to carry it out.</li>
       </ol>
@@ -101,7 +103,7 @@
         <label class="check"><input type="checkbox" class="agree"> Anything I make public can be copied by others, even if I remove it later.</label>
         <button type="button" class="btn btn-primary" id="agree-next" disabled data-go="import">I agree, import my records</button>
       </div>
-      <p class="disc">Consent video step from the mockup: not built yet (see docs/open-choices.md).</p>
+      <p class="disc">The step-by-step setup guide (with the consent video slot) is in Settings, under Run the setup guide again.</p>
     </section>
 
     <!-- IMPORT -->
@@ -144,6 +146,8 @@
       <p class="sub">Kept on this device. Code: <span class="mono" id="repo-code">…</span></p>
       <h2>Imported records</h2>
       <div class="card" id="sources"></div>
+      <h2>Photos and files</h2>
+      <div class="card" id="files-list"></div>
       <h2>What your records show</h2>
       <div class="card" id="facts"></div>
       <h2 id="branch-h">Your branch</h2>
@@ -180,6 +184,10 @@
       <h1 id="tree-title">The tree</h1>
       <div data-listen-mount="#s-tree"></div>
       <p class="notice"><strong>EXAMPLE DATA.</strong> These are made-up patients so you can see how the tree works.</p>
+      <figure class="lt-figure">
+        <div id="living-tree"></div>
+        <figcaption id="lt-caption" aria-live="polite">Tap or pick a limb or a leafy tip to see that branch below.</figcaption>
+      </figure>
       <div class="seg" role="tablist" aria-label="Tree views">
         <button type="button" class="on" role="tab" aria-selected="true" id="tab-branch" data-treeseg="branch" aria-controls="panel-branch">My branch</button>
         <button type="button" role="tab" aria-selected="false" id="tab-explore" data-treeseg="explore" aria-controls="panel-explore" tabindex="-1">Explore</button>
@@ -198,17 +206,25 @@
       <div data-listen-mount="#s-settings"></div>
       <p class="sub">You decide everything here. Changes are saved on this device and noted in your edit history.</p>
 
-      <h2>Public or private</h2>
+      <h2>Setup guide</h2>
       <div class="card">
-        <div class="item"><div class="grow"><h3 id="vis-lbl">Share my summary publicly</h3><small>One switch. Off means nothing is shared.</small></div><button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="vis-lbl"><span class="track" aria-hidden="true"></span></button></div>
+        <p class="sub">Go through the simple step-by-step setup again. Your earlier answers are kept, and you can change them.</p>
+        <button type="button" class="btn btn-primary" id="rerun-wizard">Run the setup guide again</button>
+      </div>
+
+      <h2 id="privacy-h" tabindex="-1">How much to share</h2>
+      <div class="card">
+        <p class="sub">Four levels. Nothing is picked for you. You can move to a lower level any time; that stops sharing from then on, but anything already shared stays out there.</p>
+        <div data-privacy-picker="set"></div>
       </div>
 
       <h2 id="after-death" tabindex="-1">After you're gone</h2>
       <div class="card">
         <fieldset class="choice-list">
           <legend class="sr-only">What happens to my public summary after I die</legend>
-          <label><input type="radio" name="afterdeath" value="keep-public"> Keep my summary public</label>
-          <label><input type="radio" name="afterdeath" value="remove"> Remove my summary</label>
+          <label><input type="radio" name="afterdeath" value="keep-private"> Keep it private (nothing is ever shared)</label>
+          <label><input type="radio" name="afterdeath" value="remove"> Delete my summary</label>
+          <label><input type="radio" name="afterdeath" value="keep-public"> Make it public</label>
           <label><input type="radio" name="afterdeath" value="person-decides"> Let the person I name decide</label>
         </fieldset>
         <h3 style="margin-top:10px">The person who carries this out</h3>
@@ -225,6 +241,7 @@
       <h2>Profile page (optional)</h2>
       <div class="card">
         <p class="sub">Your public page is <a class="mono" id="profile-link" href="#">…</a>. By default it is anonymous. You can add a name and photo if you want.</p>
+        <p><a class="link" id="recognition-link" href="#">See my recognition: helped counter, badges and share card</a></p>
         <div class="item"><div class="grow"><h3 id="prof-lbl">Show a name and photo</h3><small>Only when your summary is public</small></div><button type="button" class="cb-switch" id="profile-switch" role="switch" aria-checked="false" aria-labelledby="prof-lbl"><span class="track" aria-hidden="true"></span></button></div>
         <label class="field-label" for="prof-name">Name to show (a nickname is fine)</label>
         <input class="field" id="prof-name" type="text" maxlength="60" autocomplete="off">
@@ -275,8 +292,6 @@
         <button type="button" class="btn btn-ghost" style="margin-top:8px" data-go="a11y">Read the accessibility statement</button>
       </div>
 
-      <h2>Support the project</h2>
-      <div class="card"><p class="sub" style="margin:0" id="donate-text">Donations pay only for servers and outreach, through Open Collective, where every dollar is shown publicly. This app never handles money.</p></div>
 
       <div class="card sky"><p class="sub" style="margin:0;font-size:.85rem">Open source, provided "as is", with no warranty. You own and are responsible for what you share. Information, not medical advice. Version <span class="mono" id="build-id"></span>.</p></div>
     </section>
@@ -300,6 +315,167 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+</div>
+
+<!-- FIRST-RUN SETUP GUIDE (app/js/wizard.js). Full screen, one question per step. -->
+<div class="wizard" id="wizard" hidden>
+  <div class="wz-top">
+    <div class="brand"><span class="mark" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 21V11M12 11L7 6M12 11l5-5M7 6V3M17 6V3"/></svg></span>CureBranch</div>
+    <div class="topbar-end"><button type="button" class="wz-later" id="wz-later">Finish later</button><span data-a11y-launch="compact"></span></div>
+  </div>
+  <div id="wz-banners"></div>
+  <main class="wz-main" id="wz-main" aria-label="Setup guide">
+    <div class="wz-progress">
+      <p class="wz-count" id="wz-count">Step 1 of 7</p>
+      <ol class="wz-dots" id="wz-dots" aria-label="Progress"></ol>
+    </div>
+
+    <!-- 1. Welcome + consent -->
+    <section class="wz-step" id="wz-welcome" data-step="welcome" aria-labelledby="wz-h-welcome">
+      <h1 id="wz-h-welcome" tabindex="-1">Welcome to CureBranch</h1>
+      <div data-listen-mount="#wz-welcome" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">This app keeps your cancer records in one place. You decide who sees what.</p>
+      <div class="wz-video" id="wz-video">
+        <div class="video wz-video-placeholder" id="wz-video-placeholder">
+          <p class="wz-video-title">Short welcome video</p>
+          <p class="wz-video-note">Coming soon. For now, press <strong>Listen</strong> above, or read the main points below.</p>
+        </div>
+      </div>
+      <h2>The main points</h2>
+      <ul class="wz-points">
+        <li>Your records stay on this phone or computer. We don't upload them.</li>
+        <li>You own your data. You choose what to share.</li>
+        <li>Anything you share can be copied by others, even if you remove it later.</li>
+        <li>This is information, not medical advice. Make care choices with your doctors.</li>
+        <li>The app is free and open source. It comes "as is", with no promises.</li>
+        <li>It is not for emergencies. In an emergency, call your local emergency number.</li>
+      </ul>
+      <label class="wz-check" for="wz-consent">
+        <input type="checkbox" id="wz-consent" aria-describedby="wz-consent-err">
+        <span>I watched and understand</span>
+      </label>
+      <p class="wz-err" id="wz-consent-err" role="alert"></p>
+    </section>
+
+    <!-- 2. Private profile -->
+    <section class="wz-step" id="wz-profile" data-step="profile" aria-labelledby="wz-h-profile" hidden>
+      <h1 id="wz-h-profile" tabindex="-1">Your private profile</h1>
+      <div data-listen-mount="#wz-profile" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">No account. No password. No email.</p>
+      <div class="card tint wz-code-card">
+        <p class="wz-code-label">Your private code</p>
+        <p class="wz-code mono" id="wz-code">…</p>
+      </div>
+      <p>This code is random. It is not your name. If you ever choose to share, people will see only this code.</p>
+      <p>Your profile is saved only on this device. To move it to a new device later, use <strong>Download my full backup</strong> in Settings.</p>
+      <button type="button" class="btn btn-ghost wz-big" id="wz-new-code">Give me a different code</button>
+      <p class="wz-note" id="wz-code-note" aria-live="polite"></p>
+    </section>
+
+    <!-- 3. Connect hospital portal (official records only; photos/files only as supporting attachments) -->
+    <section class="wz-step" id="wz-records" data-step="records" aria-labelledby="wz-h-records" hidden>
+      <h1 id="wz-h-records" tabindex="-1">Connect your hospital portal</h1>
+      <div data-listen-mount="#wz-records" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">Bring in your records straight from your hospital. Records from the hospital are checked, so they count.</p>
+      <fieldset class="wz-choices">
+        <legend>Which portal does your hospital use?</legend>
+        <div id="wz-portal-list"></div>
+      </fieldset>
+      <div class="card sky" id="wz-connect-card" hidden>
+        <h2 style="margin-top:0">What happens next</h2>
+        <ol class="wz-howto">
+          <li>Press <strong>Connect</strong>.</li>
+          <li>Log in to your portal, the way you always do.</li>
+          <li>Say yes to share your records with CureBranch on this device.</li>
+          <li>You come right back here.</li>
+        </ol>
+        <div id="wz-real-fields" hidden>
+          <label class="field-label" for="wz-fhir">Your hospital's portal address</label>
+          <input class="field" id="wz-fhir" type="url" inputmode="url" autocomplete="off" aria-describedby="wz-fhir-help">
+          <p class="wz-note" id="wz-fhir-help">Your hospital's help desk can tell you this. It starts with https://</p>
+        </div>
+        <p class="notice" id="wz-demo-note" hidden><strong>Demo mode.</strong> Real portal connections aren't set up on this site yet. Connect will add made-up EXAMPLE records so you can see how it works. No login. No real data.</p>
+        <p class="notice" id="wz-apple-note" hidden>Apple Health records can only be shared with an iPhone app. This web app can't read them yet.</p>
+        <button type="button" class="btn btn-primary wz-big" id="wz-connect">Connect</button>
+      </div>
+      <p class="wz-err" id="wz-connect-err" role="alert"></p>
+      <div id="wz-files-status" aria-live="polite"></div>
+      <h2 id="wz-connected-h" hidden>Your records</h2>
+      <ul class="wz-files" id="wz-files" aria-labelledby="wz-connected-h"></ul>
+      <p class="wz-note">You can add a photo or file only to a record from your hospital. It is marked <strong>supporting, from patient</strong> and is not counted. It stays on this device.</p>
+      <p class="wz-note">You can skip this and connect later.</p>
+    </section>
+
+    <!-- 4. Private or public -->
+    <section class="wz-step" id="wz-privacy" data-step="privacy" aria-labelledby="wz-h-privacy" hidden>
+      <h1 id="wz-h-privacy" tabindex="-1">How much do you want to share?</h1>
+      <div data-listen-mount="#wz-privacy" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">Pick one of four levels. Nothing is picked for you. If you skip this, nothing is shared.</p>
+      <p class="notice"><strong>Only share what you'd be OK with the world knowing someday.</strong> Once something is shared, it can't be pulled back.</p>
+      <div class="card" data-privacy-picker="wz"></div>
+      <p class="wz-err" id="wz-privacy-err" role="alert"></p>
+      <p class="wz-note">You can move to a lower level any time. That stops sharing new records, but what you already shared stays public.</p>
+    </section>
+
+    <!-- 5. After death -->
+    <section class="wz-step" id="wz-after" data-step="after" aria-labelledby="wz-h-after" hidden>
+      <h1 id="wz-h-after" tabindex="-1">After you're gone</h1>
+      <div data-listen-mount="#wz-after" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">This is hard to think about. Your choice can be changed any time.</p>
+      <fieldset class="wz-choices" aria-describedby="wz-after-err">
+        <legend>What should happen to your summary?</legend>
+        <label class="wz-choice"><input type="radio" name="wz-afterdeath" value="keep-private"><span><strong>Keep it private</strong><small>Nothing is ever shared.</small></span></label>
+        <label class="wz-choice"><input type="radio" name="wz-afterdeath" value="remove"><span><strong>Delete it</strong><small>Your summary is removed.</small></span></label>
+        <label class="wz-choice"><input type="radio" name="wz-afterdeath" value="keep-public"><span><strong>Make it public</strong><small>Your summary is shared to help others learn.</small></span></label>
+        <label class="wz-choice"><input type="radio" name="wz-afterdeath" value="person-decides"><span><strong>Let my trusted person decide</strong><small>The person you name below chooses.</small></span></label>
+      </fieldset>
+      <p class="wz-err" id="wz-after-err" role="alert"></p>
+      <h2>Your trusted person</h2>
+      <p class="wz-note">This person carries out your choice. Their name stays on this device. It is never shared.</p>
+      <label class="field-label" for="wz-person">Their name</label>
+      <input class="field" id="wz-person" type="text" maxlength="120" autocomplete="off">
+      <label class="field-label" for="wz-person-reach">How to reach them (optional)</label>
+      <input class="field" id="wz-person-reach" type="text" maxlength="200" autocomplete="off">
+      <p class="wz-note">Later, in Settings, you can make a secret key to give them.</p>
+    </section>
+
+    <!-- 6. Own AI -->
+    <section class="wz-step" id="wz-ai" data-step="ai" aria-labelledby="wz-h-ai" hidden>
+      <h1 id="wz-h-ai" tabindex="-1">Use your own AI</h1>
+      <div data-listen-mount="#wz-ai" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">An AI can explain your records in plain words. This step is optional.</p>
+      <p>CureBranch has no AI of its own. If you want one, you use your own and pay for it yourself.</p>
+      <fieldset class="wz-choices">
+        <legend>Which AI do you use?</legend>
+        <div class="wz-grid" id="wz-ai-list"></div>
+      </fieldset>
+      <div class="card sky" id="wz-ai-steps" hidden>
+        <h2>How to use it with CureBranch</h2>
+        <ol class="wz-howto">
+          <li>Finish this setup.</li>
+          <li>Open <strong>Record</strong> at the bottom of the screen.</li>
+          <li>Press <strong>Copy a prompt for my AI</strong>.</li>
+          <li>Open <span id="wz-ai-name-inline">your AI</span> and paste it in.</li>
+        </ol>
+        <p class="wz-note" style="margin:0">CureBranch never asks for your AI password or key. It only sends your AI what you paste.</p>
+      </div>
+    </section>
+
+    <!-- 7. Done -->
+    <section class="wz-step" id="wz-done" data-step="done" aria-labelledby="wz-h-done" hidden>
+      <h1 id="wz-h-done" tabindex="-1">You're all set</h1>
+      <div data-listen-mount="#wz-done" data-listen-label="Listen to this step"></div>
+      <p class="wz-lead">Here is what you chose. It is all saved on this device.</p>
+      <dl class="wz-summary" id="wz-summary"></dl>
+      <p>You can change any of this later in <strong>Settings</strong>. You can also run this guide again from there.</p>
+    </section>
+
+    <p class="disc">Information, not medical advice.</p>
+    <div class="wz-nav">
+      <button type="button" class="btn btn-ghost wz-big" id="wz-back">Back</button>
+      <button type="button" class="btn btn-primary wz-big" id="wz-next">Next</button>
+    </div>
+  </main>
 </div>
 </body>
 </html>

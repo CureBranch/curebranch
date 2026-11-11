@@ -35,6 +35,17 @@
           }
         ],
         "birthDate": "1961-05-14",
+        "address": [
+          {
+            "line": [
+              "1 EXAMPLE Street"
+            ],
+            "city": "Exampleville",
+            "state": "OH",
+            "postalCode": "00000",
+            "country": "US"
+          }
+        ],
         "identifier": [
           {
             "system": "urn:example:mrn",

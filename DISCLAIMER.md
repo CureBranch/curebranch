@@ -6,7 +6,7 @@
 
 2. **No warranty, no liability.** The software and data format are provided "as is", without warranty of any kind, as stated in the [Apache License 2.0](LICENSE) (sections 7 and 8). The people who write and maintain CureBranch are not responsible for how it is used, for what anyone shares, or for decisions anyone makes based on it.
 
-3. **You own what you share, and you're responsible for it.** Your records stay on your device. If you turn the public switch on, a small summary can be seen by anyone. Others can copy public information, and copies may remain even after you remove it.
+3. **You own what you share, and you're responsible for it.** Your records stay on your device. If you pick a public sharing level (Basic, Detailed or Full), a summary at that level can be seen by anyone. Others can copy public information, and copies may remain even after you move to a lower level or remove it. Moving down stops sharing from then on; it can't pull back what was already shared.
 
 4. **"Verified" has a narrow meaning.** It means a record's digital signature matched a known hospital or lab, or the record came straight from a hospital portal you logged into. It does not mean the record is medically correct or complete.
 

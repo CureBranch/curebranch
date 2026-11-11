@@ -30,8 +30,8 @@
     "publicKeyJwk": {
       "kty": "EC",
       "crv": "P-256",
-      "x": "IL1Mw-tABmfN8G6gWAx97DeOLX27dPSv5oCMMaD2P5s",
-      "y": "eN7bVsMyF6DgLqyC2od8J6QqDjfxdc2wFOClUPzlZs4"
+      "x": "xKHYwvum0B5IC4KPW03zqsPHQV-QKlJGuis7mmg7VpY",
+      "y": "XiM_JIJp-oHCgUWvD6HtSq_qpqllnl59lNxOjd498PE"
     }
   },
   "updated": "2026-11-01",
@@ -95,5 +95,18 @@
       "afterTreatment": 2
     }
   ],
-  "signature": "mSNfM0YZs8VgGsQZ5JHQQLtqXNJrC464c1A3mLNb7NW-IrJlTML7fdzQqzM4-7QjLKKcLscvyNLA0G9So8xOGQ"
+  "detailLevel": "basic",
+  "recognition": {
+    "helpedCount": 12,
+    "badges": [
+      "first-share",
+      "verified",
+      "helped-10",
+      "founding"
+    ],
+    "showBranch": true,
+    "acceptsNotes": true,
+    "example": true
+  },
+  "signature": "o7nUc70p0LhjfM1RplkRuQwe2oFtn6JSCVw-ByI3C2fbk42fAqVGVodE8TRE9FI8N7ZKzdQQ5sS7SJVldPC_2Q"
 }

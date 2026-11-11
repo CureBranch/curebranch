@@ -1,0 +1,47 @@
+# Publish the app to GitHub Pages at https://curebranch.ai
+# The site is the app/ folder, stamped with the commit id by tools/stamp-build.mjs (output: dist/).
+# One-time repo setup: Settings > Pages > Source: "GitHub Actions"; Custom domain: curebranch.ai; Enforce HTTPS.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: npm ci && npm test
+      - name: Build (copy app/ to dist/ and stamp the build id)
+        run: node tools/stamp-build.mjs
+        env:
+          CB_BUILD_ID: ${{ github.sha }}
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
