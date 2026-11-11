@@ -4,7 +4,7 @@
  * axe-core WCAG 2.0/2.1/2.2 A+AA on every screen and all 5 color themes
  * import: example SMART Health Card (verified), example FHIR file via the file picker
    (unverified), tampered card (unverified); data survives a reload (IndexedDB)
- * public switch, summary preview, profile page (anonymous by default, name when opted in)
+ * 4 sharing levels with warnings, summary preview, profile page (anonymous by default, name when opted in)
  * offline: app reloads with the network off once the service worker is installed
  * setup guide (first-run wizard): opens on first visit, one step at a time, consent gate,
    guided hospital-portal connect (demo stub), supporting photo linked to the official record
@@ -117,6 +117,19 @@ def finish_wizard(pg, on_step=None, show_errors=False, fill_records=False):
     wait_js(pg, "document.querySelector('#wizard').hidden")
     pg.wait_for_timeout(200)
 
+def pick_level(pg, scope, level, confirm=True):
+    """Pick a sharing level in a picker (scope = '#wz-privacy' or '#s-settings'). Returns the warning text."""
+    pg.check(f"{scope} input[type=radio][value={level}]"); pg.wait_for_timeout(150)
+    warn = pg.locator(f"{scope} .pv-warn")
+    text = warn.inner_text() if warn.is_visible() else ""
+    if text:
+        pg.click(f"{scope} [data-pv-yes]" if confirm else f"{scope} [data-pv-no]")
+        pg.wait_for_timeout(300)
+    return text
+
+def lvl(pg):
+    return pg.evaluate("(window.CureBranchApp.getRecord().privacy || {}).level || null")
+
 def wizard_flow(b):
     """The setup guide, end to end, the way a patient would use it (390 px phone)."""
     ctx = b.new_context(viewport={"width": 390, "height": 844})
@@ -179,13 +192,32 @@ def wizard_flow(b):
     check("records step: Next once a record is in", pg.inner_text("#wz-next") == "Next")
     pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-privacy').hidden")
     check("wizard: privacy reminder shown", "Only share what you'd be OK with the world knowing someday." in pg.inner_text("#wz-privacy"))
-    check("wizard: starts private", pg.get_attribute("#wz-privacy [data-privacy-switch]", "aria-checked") == "false")
+    check("privacy: 4 levels, nothing preselected", pg.locator("#wz-privacy input[type=radio]").count() == 4
+          and pg.evaluate("!document.querySelector('#wz-privacy input[type=radio]:checked')") and lvl(pg) is None
+          and pg.inner_text("#wz-next") == "Skip for now (share nothing)")
+    labels = pg.inner_text("#wz-privacy .pv-levels")
+    check("privacy: levels named in plain English", all(x in labels for x in ["1. Private", "2. Basic public summary", "3. Detailed public", "4. Full public"]))
     pg.reload(wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.wait_for_timeout(300)
     check("wizard: resumes at the same step after closing the app", wizard_open(pg) and pg.inner_text("#wz-count") == "Step 4 of 7")
-    pg.click("#wz-privacy [data-privacy-switch]"); pg.wait_for_timeout(300)
-    check("wizard: one switch turns public on", pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is True and "On:" in pg.inner_text("#wz-priv-state"))
-    pg.click("#wz-privacy [data-privacy-switch]"); pg.wait_for_timeout(300)
-    check("wizard: and off again", pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is False)
+    pg.check("#wz-privacy input[value=detailed]"); pg.wait_for_timeout(200)
+    w = pg.inner_text("#wz-privacy .pv-warn") if pg.is_visible("#wz-privacy .pv-warn") else ""
+    check("privacy: warning shown BEFORE level 3 takes effect", "can't be pulled back" in w and lvl(pg) is None
+          and pg.evaluate("document.activeElement.classList.contains('pv-warn')"), w[:200])
+    pg.click("#wz-next"); pg.wait_for_timeout(150)
+    check("privacy: can't go on with an unanswered warning", pg.inner_text("#wz-count") == "Step 4 of 7" and "Yes or No" in pg.inner_text("#wz-privacy-err"))
+    pg.click("#wz-privacy [data-pv-no]"); pg.wait_for_timeout(200)
+    check("privacy: No keeps the earlier choice (nothing)", lvl(pg) is None and not pg.is_visible("#wz-privacy .pv-warn")
+          and pg.evaluate("!document.querySelector('#wz-privacy input[type=radio]:checked')"))
+    w = pick_level(pg, "#wz-privacy", "full")
+    check("privacy: Yes saves level 4 (Full public)", lvl(pg) == "full" and pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is True and "Saved: Full public" in pg.inner_text("#wz-privacy .pv-status"))
+    w = pick_level(pg, "#wz-privacy", "basic")
+    check("privacy: moving down warns that already-shared data stays public",
+          "stops sharing from now on" in w and "already shared at the Full public level stays out there" in w and "can't be pulled back" in w, w[:300])
+    check("privacy: moved down to Basic, highest level remembered", lvl(pg) == "basic" and pg.evaluate("window.CureBranchApp.getRecord().privacy.highestShared") == "full")
+    w = pick_level(pg, "#wz-privacy", "private")
+    check("privacy: moving to Private warns too", "Full public level stays out there" in w and lvl(pg) == "private"
+          and pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is False)
+    check("privacy: status still says earlier sharing stays public", "that stays public" in pg.inner_text("#wz-privacy .pv-status"))
     pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-after').hidden")
     check("wizard: no after-death choice is picked for the patient (stored default keep-private)", pg.evaluate("!document.querySelector('input[name=wz-afterdeath]:checked')")
           and pg.evaluate("window.CureBranchApp.getRecord().afterDeath.choice") == "keep-private")
@@ -262,8 +294,8 @@ def main():
         finish_wizard(pg)
         code = pg.evaluate("window.CureBranchApp.getRecord().code")
         check("random code format", re.fullmatch(r"[0-9a-hjkmnp-tv-z]{6}", code), code)
-        check("dedication present", "In honor of my dad, whose son wishes AI had come a few months sooner." in pg.inner_text("#s-home"))
-        check("default is private", pg.get_attribute("[data-privacy-switch]", "aria-checked") == "false")
+        check("dedication only on How it started (not Home)", "In honor of my dad" not in pg.inner_text("#s-home"))
+        check("default: sharing not chosen, nothing public", lvl(pg) is None and "not chosen yet" in pg.inner_text("#privacy-title"))
         check("new record: after-death stored as keep-private", pg.evaluate("window.CureBranchApp.getRecord().afterDeath.choice") == "keep-private")
 
         go(pg, "import")
@@ -290,8 +322,11 @@ def main():
         go(pg, "repo")
         pg.wait_for_timeout(400)
         check("mixed sources -> summary private by default", "Private" in pg.inner_text("#summary-state"))
-        pg.click("#s-home [data-privacy-switch]") if pg.is_visible("#s-home [data-privacy-switch]") else None
-        go(pg, "home"); pg.click("#s-home [data-privacy-switch]"); pg.wait_for_timeout(300)
+        go(pg, "home"); pg.click("#privacy-change"); pg.wait_for_timeout(300)
+        check("Home 'Change how much I share' opens the Settings picker", pg.evaluate("document.activeElement.id") == "privacy-h")
+        w = pick_level(pg, "#s-settings", "basic")
+        check("settings: warning before Basic, then saved", "can't be pulled back" in w and lvl(pg) == "basic")
+        go(pg, "home"); check("Home shows the level", "Basic public summary" in pg.inner_text("#privacy-title"))
         go(pg, "repo"); pg.wait_for_timeout(500)
         summ = json.loads(pg.inner_text("#summary-json"))
         check("public summary built", summ["visibility"] == "public" and summ["branch"]["path"] == ["Lung", "KRAS", "G12C"], json.dumps(summ["branch"]))
@@ -299,6 +334,17 @@ def main():
         txt = json.dumps(summ)
         check("summary has no name/birthdate/MRN", not any(x in txt for x in ["1961", "EXAMPLE-0000", "family", "birthDate"]))
         check("summary anonymous by default", "profile" not in summ)
+        check("Basic: ranges only (no exact age, dates or place)", summ.get("detailLevel") == "basic" and "age" not in summ and "location" not in summ and "diagnosisDate" not in summ)
+        go(pg, "settings"); pick_level(pg, "#s-settings", "full"); go(pg, "repo"); pg.wait_for_timeout(500)
+        sf = json.loads(pg.inner_text("#summary-json"))
+        check("Full: adds exact age, dates, city/state/country", sf.get("detailLevel") == "full" and sf.get("age") == 65 and sf.get("location", {}).get("city") == "Exampleville"
+              and not any(x in json.dumps(sf) for x in ["EXAMPLE Street", "00000", "1961"]))
+        go(pg, "settings"); w = pick_level(pg, "#s-settings", "detailed")
+        check("settings: moving down from Full warns, stops future Full sharing", "Full public level stays out there" in w and lvl(pg) == "detailed")
+        go(pg, "repo"); pg.wait_for_timeout(500)
+        sd = json.loads(pg.inner_text("#summary-json"))
+        check("Detailed: no location any more", sd.get("detailLevel") == "detailed" and "location" not in sd and sd.get("age") == 65)
+        go(pg, "settings"); pick_level(pg, "#s-settings", "basic"); go(pg, "repo"); pg.wait_for_timeout(500)
         # remove the unverified + tampered sources -> verified
         for _ in range(2):
             pg.once("dialog", lambda d: d.accept())
@@ -313,6 +359,23 @@ def main():
         pp = ctx.new_page(); pp.goto(f"{BASE}/p/{code}", wait_until="networkidle"); pp.wait_for_timeout(600)
         t = pp.inner_text("#profile")
         check("profile page anonymous by default", "Anonymous patient" in t and "Preview" in t, t[:200])
+        check("recognition: owner section shown, everything off", pp.is_visible("#recognition") and not pp.is_visible("#rc-public")
+              and pp.evaluate("[...document.querySelectorAll('.rc-opts input')].every(x => !x.checked)"))
+        check("recognition: helped counter, badges, branch picture", "Your branch helped" in pp.inner_text("#rc-helped")
+              and pp.locator(".rc-badges li").count() == 4 and pp.locator("#recognition svg[role=img]").count() == 1)
+        check("recognition: branch glows when someone landed nearby (stub)", pp.locator("#recognition .tr-glow").count() == 1 and "glowing" in pp.inner_text("#rc-glow-words"))
+        pp.check("#rc-show-helped"); pp.wait_for_timeout(300); pp.check("#rc-show-badges"); pp.wait_for_timeout(300); pp.check("#rc-accept-notes"); pp.wait_for_timeout(500)
+        check("recognition: notes inbox appears after opting in (example notes)", "EXAMPLE" in pp.inner_text("#recognition .rc-notes"))
+        pp.reload(wait_until="networkidle"); pp.wait_for_timeout(700)
+        t = pp.inner_text("#rc-public") if pp.is_visible("#rc-public") else ""
+        check("recognition: public part shows only what was switched on", "This branch helped" in t and "First record shared" in t and pp.locator("#rc-public svg").count() == 0, t[:200])
+        alt = pp.get_attribute("#rc-card-img", "alt") or ""
+        check("share card: preview with alt text, no code by default", alt.startswith("Share card preview: I'm part of CureBranch.") and code not in alt, alt)
+        pp.check("#rc-card-code"); pp.wait_for_timeout(300)
+        check("share card: code only when ticked", code in (pp.get_attribute("#rc-card-img", "alt") or ""))
+        with pp.expect_download() as dl: pp.click("#rc-share")
+        check("share card: downloads a PNG when sharing isn't available", dl.value.suggested_filename == "curebranch-card.png")
+        pp.uncheck("#rc-card-code"); pp.wait_for_timeout(200)
         go(pg, "settings")
         pg.click("#profile-switch"); pg.fill("#prof-name", "Sam (EXAMPLE)"); pg.click("#prof-save"); pg.wait_for_timeout(400)
         pp.reload(wait_until="networkidle"); pp.wait_for_timeout(600)
@@ -324,6 +387,14 @@ def main():
         ex = json.loads((DIST / "data/example-summaries.json").read_text())["summaries"][3]["code"]
         pp.goto(f"{BASE}/p/{ex}", wait_until="networkidle"); pp.wait_for_timeout(600)
         check("example profile renders, signed", "EXAMPLE DATA" in pp.inner_text("#profile") and "Signed by the patient" in pp.inner_text("#profile"))
+        exr = json.loads((DIST / "data/example-summaries.json").read_text())["summaries"][1]["code"]
+        pp.goto(f"{BASE}/p/{exr}", wait_until="networkidle"); pp.wait_for_timeout(600)
+        check("example with recognition: counter, badges, branch picture, note form", "This branch helped" in pp.inner_text("#rc-public")
+              and pp.locator("#rc-public svg[role=img]").count() == 1 and pp.is_visible("#rc-send"))
+        pp.fill("#rc-note", "Email me at a@b.co"); pp.click("#rc-send button[type=submit]"); pp.wait_for_timeout(300)
+        check("thank-you note: contact details refused", "can't include" in pp.inner_text("#rc-send-msg"))
+        pp.fill("#rc-note", "Thank you. This helped me ask the right question."); pp.click("#rc-send button[type=submit]"); pp.wait_for_timeout(400)
+        check("thank-you note: saved anonymously on this device", "saved on this device" in pp.inner_text("#rc-send-msg"))
         pp.close()
 
         # after-death key
@@ -377,7 +448,11 @@ def main():
                         r = pg.evaluate(OVERFLOW_JS); results["overflow"].append({"w": w, "scale": sc, "screen": "wizard-a11y-panel", **r})
                         if r["overflow"] > 1: fails.append(f"overflow w={w} scale={sc} wizard a11y-panel: {r}")
                         pg.evaluate("CureBranchA11y.closePanel()")
-                finish_wizard(pg, on_step=wz_overflow, fill_records=True)
+                def wz_overflow_plus(sid):
+                    wz_overflow(sid)
+                    if sid == "privacy":   # also with the warning open
+                        pg.check("#wz-privacy input[value=full]"); pg.wait_for_timeout(150); wz_overflow("privacy-warning"); pg.click("#wz-privacy [data-pv-no]")
+                finish_wizard(pg, on_step=wz_overflow_plus, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
                     if s == "tree":
@@ -390,9 +465,13 @@ def main():
                 if r["overflow"] > 1: fails.append(f"overflow w={w} scale={sc} a11y-panel: {r}")
                 pg.evaluate("CureBranchA11y.closePanel()")
             pg.evaluate("CureBranchA11y.set({textScale:100})")
-            pp = ctx.new_page(); pp.goto(f"{BASE}/p/{ex}", wait_until="networkidle"); pp.wait_for_timeout(500)
-            r = pp.evaluate(OVERFLOW_JS); results["overflow"].append({"w": w, "scale": 100, "screen": "profile", **r})
-            if r["overflow"] > 1 or r["offenders"]: fails.append(f"overflow w={w} profile: {r}")
+            pp = ctx.new_page()
+            mine = pg.evaluate("window.CureBranchApp.getRecord().code")
+            exr = json.loads((DIST / "data/example-summaries.json").read_text())["summaries"][1]["code"]
+            for name, c in (("profile", ex), ("profile-recognition", exr), ("profile-owner", mine)):
+                pp.goto(f"{BASE}/p/{c}", wait_until="networkidle"); pp.wait_for_timeout(600)
+                r = pp.evaluate(OVERFLOW_JS); results["overflow"].append({"w": w, "scale": 100, "screen": name, **r})
+                if r["overflow"] > 1 or r["offenders"]: fails.append(f"overflow w={w} {name}: {r}")
             ctx.close()
 
         # ---------- axe ----------
@@ -405,15 +484,24 @@ def main():
                 pg.evaluate(f"CureBranchA11y.set({{theme:'{th}', customOn:false}})")
                 if not wizard_open(pg): pg.evaluate("window.CureBranchApp.openWizard({restart: true})")
                 pg.evaluate("document.querySelector('#wz-consent').checked = false")
-                finish_wizard(pg, on_step=lambda sid, w=w, th=th: run_axe(pg, f"{w}px {th} wizard-{sid}"), show_errors=True, fill_records=True)
+                def wz_axe(sid, w=w, th=th):
+                    run_axe(pg, f"{w}px {th} wizard-{sid}")
+                    if sid == "privacy":
+                        pg.check("#wz-privacy input[value=detailed]"); pg.wait_for_timeout(150)
+                        run_axe(pg, f"{w}px {th} wizard-privacy-warning"); pg.click("#wz-privacy [data-pv-no]")
+                finish_wizard(pg, on_step=wz_axe, show_errors=True, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
                     if s == "tree": pg.click("#tab-explore")
                     run_axe(pg, f"{w}px {th} {s}")
                 pg.evaluate("CureBranchA11y.openPanel()"); pg.wait_for_timeout(200)
                 run_axe(pg, f"{w}px {th} a11y-panel"); pg.evaluate("CureBranchA11y.closePanel()")
-            pp = ctx.new_page(); pp.goto(f"{BASE}/p/{ex}", wait_until="networkidle"); pp.wait_for_timeout(500)
-            run_axe(pp, f"{w}px profile")
+            pp = ctx.new_page()
+            mine = pg.evaluate("window.CureBranchApp.getRecord().code")
+            exr = json.loads((DIST / "data/example-summaries.json").read_text())["summaries"][1]["code"]
+            for name, c in (("profile", ex), ("profile-recognition", exr), ("profile-owner", mine)):
+                pp.goto(f"{BASE}/p/{c}", wait_until="networkidle"); pp.wait_for_timeout(600)
+                run_axe(pp, f"{w}px {name}")
             ctx.close()
         b.close()
     httpd.shutdown()

@@ -39,7 +39,7 @@ test("new record: nothing public unless the patient picks it", async () => {
   assert.equal(r.afterDeath.choice, "keep-private");
   assert.equal(r.share.profile, false);
   assert.equal(choicesSummary(r).find((x) => x.label === "After you're gone").value, "Not chosen yet");
-  assert.equal(choicesSummary(r).find((x) => x.label === "Sharing").value, "Private (nothing is shared)");
+  assert.equal(choicesSummary(r).find((x) => x.label === "Sharing").value, "Not chosen yet (nothing is shared)");
   const kp = await newOwnerKeyPair();
   const s = buildSummary(r, await crypto.subtle.exportKey("jwk", kp.publicKey));
   assert.equal(s.visibility, "private");
@@ -246,7 +246,7 @@ test("finish, then re-run from Settings keeps every answer", () => {
   assert.equal(hasConsent(r), true);
   assert.ok(validLocal(r), JSON.stringify(validLocal.errors));
   const sum = Object.fromEntries(choicesSummary(r).map((x) => [x.label, x.value]));
-  assert.equal(sum["Sharing"], "Private (nothing is shared)");
+  assert.equal(sum["Sharing"], "Not chosen yet (nothing is shared)");
   assert.equal(sum["After you're gone"], "Keep it private");
   assert.equal(sum["Your AI"], "Grok");
 });

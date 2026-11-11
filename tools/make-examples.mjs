@@ -45,6 +45,7 @@ const bundle = {
   resourceType: "Bundle", id: "example-bundle", type: "collection", ...EX_TAG,
   entry: [
     entry({ resourceType: "Patient", id: pid, name: [{ family: "EXAMPLE", given: ["Patient"] }], birthDate: "1961-05-14",
+      address: [{ line: ["1 EXAMPLE Street"], city: "Exampleville", state: "OH", postalCode: "00000", country: "US" }],
       identifier: [{ system: "urn:example:mrn", value: "EXAMPLE-0000" }] }),
     entry({ resourceType: "Condition", id: "example-primary-cancer", subject: ref,
       clinicalStatus: { coding: [{ system: "http://terminology.hl7.org/CodeSystem/condition-clinical", code: "active" }] },
@@ -104,7 +105,9 @@ const ownerPub = await crypto.subtle.exportKey("jwk", ownerKp.publicKey);
 const record = {
   schemaVersion: "0.1", code: "k7x2m9", example: true,
   created: "2026-11-01T12:00:00.000Z", updated: "2026-11-01T12:00:00.000Z",
-  privacy: { public: true },
+  privacy: { public: true, level: "basic", highestShared: "basic", history: [{ level: "basic", at: "2026-11-01T12:00:00.000Z" }] },
+  recognition: { showOnProfile: { helped: true, branch: true, badges: true }, acceptNotes: true, shareCardIncludeCode: false,
+    firstSharedAt: "2026-11-01T12:00:00.000Z", stats: { helpedCount: 12, foundingNumber: 42, nearby: [{ at: "2026-11-01T10:00:00.000Z", path: ["Lung", "KRAS"] }], example: true, checkedAt: "2026-11-01T12:00:00.000Z" } },
   afterDeath: { choice: "person-decides", person: { name: "EXAMPLE Person", howToReach: "example@example.invalid" },
     stewardKeyHash: "sha256:" + "0".repeat(63) + "1", stewardKeyGivenOn: "2026-11-01" },
   sources: [{ id: "src-1", kind: "smart-health-card", fileName: "example-health-card.smart-health-card", importedAt: "2026-11-01T12:00:00.000Z",
@@ -125,6 +128,9 @@ const record = {
 write("schema/examples/example-local-record.json", record);
 const summary = await signSummary(buildSummary(record, ownerPub, { on: new Date("2026-11-01") }), ownerKp.privateKey);
 write("schema/examples/example-public-summary.json", summary);
+// Same patient at level 4 (Full public), to show what the extra levels add.
+const fullRecord = { ...record, privacy: { public: true, level: "full", highestShared: "full", history: [{ level: "full", at: "2026-11-01T12:00:00.000Z" }] } };
+write("schema/examples/example-public-summary-full.json", await signSummary(buildSummary(fullRecord, ownerPub, { on: new Date("2026-11-01") }), ownerKp.privateKey));
 
 // ---------- 4. Example public tree ----------
 let seed = 42;
@@ -171,6 +177,11 @@ for (const [path, regimens, count, extra] of BR) {
       // Demonstrates "one person, one vote": two verified summaries with the same personKey; only one is counted.
       s.personKey = "EXAMPLE-same-person";
       s.verification = { status: "verified", method: "smart-health-card", checkedOn: "2026-11-01" };
+    }
+    if (summaries.length % 4 === 1) {
+      // Some example patients switched on recognition (no extra random draws, so codes stay the same).
+      s.recognition = { helpedCount: (summaries.length * 7) % 23, badges: ["first-share", ...(s.verification.status === "verified" ? ["verified"] : []), ...((summaries.length * 7) % 23 >= 10 ? ["helped-10"] : []), "founding"],
+        showBranch: true, acceptsNotes: true, example: true };
     }
     summaries.push(await signSummary(s, kp.privateKey));
   }

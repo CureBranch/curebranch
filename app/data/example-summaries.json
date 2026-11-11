@@ -59,13 +59,13 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "lGouK5oSrs5B8Tqi3lzFEFqAFNhevc3vOTIslefsovA",
-          "y": "V7tP0W04rquhC1welMg_mlwwqprk0znwKJkg7cFzGfA"
+          "x": "4uBnfIpcUv1-_0h-_2-CmF9Cy2skek_v4SIH1I8EgnI",
+          "y": "MS7hNkVUyyn1Zg0fNh6IGhk2EpCOK42KzaVKUM-gAdI"
         }
       },
       "updated": "2026-07-15",
       "personKey": "EXAMPLE-same-person",
-      "signature": "_OzvmzJVw8cyiYLTb9KkoP3vIFbQVUbBgC9dpKlLMxQJIP_nGWyusf5qiCjcKDNjoaksnZcnAmCtHBJAg7B1GA"
+      "signature": "tR4mA-lxKOkhkWiXKaLh9MQZ_byz3cm6IEGWOiNAvYfjV_lp29SLQ15tjogaAGWySH7LCAbV0P3d1W7LflZZ4g"
     },
     {
       "schemaVersion": "0.1",
@@ -115,13 +115,24 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "WCAleRYcymRq7CfsiElCDbq3-dOBpyRWZFF3zeSsw-4",
-          "y": "dZBUhi1qnu1Fzqm8Z7o8gMCJoGSEl9XS37fdSlikcl8"
+          "x": "JyqYR6aK-1cFl_zQjiWUZD7YPxPXNcrNg3krcQUKT10",
+          "y": "rbXu-bcH2Q6khWQAk_N5N1VLQsXYzdsQXyXCTxJuOqs"
         }
       },
       "updated": "2026-05-15",
       "personKey": "EXAMPLE-same-person",
-      "signature": "zUDr7ihB_p7dcDco1f4_213N-yX7MQzjaAxK5U2fZxdsf_XHg-RLVQOrW7VO-ifIdzwVW-mVyIv6ljyMJukI1g"
+      "recognition": {
+        "helpedCount": 7,
+        "badges": [
+          "first-share",
+          "verified",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "5KUeGKfEe0Dc9LRpIl89EoKPvxJhj8G8jnIRs2_xo_NmwFvAz4VLvRMviD_jmr1t2wqPzqGofql8yyP-crZk1Q"
     },
     {
       "schemaVersion": "0.1",
@@ -177,12 +188,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "LdjtaC0odG3ovqLuQIhB6r7Wf4OghMEZdmUzi_LJF7U",
-          "y": "FMF5FZSKOJhhQrjsYXx-veAYFx5ys8rWwO73pFNIPeI"
+          "x": "gxKrTvam5p_A45mncgDG8mEs0PWvIs4c9BPdhKDBpX4",
+          "y": "yTSThu66exORwwM4MYh1RbbDqLcOSZlZbFLnhMV7TS0"
         }
       },
       "updated": "2026-07-15",
-      "signature": "HyUqON3YD641Ruk-SBO_GcZjr-5DOmiFHRN0FfzM3VdECjIL-SRhYbb0IqobCc6heCxFcVkuDD69RCO_eS8Hug"
+      "signature": "DWYo-bRkPsuEdrfEZlVYdWl9aRvJLmKSPqOTFnOsflbW7VrxCr6FqSNJm1pLMt9dh9RUAyRminZI9VVYHq92_g"
     },
     {
       "schemaVersion": "0.1",
@@ -231,12 +242,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "Kxz9enJg1i49PVueg2cMAGGHU-vG_7DCDRiz2vVGMKY",
-          "y": "Hg1M7iC3Q562TOpStaooTL5sfgiR0VM_iAp4idaoiH4"
+          "x": "HsCNFhQ4_xvAmpZ23utscrLJq5RQa_pRJrzIWGzJvk4",
+          "y": "JorWStm8pS5SornndqNE4TzwFHnOu1nt5cEGSUOwvpU"
         }
       },
       "updated": "2026-02-15",
-      "signature": "7Rh8PMwRCGjBYreKUzAvIKyqAaE93ZxZhpmTgLopfCe8dOfGj5D4gvbOXOQKmQ1daNv7paJvwMeh1pkICbfXKA"
+      "signature": "AsJ-pkFEWgzHMUCxQ6SlIRBqdvLKvfshq9VxXn0Wb4y20UIFYqnUFniWdftZzir5BtkZPKO9ZYKha510KY7-rg"
     },
     {
       "schemaVersion": "0.1",
@@ -296,12 +307,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "6ra_OtqGydqT9-Msl0qfjxfu4iA51JSVEPreFJ_eRhw",
-          "y": "79D9gflFbHR2g-YpRNipftvz7MF2WuP7fX7XnE77F_Y"
+          "x": "Q_emsperaRv7joXgq6Ueyiq5wbkBs_IRcjlgyhn9W2g",
+          "y": "M7XZVpcSsdBoewPQTqzQNxuSNlxjXZwDQQdOl8HfOZo"
         }
       },
       "updated": "2026-09-15",
-      "signature": "REQmi4yT5_nhAJ8Rz_cEQKttXjRVudQ1FcwTvUJbM9pzOlg3Mv_0SACbI5tTFKY72KEb5tTzOXKCQEnUXnhqHw"
+      "signature": "ZhxXyatoOnr-ZVzLLqX1yblG6HoQQoQ2NkDpwYdGA5-bBxqLVgxqnVN2hXIFl8kCH5NG-A6z3pcwX2Zb3Ot-Lg"
     },
     {
       "schemaVersion": "0.1",
@@ -361,12 +372,24 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "YlPv2x6zIEu5JCzfDNkA4amVfrZ8BPwgN2i4rnb1v40",
-          "y": "G49EGOUI3BUiBL1pmmOuY5OODArXf-IOwULNzdond7g"
+          "x": "XGCMQel3XS45VPbND7z4DRuRwvvwtAeyayQraLtTvgM",
+          "y": "jTGap2sv8rKgb2jteqtcIIx7fzKhBoaPgJPsZ41sNgs"
         }
       },
       "updated": "2026-05-15",
-      "signature": "FGgWldF2dvEsADR-ZjaJeqAZ89PLya6XiNAA3a2BFyeyTvYtb84xIAdz7wvPiiJL-bM168XxqPOAlA6CNLgKhA"
+      "recognition": {
+        "helpedCount": 12,
+        "badges": [
+          "first-share",
+          "verified",
+          "helped-10",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "l5dKQxgznPEEhGy63CnPSTYRCU3M2Vq4pIYR_UQvBi_tNfxQ1iGe3E3eIgMfPX_KUVU_vMd3sXICo1R0rBnOVA"
     },
     {
       "schemaVersion": "0.1",
@@ -416,12 +439,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "-XsN0VTFNlW0gs1lVdT9SBlS_PkSAQotgF5aU2rcnPc",
-          "y": "nhOFlNBatCkThFzToN2HSDPWA0g7v4-_tm_muq1S-g8"
+          "x": "SsxsCDUxIdV6cTb6qs1st0JEG2YIWBfcO1o_GqR3C7M",
+          "y": "aqdHwJ-sfq8nRAlYrwu_T-pZZJG95GwY4ixFzQCRfIE"
         }
       },
       "updated": "2026-03-15",
-      "signature": "QAe4JuL56YHqRw86ZrA_6moPVyCMrBWuOLxc4qIihf_bmoYnU47vEtBx8KIDb1A8sZT7nHo-yK10Phb9zpTwIA"
+      "signature": "qdHO0bPRtvaJ88ypsPftu9Fr9CCG46XN-lF6lq3AHBaCVC8fGLx3tlDbGWYL--ueZfTtjvbC0dWplAiQngbtLA"
     },
     {
       "schemaVersion": "0.1",
@@ -475,12 +498,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "5u6UNt31Vr1v4F8vYjpsinrXeh0V4TiOcItYVw9FuV8",
-          "y": "VSL_9cuj9XpRW5Wn8tNueGanPNRfX56PB7diOpu9Sus"
+          "x": "Cf-7MUX7tXQrfPrHZMBAaipCymhgb_bBov3YKPtY8Zc",
+          "y": "3uxFuEhB0CKe0vY9o1g05HE2zWHvOADV17Z-mqFP140"
         }
       },
       "updated": "2026-03-15",
-      "signature": "w7lJJHOeMcJD-M1bfo1Z3Tn_LxPVgVq7QBx7oHsRRUNCmiYaN3QiW5NfNfLrvZ9dbDcRkpxZolnTw6OA_BiDwg"
+      "signature": "1aCkAezaIh61b1py_WpVueh4lPNVxfOs8QGAqlW7aN8QDFFr-Ivzpcpmy_Jd5PY48NesH_gayOUn4hmqw0Msaw"
     },
     {
       "schemaVersion": "0.1",
@@ -540,12 +563,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "yBcNhKo5H8XaDAbbQAWL1Pm1r1v8bQcSvkmj-LznvMQ",
-          "y": "m1dEK6wrZUmPN1K5WFBq31YfyLRSZinqTZkJtgzKS0c"
+          "x": "si_PHKTfEgINuiTse4SOhYvglYcsHyQjwfNoCvKzsDE",
+          "y": "Nt49d7YqH6_LYGxLpaSFoG7A92cv2jW4axfnx34MKPs"
         }
       },
       "updated": "2026-03-15",
-      "signature": "lPVTsN8fE09lqC_qeVOeiqbEBMlMSJPoez0d2xcifBHjat6Wev-S_wsxpaFoMjujtT5NukkqxB49fwZHty5KGQ"
+      "signature": "Pp6fjZmOZxxCRwoz64GHv6a7Rccqj-_zWdREUYGgNjmUvi245f7Qt5AE9nTGDW5kxGduwEmXT0k0aCVhvlExdQ"
     },
     {
       "schemaVersion": "0.1",
@@ -595,12 +618,24 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "EXR33YymBhdAon3OvAhS1cngl06u_-9wz2pE_dj5sy4",
-          "y": "0wNil5v9XQo-266f0v56UJSrYxb6b0NcRyyxgvXj5dg"
+          "x": "BDuvT5aRyW3Be7vESKARkXc03sSDUXlqtspPm-z2pY4",
+          "y": "BJ1QH7oIlk30ZZdBMFFjpVc_ODoCIQVsaVoONRyEwMc"
         }
       },
       "updated": "2026-06-15",
-      "signature": "qNYJxXAFi93ycBzE_a0Sm-BBCoHM8VWyhmjIrHL09DnQnJojqkP13O3hudH-vwq5ye7L6t12MJ6Xlv9du-oIjg"
+      "recognition": {
+        "helpedCount": 17,
+        "badges": [
+          "first-share",
+          "verified",
+          "helped-10",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "4ctA8swn-AJyXfjeihRi12_p33nnjaMT2lr7AU9PAL0uoxKyRIrB3xFUG-CbST3hH-0rNQYw0pTWR1XTkt9gEg"
     },
     {
       "schemaVersion": "0.1",
@@ -654,12 +689,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "9iSH65_WFSJDvFZnRakzTIBu_NVipEq3Pau4sLXegMI",
-          "y": "_U2ZPENfRwmWhloDihbwepP5C_cNMpkzW7ECOKj-eO0"
+          "x": "6L1REo7nWC8TyL_nE474IQQ_naw9EY5tsIuIbEWM1k4",
+          "y": "vGonl4JiGm6YE4CXbFQGeBnqsTZML4npCQqbAI_hFxc"
         }
       },
       "updated": "2026-02-15",
-      "signature": "B3j9GJdYVGtU6WCSe_yEsA78g413oWoa9rTjmMktz8kx1VcQWwkP8dC7JklxS8Fk_W8kiDY3lbkxNf8A-I7MDA"
+      "signature": "rzFPsCOrMAqjKyL0lsK8HBVExcoASKYXTSZ0VfGf4vws6vaU6xfzzjkVzPTUnHwOq-vwgIfyIf6NHaQDKXkN8w"
     },
     {
       "schemaVersion": "0.1",
@@ -712,12 +747,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "m6wx0-0c9TKris_Li6ku47GUlfT7Ni73zlwGqHj0K9w",
-          "y": "MecWtwIyAXkvXnb7E8kdCiYhzO_Yov0nseccVIrc-J0"
+          "x": "GBeHvH1VIPlCotFIvUjwixBcWd1TS0OSQ0SrpifcV3o",
+          "y": "En-gN4z3O237buTR70d908alqUtbmjoO99Jer0q1eM4"
         }
       },
       "updated": "2026-04-15",
-      "signature": "kZ_jK-BpYYhlwmBGl9T-GH-bFswdpCC_JHcA-AWu6iZUWYNecIYaZ_KGY-E-y1sT8xyXvoD1OeL4pAUwlQvcew"
+      "signature": "edtj8_jG7AMaUQZCxSCY8XLWqz2YMvppCbkLyhe6i3bxUp_C8Pu2WA6FxJWRncAYQBsstdeKsjThDXNXhKgr1Q"
     },
     {
       "schemaVersion": "0.1",
@@ -771,12 +806,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "6m4BioOnB_s6OqHktbSAUelS66v_D4iOtQDKUObrO1E",
-          "y": "0sblUJsb6mkstt0p-lENIUDNcl1kRaxvzqVHPXSQ5dE"
+          "x": "JTZEEqJk_wSxO9dkOe_pErsCTKDQS61QQJq50NTZNOI",
+          "y": "eIVJbVjfr13DedhoINL1FuRm-bzuO4Lt4oI-8LwsedY"
         }
       },
       "updated": "2026-05-15",
-      "signature": "kLy256asmjalOL4o9J7ffLtMLQjpvPdhV-ArJV7up32R6-7R9Dd3qTenULubXjl3naxUM6G6an0Bq7VsNReTyA"
+      "signature": "pYdI1IiOqWMPNAPtB_M_58mk-VINUazbaRMMgDEUTeIqBZ5O4TW_gswxdLKiBWpZU12WzkJIBdUhvQfuoLdKJQ"
     },
     {
       "schemaVersion": "0.1",
@@ -829,12 +864,23 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "Ot3Vb_L4MxwbxcmF3i_GQQY9tdkRmibt-N5BDRW8xSA",
-          "y": "XjaqgAgh_NJt66tJ1oLMAhOrOBN7ahZdUhnLfJ4e4FU"
+          "x": "vg7wa5XzM2N8sULhpEc0Yq8afGJaKX9ycuFu6rZnzwo",
+          "y": "YOfVkE0zzC7X-RRagvg1klXJkp7B6AYm6kZE2yue8JQ"
         }
       },
       "updated": "2026-06-15",
-      "signature": "HiSgWqeiKL8rEie6Hky8k9rKHLekWv4giXTAOn7cGYI6SS7fuIjd_F_WOjHB82ghKNyOTOi-KvpyWHSthXYA-Q"
+      "recognition": {
+        "helpedCount": 22,
+        "badges": [
+          "first-share",
+          "helped-10",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "YbB5L0fy7a0u8VN3w4nUWwtneANReQCjW9vxbn0Xyosta3dQrsFT-L2Wlaz28bZrJxgeZDV7R76At52lVfrZYg"
     },
     {
       "schemaVersion": "0.1",
@@ -888,12 +934,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "jEWG4C7B3vtg3odJi6Wv_cVVeACcXDZKjV9-_wJfl_M",
-          "y": "DQ-RB4YKsgaBp4WJXs-yFK7f4lMXOcjCq63myqjfbAw"
+          "x": "DL55114DYOXaBMg7un-kiT6ZGJnSSznKST1_ZpeRjUQ",
+          "y": "COyfKTb93apmJtqCm28lrKjXm6cBmdO4F0kFk-weLZw"
         }
       },
       "updated": "2026-08-15",
-      "signature": "t_3Vlt6RCd_8guFDB9PYx8Lspgs_fFBn6M7YSidSxJ3eZx6_X8M0Vhbux-p1z1LDMCkG3nbeOXB4NJ2ZVgc2Xw"
+      "signature": "IXBVxf5Z2fvzK2NpxjPZ_LucRytO9QENU00M3bPZwgXdKyb2AjeZKh8unmBPUfy08pWFC_sKk6WE-OMKZ7BffA"
     },
     {
       "schemaVersion": "0.1",
@@ -942,12 +988,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "arDq07Mg70xWmFwN8ZuVreCAuphXc2e0mZLSyx02srI",
-          "y": "3H0kJzHv6z16jU2PUkQPbcd0Rkb5aHoU38xpvQJPh7g"
+          "x": "z3x-mwSlCOrYNI09etfNfNr4mJSEmW2svphz8hl-iY8",
+          "y": "OMrgSO5NH0tePMPbdpAyU6PfhEP68nLtyi5VTFgqxh8"
         }
       },
       "updated": "2026-06-15",
-      "signature": "uFWjD2soe8jreZ8x7xJmSrb2OIFd2j2ymYFVIlv9y-F7bQBJjiS4Bnohe8F_ikAD-aj0N6o_qCwrgrrVJXFytw"
+      "signature": "cuDZ5UmPOMPiouiU34LLjlHnLW5Fra-tAbg_qtQi6BbDzDEzLE3ZZccc6UjFQjAwb-skud0A0DmLMSpL9sO8Ag"
     },
     {
       "schemaVersion": "0.1",
@@ -997,12 +1043,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "O8OsCQVbQ0epJWlYfR0h0D4c93IAil6iLQJNKaQb6GY",
-          "y": "AV19atqRjuVSJoXPLGmpiQark9QrDdcgkdhWvrsH9DA"
+          "x": "vBQLsE9vdMEs4wXe6vwEsLHbeNhyCWcN_qMLjR-zCDk",
+          "y": "WMn_Gr4iY5zlHNfxoc4DMtwtagML5cKj76Ywzs7lJrM"
         }
       },
       "updated": "2026-09-15",
-      "signature": "02m3pyFfbRZnzI-UyNqg8cP-q07puzXVg0tU5xVaojP9KiTPS5lYGOMeeN_frKAD8ATC3uIsLSJqzYPvKXcaIQ"
+      "signature": "SzvhO3bhVIKbBIaWxA4KtpLKOe-q-18Pv1d7vscp9xD_hXo585U78cypxbafor4oNdye37Y-JSqQAD1XSntyog"
     },
     {
       "schemaVersion": "0.1",
@@ -1051,12 +1097,22 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "DEKI9ero85NhPgEOssdTFXIemOo_-S7ocWorB1d8xJ4",
-          "y": "0cbPBThmT6wFBd46pvcu1TGohs8p1tJK1PmnUSrSWnw"
+          "x": "WDgZM8q3rJXIHpYOnmIzjtJVLaFdpCLAtlDWKfpRI_E",
+          "y": "5LyQQBSNnMmsHvFhUjD9F_cMwSoE10AWQ8Oxad7tqxE"
         }
       },
       "updated": "2026-04-15",
-      "signature": "OP6U0_e5lJUC5XLfHN6j-dw5VCB8fn7ZUs2XR3vc4xTcANV1N3CLk_muh6Gjmm4Mwa-n8ZSTXqx17j8Swguf8g"
+      "recognition": {
+        "helpedCount": 4,
+        "badges": [
+          "first-share",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "QtKKE8IW-r31fHvESqC9ZQCnM7y1Blb6jsDSgFSpSxLw_6rzyrIAXJ2_3kK-2_uk_WLdars9LiYBIHpAVaIDsQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1110,12 +1166,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "xQZlcU-hefI30hS56PkBiRU-orpjfqa5EadUrbWajms",
-          "y": "0qnbVUXHYdXzipUt9c0IqMvMRXv_X-U0XVJN4IDEMP4"
+          "x": "oep9ueS0kf9QhVPWx2O-DY1hj7DTP5Kgahu7KjA96bw",
+          "y": "dumlg4ivmd0w3ib2eRz0Vb3uigpRGkjM0vabWcBVQ0A"
         }
       },
       "updated": "2026-08-15",
-      "signature": "sdiI-r8rBFy02hWGK0gMwygfim0ap1fawXuyv08tWazbgbg-ufNJhpkbD9TWZdydr4KV3QnVz8rfgwd51wvmQA"
+      "signature": "pEhNPvpnoU572LXCDRaDABldvSHwFKYJZMV_d8sc8vJRWbo2u_dsbCv1kq4YTHI22NKcb0R37FkDgoJ3F8m1pw"
     },
     {
       "schemaVersion": "0.1",
@@ -1164,12 +1220,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "LoEvm-fsqP5LUY02MOrs4WlEQbMod0P2_nrIk9fM7D8",
-          "y": "AeR53CzpJDITUYcEp-MJwTL9GYA0wIp80v4zOihIMT4"
+          "x": "DsQO8FwBqRHJrk6tYFTYl2dGfU_a4NXthxjYDZo_fmk",
+          "y": "9QOdJKtDJXHWpEgvefjQoa8zaFY7dM4TChG-Es9b1oM"
         }
       },
       "updated": "2026-01-15",
-      "signature": "IZYLkLSjy_Kfo5u9XGdwm2zZcvRjeDsyC1tplBm1_gRnMol48Jrrr6HcXinTyLOKyo54aoNllSVRKZk7Gq2aVw"
+      "signature": "9lZoedklp741-OyJojX79NUL9gcgIc-0c31H5VEMjcIJz7ZL9bJRB0_iRGS1MBrIKXjC-9-b59bUl8Vc4ASwcg"
     },
     {
       "schemaVersion": "0.1",
@@ -1218,12 +1274,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "FZWwUuHtgU7P5do_O_a4lJk90yLDUsjGZ1VX7FDzjNo",
-          "y": "p1QivtGrzZXE6pSFQHDi0zHbhTUetwCM98zBT0XTep8"
+          "x": "VqZsLUzDH0D6PQyV9W5G5-bJpWMJLxs_AHEF19eB6qk",
+          "y": "x2RIXFapc2A9gEtS4GnzrQIFghMGk30BjESWY2RfHGY"
         }
       },
       "updated": "2026-07-15",
-      "signature": "HnyP1LQo4sXWI8IDx5WHX6meRuv_qAEahV5_RhbIv3_tLIiQWv18UhwQJ0C0ppza-nJ8jOZn9itXhSlOR1YEVw"
+      "signature": "Fg3Sg68hOGZCHDZAtE0Mh0kez5pOi-CxTV-1u7DvMrOssn3MPislPswbQaTAi4fb_2OSWHeph8Jg35mfvGF7tQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1273,12 +1329,23 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "UlSrct0Epbqkh_zByucSd7vQkQWxoaZFWDqAQ_oJD18",
-          "y": "5fgXB1qaEXqHmKFazwz0syhrViOqIiofIPni5-IsVOI"
+          "x": "UwpGZo-VxBMcWfDKUqIRg7-WicMPOp_76nhNg43EGbE",
+          "y": "n5tdTtCx2jAzPNrAd8PzOiHz4M6x3382zY9XpM5aSK4"
         }
       },
       "updated": "2026-03-15",
-      "signature": "aS3qVG3BlDdPTeIqUYZYHVMR7x4nSuiUAsoJqaO8UUxmGBtwg_ZadsJjrSBQ4PqBfxz9dPJuXDBhic3wIj6fEg"
+      "recognition": {
+        "helpedCount": 9,
+        "badges": [
+          "first-share",
+          "verified",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "nLx_HtKOi3xS182C6iWvO8LwhyygnjqrQKKUIcXkajiayCMdDygjQ0ObKV9OvmkUTL1-Rr2MJRJ9YiKKuEk6rw"
     },
     {
       "schemaVersion": "0.1",
@@ -1328,12 +1395,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "MfcnMn9o5vsu1-ggRh8sdKyny0-986wJAl3B1mNGu4k",
-          "y": "iktdHSqAkCYTxY4qmo0O1KW0Wh_U24N-I3wr3RtFBYk"
+          "x": "PF3wWRaVTSzZexKJQbKHVvw729Bd3zTAF-8t48cgu9I",
+          "y": "SkDuiPcLgXcroTU9l_mmI_1lbv9IqkjDS_Y6bWKirBI"
         }
       },
       "updated": "2026-05-15",
-      "signature": "Q_WqlAkltzwJnNSGAzFRGmTSJid_DqmZ5Sk0MllCnsYkVRvQMBJBSyLda9kTQ3SaCbo0yI2OkjgL9C7rc66eZQ"
+      "signature": "Naj95LvifBDe2E-v-1-YagOSEtwss9FICzga0GJxkAx7_cJ5v67YCF_cQOcM8XUeHNf5NG7qhU64cndT0Nci6A"
     },
     {
       "schemaVersion": "0.1",
@@ -1387,12 +1454,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "rgdzFQCU_L4L4b35U_GZHZ07GNgO72Cz0W7UHadJ89Y",
-          "y": "OaTGQRVSS0O0_wgXcotHBlK3wnrPSGXkFEePN4z001c"
+          "x": "mwMylt3uT5VpTqfOVhiovxzR-CzCTC5S0IusmdtQkhM",
+          "y": "nYvjoGxxkybxPS6PGXrEkdQwXn9Bjh_H6xgPvM9vbFE"
         }
       },
       "updated": "2026-10-15",
-      "signature": "rUvb_sHLFvGyj2gZRvqAuzS4eRxvuAceaPsJkPLcmRZikIxXIdaX0IoVvha_-fEjT5NQqpDrtoT9hNvi1PMLYg"
+      "signature": "nN1aIVz1FYHmXD0XT10p4yP95UHVahHx9zK_LQvzsxsTqYudt8VOlAXxzc1oCie8HxoBDZy8ge0y1TVROUyAbg"
     },
     {
       "schemaVersion": "0.1",
@@ -1446,12 +1513,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "AS6RTyaHDCTJYqAizduo0LkplbYa9NNvSVkRra22uQI",
-          "y": "XYxPkHIUO1tfxsnAdJ6ZLVc0yrPRKdYQ896rCnDBvxA"
+          "x": "V4t10upaGDoPefE6rTpOwtLSZYy7NF92_dP2mUo60Lg",
+          "y": "DceD4WXURWsm3QMRwJt7Ay29BGE2Y4TbAEY9ET7INgs"
         }
       },
       "updated": "2026-02-15",
-      "signature": "809CXK4tL_3iAi5fIUTI4E5bUM5og2r4wIViPHfzoqwhqMB20TB8k7WhMpTG-GGVr9LlTrC3700IZSg5o4BJrg"
+      "signature": "lPAoP3gFL_7Smf8DjKo7sRkBY63-j6ZjME93ibazxtqlwMe03csPCcSZ3bWS3Sdh2AzN5Z_zzchB0XcBvmbeJQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1505,12 +1572,24 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "y-wTRGcjpMSESHiSlrpHrpCBCNmG64qRDOBWDxSi78Q",
-          "y": "D-ZHKAWLk0jAwEWKGoLgs_duOhYAXHPkAB4Efmt6W_4"
+          "x": "-GLAtMz26aKTsBGZEh6ysryRVzC5vYe5j12tvrN3MTI",
+          "y": "37lW2AXzsPgrlGRycbgaxRb534_4v9Q7xqY3BuTjblw"
         }
       },
       "updated": "2026-08-15",
-      "signature": "Uz8PSQcFkysOG0leNWH9GwRW7qlx92B5nDFVLgMSfhvP68-g9jTyOHxH40wr7La7exPPyMTNb2fQZL1UNOTJ_w"
+      "recognition": {
+        "helpedCount": 14,
+        "badges": [
+          "first-share",
+          "verified",
+          "helped-10",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "BheDZgk35b6hDYwbSkylTM5v8oV5D-v6joNXnPsTHjrgc8VAog4Ar1LSWIAHOcwzJYQshPRl4YHRaQKWEyGihw"
     },
     {
       "schemaVersion": "0.1",
@@ -1564,12 +1643,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "J-29CepaaFFhL6mDafX4speIXwxq3hnmhFyLblPFsGo",
-          "y": "tAdVNO66qGQrNFzcp0A4PqsYT42HTNiJaR2_wvrj084"
+          "x": "kG3D5f3jMSS98N911DNtqU8PyBSqCKWmVMYtSo3UiKU",
+          "y": "80rQOb8qT5CsfxiomnnFjv3XsjyiKMIEnIBuJZ326e0"
         }
       },
       "updated": "2026-09-15",
-      "signature": "B8LX6zH9EfOv7hbwHxLjs5bF1ILggo-Yn0AYyC2ZBgk0EK5SWgW-6zgacFN0XgDt3W98lDt2idx2ubIj7njmMw"
+      "signature": "qqhuDAxfPzxA8ugHczgENaN_uZGjIqkv_AS2gI6k_wamzPZ-rqt8rR7cVRLjftSh22f1gsIDdKzGXWMrgtwDnw"
     },
     {
       "schemaVersion": "0.1",
@@ -1623,12 +1702,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "S1MSYTsQbDi6EsuGvBrV5tLEG34_Pi_acm-8XsiuxLs",
-          "y": "ti_LDbBjNTcRQNfAt97BatQRNNHFy1Et6JWcVltsjrw"
+          "x": "f2cJJHngjFxIg4sJ6lWcZt8wOPQLtspj7Xm_j7elbs0",
+          "y": "LO9F-e55MVoizYziU3rKL2GTB6nEwyABy7qSyfNVspg"
         }
       },
       "updated": "2026-03-15",
-      "signature": "D7AbVbeoIrdPlkZhVN691cykQwccIipy5_sQpWH02LgRDOPrHwwRbzF6NUGHZgPemcVqfdi29kuHCBGMY-6F6g"
+      "signature": "PaQj68NkamizRJGrl8qjfbepBxVUMyRUVUf70EObsQxrePOjUfBkxMyKDcuenMFrQtFgBpy2zrphQZ54MrBl1w"
     },
     {
       "schemaVersion": "0.1",
@@ -1678,12 +1757,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "UfZS4WGiI53IfLg7aEZXoNwnQNK7a3bzMkQ3oOdfyOU",
-          "y": "lnJfyn4vlgrJ8Zq3IAjhbvwZse7TfrsBcNALsp9AGMA"
+          "x": "XxrTeesVI2WXPw9nqSbq9evl4X_o9bj3gfDBEIvMezo",
+          "y": "Ihu2ZwFv3fLF6N1a3cZMeUV5BnjXNk_0Z80CrSMkNEk"
         }
       },
       "updated": "2026-10-15",
-      "signature": "rAWEPtKTL_5m1E8iqOV_qamtnuO93nQwu7qC3Bc9PDhto4uMzuLjwpEkpwgMsnWBeZ-ZJwaVJJQ5yNe3WRDOWQ"
+      "signature": "B4GHoXtyGvxc3IVrvwwYxP7W5WpTwNtLeTq9BMHZYpXphOKtfw9uASQyDkiyyxj-6mPC0qYngZSRSQ1E8_-_rQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1737,12 +1816,24 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "10Cu8dOoTZf2GHwB-DY5lPU3xRWkKfsrNlBKI_yZYfI",
-          "y": "wCng_oFP1UBSv4JHmCp4vJvUHXswRDXRYqpz8-AfDE0"
+          "x": "UAU9YRTtzeu05bNggiJ1gjbO0PuxxuUpcYVXZUGaXTI",
+          "y": "qBR_UbFeur0xoc4i63j01hckBwMP8qz2g3AWwfyJXMg"
         }
       },
       "updated": "2026-10-15",
-      "signature": "dpVRmZb0nI6vhpzXTtyy8ish-qme_mG8lZgCthbKP3M90FmnTlcr7cs5AFO22T2FsFC2HqpJ88Up2rw5VWixSA"
+      "recognition": {
+        "helpedCount": 19,
+        "badges": [
+          "first-share",
+          "verified",
+          "helped-10",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "NpXMnc22nletYcEgPktws6BJhJ-kQbIY0i2AfMv2otCb64xKU2rQKncR5wn48Pjges7ikJHjt40uVWUZFlOqqQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1795,12 +1886,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "vqALIw9NAeiwNR-uuHITU4AC7YISj9UaT5ppy236jwo",
-          "y": "hjeOTihxg6eIKEjjWq9kBMNAvKkFi0P8ibt87DxS82A"
+          "x": "-DD3LIE1ZHs_izXoaYpy7T4dqfV-ctBgIp9m4PCXi00",
+          "y": "-qGeB3cVAvBb_wy2yD0qJb6Njb_HW7q84rGd3y1kwGo"
         }
       },
       "updated": "2026-03-15",
-      "signature": "nqYGI_It4SC5CSsd_yrsfxhEWkGE_xHEXQ2Ri9KHfJQizHKJULxq5b3SIzPbanLW6COoiOh6Pkhnq9FvbfI6zg"
+      "signature": "u96qXPPQGnj-Fx_4OKqc4ChmrXuP_OO2nBfwAJ7OZ4v2M9ekaFok_amzuD-OLKxDwrwyKn6EYcMw9Z4zbrO9ig"
     },
     {
       "schemaVersion": "0.1",
@@ -1854,12 +1945,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "8_zhSRTr5-J1N0BEYVvPbO_RsLzax8VV4mDIWLlOStY",
-          "y": "QAUUqz7num5ogma_S3TF7eQj9sgBqm5zLa1Y4FgJJho"
+          "x": "K18Ymn6so_pv2u9W88nKBiz0eyGiTRLbXI8aZMpG8h4",
+          "y": "eiOi_qRr7Nwos2QRJgqyPDrgG5wOE2pKqsMc-jMl1Vs"
         }
       },
       "updated": "2026-07-15",
-      "signature": "dDF-8Icimiia6v33TVpbYburSFKgcCXXGZUUSKYElH4uItOonHY8cpqokGjBRXq8jWntbI9E76gKHcD7QvMyvA"
+      "signature": "IZV1NjgChHBky6Zke8nfGBX4EqnLIRa46dWhYQ5aC-8Ag7cYRUQz3bCRsHJWWKeLiGPog1bnCLmb42JzbuxZnw"
     },
     {
       "schemaVersion": "0.1",
@@ -1913,12 +2004,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "98QCsYkUmy2uDRjdN7rlkPoJQ7RSx8ITKbb0t7mbW9Y",
-          "y": "TM1eyK6OORmEuvMZe3SvRwSRxZ0sESts5ux0YT7f7UI"
+          "x": "KacUJZdSciGeAJfyKFtnT1SLBkr3IZHOwFZzM29vAT8",
+          "y": "ZCLAxIh8tVJp3yunYLTNtIP3FvDHdJ_OyBMUM9qpdRA"
         }
       },
       "updated": "2026-02-15",
-      "signature": "70znApB2qeMp8VUB-UEXZCHU41fw9PJw3zvJGsIDVZdeFCb2v3_ZmObhZMeqhDMk6wPN2_FJwVj0yjysxRgNoA"
+      "signature": "uCIj1IYmjBLKtiuc13zpu_iZCtqrTNr9hcCPpG37ja1jKNr1fD1vtY_EMeMW7P6xyEMVEHDfgtijr0o5ToAgVQ"
     },
     {
       "schemaVersion": "0.1",
@@ -1972,12 +2063,23 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "9hSInzwS5V2x8zt-TtPKCXRpziFxEgQY0lRb9NeNA_s",
-          "y": "Ow2NO3tAF-tTLvhJdn4lPX7lTxfOGrKwUGr5MBbJu7o"
+          "x": "csUVy06OQ9He2nLskcibc1ntj3cu9OwZ0_0RM7a7kXI",
+          "y": "LPBMAVX0yHiDMqFtApXnbEv9l9OPYHiiHrnhftQUTTg"
         }
       },
       "updated": "2026-07-15",
-      "signature": "FxUl3wxzuU5jjEs2b2xmkBmVLUYh4-AacCWXiY-FiH4QUTK85YfkJIVrceYPBDXX5HIpd3FdrJXI77L57bi0Zw"
+      "recognition": {
+        "helpedCount": 1,
+        "badges": [
+          "first-share",
+          "verified",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "CT_49ajact7U5WlbTRg170SjnKHc4KiOTKIIGRp0MB_thXU0YEMpzD2KtvzeNwtlMrQMZso3zuliZ2tGBrOrpg"
     },
     {
       "schemaVersion": "0.1",
@@ -2030,12 +2132,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "v0AC-4V28nBbKUW1dfsZ8GLwmPT8aeLaLqbnC9ArNpM",
-          "y": "i85EccAZHy1GQ_BSv8cWFUhL7iotYYBoo7I9M7ydBEI"
+          "x": "jyMj_kUTdqLCNGpAJyQ44e63iWRdpfMVGoaFsYCs0TE",
+          "y": "JjVNZKh1o5jZRiEc0PlGjO2KG4dC9bHY1f1TQNOeZ88"
         }
       },
       "updated": "2026-02-15",
-      "signature": "7zN5_0s-SkkTxYE2bVS7qpcRkI440MdJ0--1HBn4uBjYqAYpUgqFEHRU10BNzM2VvYbeHfHoiOdSW6ac3zmp4g"
+      "signature": "AmRkwl37Gam_NoSNaGoSX2ug4E1OZFlY6phrgzDz4-79iYIPUaykR2wt31EOtIeciRzz-Gv4nn6xzt7Bwev8tQ"
     },
     {
       "schemaVersion": "0.1",
@@ -2089,12 +2191,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "A_ltKQGlJ0Wgq6blWjZWsHWBARd0ElPH2WqPr09NgFY",
-          "y": "YYxN6nD87RddZQJpYq051mb2HoQAPS4yAaAm_HXfy8w"
+          "x": "_-wQRn8RxpH4vv_G2ZqLXd6t2Q4-Y9bv3R6arp3Hr-g",
+          "y": "yA0IKaE44noSyCbMILpQGOoZpnEBxxEhhhVkEa_ZdDA"
         }
       },
       "updated": "2026-10-15",
-      "signature": "9ScXj9lFbs4jqDryioBYSJgjNBmpJJzH1RVx9bnWkjbsCy_xf4XvHlVp4thCnNdtOp0A8u1wfzdBJpXVmvyqHg"
+      "signature": "ql8ZmYcfcEyeiJYYsYKWBwLwQWcbB8jVClPnGE3iEZta2T7kRj38TgELKCdp4SfxbLYC0iq4Z61jEDfx3DW1LA"
     },
     {
       "schemaVersion": "0.1",
@@ -2148,12 +2250,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "G3emeidVk_Z3V3ABy_ptksXMU0_N8iUk7khxckBTFB0",
-          "y": "YhC31urWV0KRNTQaa1ptE7Q3tgx2w_XnJiUJKl1u2Hs"
+          "x": "3Pu89te3rwPChDvhvIWQU4mwWHHzP8RemzmiXHa-b7I",
+          "y": "ZKYF7Bg-kxYBhB24nTvQm2U8Q_-fI8e58M9RegdAki0"
         }
       },
       "updated": "2026-04-15",
-      "signature": "-95o_oMeyd2YqZRdGNImO4osnQ_wPzHEKlJsSLyASaZZIUnewnzJHBfyqv-PXL4_sBG2UXum6ZkASXD46f5tBg"
+      "signature": "ZOp6-dSahw8GT1AxsOzf1RBYbUJrjrTPyL2Tncxu15FxKNcizaHZEPTCECzNZGkLnH5jfKklN6gjxrVC_jDVaA"
     },
     {
       "schemaVersion": "0.1",
@@ -2202,12 +2304,22 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "f6dqa-09tGXzi5huiWj-LLKdG4R9qBGR1vz6Tg3jGzI",
-          "y": "WsMD4mf23Idahm-gmlRcDsHAysoKrz3mO5R-JXaedlQ"
+          "x": "E0zi_nZQbt4ekrkKGTOgAjwb0RGl8E0TQTqAN0COyAo",
+          "y": "I6AAn77y4AcTmJW1f04zfF6iGwOpxzpq5Y6i7Q1vVng"
         }
       },
       "updated": "2026-05-15",
-      "signature": "TDBHtXUV4woDEGo5IQjl0YmjqthIeW6ZncONmybJvuD05iVBqtRE3aBTZSL6bBo-1B3wVKnGORNfYFpnCCNxCQ"
+      "recognition": {
+        "helpedCount": 6,
+        "badges": [
+          "first-share",
+          "founding"
+        ],
+        "showBranch": true,
+        "acceptsNotes": true,
+        "example": true
+      },
+      "signature": "elx6JQ8yGOhKHNAB8vPmy5NakHCym_NpuFkWwCqwRKpyPUJQ4ctM32scfxuIDZ4PY8m3edoQVyqnNDnocSpbyg"
     },
     {
       "schemaVersion": "0.1",
@@ -2257,12 +2369,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "qAB9XiyzTAfJKD2msjyGpzeOu_ojpj1zIDL1faeJpk8",
-          "y": "iD16nALLX5L0Cp4lGaIL-c1QLhEmjXmLDbeJ7KC-wPA"
+          "x": "wqogIgJIYrn-NJznYvM9hc_KdGpdnlc03Ber_qyf2Jw",
+          "y": "7KT5OiwYOkwqYVqyEOj5bQipEN9NaeEN51N-taUPlsM"
         }
       },
       "updated": "2026-05-15",
-      "signature": "dJ6iG32IRkZGcS0eZzAK9Z7aPsaUAMsN73eUInA-el0drLgN8fw-ei0HJYdymoYeR728xvKjfCdHLgKNXlehxg"
+      "signature": "4FLgEMNNu5TTokn4G1TNKjPNyy0WgzjcZKoo76B6k9CldISejf-JH3q4DcsazOci6V_Saqlr5ptXrIpNPSejzQ"
     },
     {
       "schemaVersion": "0.1",
@@ -2312,12 +2424,12 @@
         "publicKeyJwk": {
           "kty": "EC",
           "crv": "P-256",
-          "x": "geoMQYPXSJV0kAaPskj2iOJphXvlANQhC0Lt6LyCU3w",
-          "y": "0a1j_8RvE-MbMKJxF9bHzs0-b1_NFgo2tO0_OfO3hCw"
+          "x": "Pf6Qea-4jNr_NS0d42UetIXTHLHsQULXzR76QM6PYW8",
+          "y": "TCfv-k9fKpf0okw1C-obwosCP5nqe2GVUfBwnMPgmf8"
         }
       },
       "updated": "2026-10-15",
-      "signature": "k7R4EQfDJvJmqP7xiF65L1yrkYriz8fhwLHyQvTuPMbdX-f_U5RO-OAmgYCV7lweIBAjtgXZmUHcobSpaOQNYw"
+      "signature": "MKv91P_-Nkc7j2Xk12ebm6n5cebstMAjkJuBl-mmvKjyvw4zto0C2OSHBFrFVRhR-CR1SKF7npWdeqmiqIULhQ"
     }
   ]
 }

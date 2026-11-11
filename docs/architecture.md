@@ -45,9 +45,9 @@ CureBranch is a **static web app** plus an **open data format**. There is no app
 ## Privacy rules built into the format
 
 - The public schema has `additionalProperties: false` everywhere, so names, birth dates, record numbers, addresses and free text cannot be added.
-- Age is a 10-year band; stage is a roman numeral; dates are years or "months from start".
+- Sharing has 4 levels the patient picks (none preselected): **private** (device only), **basic** (age is a 10-year band; stage is a roman numeral; dates are years or "months from start"), **detailed** (adds exact age, exact stage text, diagnosis / treatment / result dates), **full** (adds city/state/country and end dates, status and dose text of treatments). No level ever includes name, birth date, street, postal code, phone, email or record numbers. Moving down only changes FUTURE summaries; `privacy.highestShared` remembers the highest level ever published so the app can keep saying that it stays public.
 - A summary is **verified** only if *every* record it was built from is verified.
-- When the switch is **private**, the summary shrinks to a removal request (code, key, "Not shared").
+- When the level is **private** or not chosen yet, the summary shrinks to a removal request (code, key, "Not shared").
 - The after-death choice is public; the chosen person's name is **not**. They get a secret key; only its SHA-256 hash is published.
 - Profile name/photo appear only if `share.profile` is on. Photos are re-encoded on the device (max 512 px), which strips location and camera data.
 

@@ -14,7 +14,7 @@ const out = process.env.CB_OUT || "dist";
 
 rmSync(out, { recursive: true, force: true });
 cpSync("app", out, { recursive: true });
-for (const f of ["sw.js", "index.html", "profile.html"]) {
+for (const f of ["sw.js", "index.html", "profile.html", "how-it-started.html"]) {
   const p = `${out}/${f}`;
   writeFileSync(p, readFileSync(p, "utf8").replaceAll("__BUILD_ID__", id));
 }

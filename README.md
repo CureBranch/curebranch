@@ -2,16 +2,16 @@
 
 **An open-source, patient-owned cancer knowledge tree.**
 
-> In honor of my dad, whose son wishes AI had come a few months sooner. Let tomorrow be decided by patients and their own medical records. Here's to you, Dad.
+[How it started](docs/how-it-started.md), and how it all works, in plain English.
 
 ## What it is, in plain English
 
 - **Your records stay with you.** You load your own medical records into the app. They are saved only in your browser, on your device. CureBranch has no server that stores medical records.
-- **You decide everything.** One switch makes a tiny summary public or keeps it private. You also choose what happens to that summary after you die, and you name the person who carries it out.
+- **You decide everything.** You pick one of 4 sharing levels: Private (device only), Basic public summary, Detailed public, or Full public. Nothing is preselected. Moving to a lower level stops sharing from then on, and the app says plainly that what was already shared stays out there. You also choose what happens to that summary after you die, and you name the person who carries it out.
 - **No names, ever.** A public summary lives at a random address like `my.curebranch.ai/k7x2m9`. It never includes your name, birthday or record numbers. A name or photo appears only if you turn that on yourself.
 - **Only checked records count.** Records signed by a hospital or lab (SMART Health Cards), or pulled straight from a hospital portal (SMART on FHIR), count in the tree's numbers. Everything else is shown but not counted. One person counts once.
 - **Bring your own AI.** If you want an AI to read your records, you use your own (Grok, ChatGPT, Claude or any other) and pay for it yourself. CureBranch never runs AI on your data and stores no AI keys.
-- **No prize money.** The tree only shares information. Donations go through Open Collective and pay only for servers and outreach (merch, ads, and paid advocates who say they're paid). The code never touches money.
+- **No money involved.** No prizes, no fees, no donations. The tree only shares information, and the code never touches money.
 - **Information, not medical advice.** See [DISCLAIMER.md](DISCLAIMER.md).
 
 ## First-run setup guide
@@ -21,12 +21,35 @@ The first time someone opens the app, a full-screen guide walks them through set
 1. **Welcome.** A slot for the plain-English consent video (`CONSENT_VIDEO_URL` in `app/js/config.js`; a placeholder until it exists), the main points of the disclaimer, and an "I watched and understand" box that must be ticked.
 2. **Private profile.** A random code like `k7x2m9`, kept on this device.
 3. **Connect your hospital portal.** Records come only from official sources (SMART on FHIR portals such as MyChart), marked verified. Until `SMART_CLIENT_ID` is set, **Connect** runs a demo stub (`app/js/portal-stub.js`) that adds made-up EXAMPLE records, with no login and no real data. Photos and files can only be attached to an official record, are labeled "supporting, from patient", and are never counted. The patient can say what a photo shows (date, test type, key results). `app/js/consistency.js` checks that against the linked record and sets `matchStatus` to `matches`, `mismatch` or `unchecked`. A mismatch gets a plain-English flag and `ignoreForAiMatching: true`. This step can be skipped.
-4. **Private or public.** One switch, with "only share what you'd be OK with the world knowing someday".
+4. **How much to share.** 4 levels, nothing preselected, with "only share what you'd be OK with the world knowing someday". Picking a public level, or moving down, shows a plain warning first.
 5. **After you're gone.** Keep private, delete, make public, or let the person decide, plus the trusted person's name (kept on this device only).
 6. **Your own AI.** Optional guided steps. CureBranch never asks for or stores AI keys.
 7. **Done.** A summary of every choice, all changeable in Settings.
 
 Progress and answers are stored in the local record (`onboarding`, `files`, and `sources[].origin` in `schema/local-record.schema.json`).
+
+## Sharing levels
+
+There are 4 levels, picked in the setup guide or in **Settings** (`app/js/privacy.js`, `app/js/privacy-ui.js`). Nothing is preselected, and until the patient picks a level nothing is shared.
+
+1. **Private**: only on the device.
+2. **Basic public summary**: cancer type, stage group, 10-year age range, markers, treatment names and start year, and "months from start" results.
+3. **Detailed public**: adds exact age, exact stage (for example "Stage IIIA"), and the dates of the diagnosis, treatments and results.
+4. **Full public**: adds city, state and country, plus treatment end dates, status and dose text.
+
+No level ever includes name, birthday, street, postal code, phone, email or record numbers. Picking level 2 to 4 shows a plain warning first, and nothing changes until the patient taps **Yes**. Moving to a lower level stops sharing from then on. The app says, before and after the move, that what was already published at the higher level stays out there and can't be pulled back. `privacy.highestShared` and `privacy.history` keep track of this.
+
+## Patient recognition
+
+The recognition features are on the patient's own profile page (`/p/<code>#recognition`, `app/js/recognition.js`). Everything is off until the patient turns it on, and the public page shows only the random code unless they choose more.
+
+- **"Your branch helped"**: how many other patients were matched using their data.
+- **Their branch on the tree**: it glows when someone lands near it.
+- **Badges**: First record shared, Verified records, Helped 10 people, and Founding branch (first 1,000).
+- **Share card**: a one-tap picture (canvas PNG, shared with the Web Share API, or downloaded where that isn't available).
+- **Thank-you notes**: anonymous "this helped me" notes, up to 280 characters, with no links, emails or phone numbers.
+
+There's no shared network yet. The numbers come from `app/js/recognition-source.js`, a local stub that works them out from the EXAMPLE tree and labels them as examples, and sent notes stay on the device. A future network source only has to provide the same three calls: `stats`, `inbox` and `sendNote`.
 
 ## What's in this folder
 
@@ -66,11 +89,11 @@ npm run test:browser           # every screen and setup-guide step at 320/390/76
 
 ## Built on proven open tools
 
-SMART Health Cards and SMART on FHIR (HL7 FHIR R4, mCODE-style codes), Web Crypto and IndexedDB (built into browsers), the Web Speech API for read-aloud, Cloudflare Pages for static hosting, and Open Collective for donations.
+SMART Health Cards and SMART on FHIR (HL7 FHIR R4, mCODE-style codes), Web Crypto and IndexedDB (built into browsers), the Web Speech API for read-aloud, and Cloudflare Pages for static hosting.
 
 ## Support
 
-Donations: Open Collective (link coming), for servers and outreach only, shown publicly.
+CureBranch takes no donations and involves no money. (The public website footer has a personal Buy Me a Coffee tip link for the creator; it is not part of the project or this app.)
 
 ---
 

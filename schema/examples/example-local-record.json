@@ -5,7 +5,40 @@
   "created": "2026-11-01T12:00:00.000Z",
   "updated": "2026-11-01T12:00:00.000Z",
   "privacy": {
-    "public": true
+    "public": true,
+    "level": "basic",
+    "highestShared": "basic",
+    "history": [
+      {
+        "level": "basic",
+        "at": "2026-11-01T12:00:00.000Z"
+      }
+    ]
+  },
+  "recognition": {
+    "showOnProfile": {
+      "helped": true,
+      "branch": true,
+      "badges": true
+    },
+    "acceptNotes": true,
+    "shareCardIncludeCode": false,
+    "firstSharedAt": "2026-11-01T12:00:00.000Z",
+    "stats": {
+      "helpedCount": 12,
+      "foundingNumber": 42,
+      "nearby": [
+        {
+          "at": "2026-11-01T10:00:00.000Z",
+          "path": [
+            "Lung",
+            "KRAS"
+          ]
+        }
+      ],
+      "example": true,
+      "checkedAt": "2026-11-01T12:00:00.000Z"
+    }
   },
   "afterDeath": {
     "choice": "person-decides",
@@ -68,6 +101,17 @@
                 }
               ],
               "birthDate": "1961-05-14",
+              "address": [
+                {
+                  "line": [
+                    "1 EXAMPLE Street"
+                  ],
+                  "city": "Exampleville",
+                  "state": "OH",
+                  "postalCode": "00000",
+                  "country": "US"
+                }
+              ],
               "identifier": [
                 {
                   "system": "urn:example:mrn",

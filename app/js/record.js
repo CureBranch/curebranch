@@ -1,6 +1,6 @@
 // A brand-new private record. Pure (no storage), so the defaults are unit-tested in Node.
 // Rule: nothing is public unless the patient explicitly picks it.
-//  * privacy.public = false (private)
+//  * privacy.public = false and NO privacy.level: sharing "not chosen yet", so nothing is shared
 //  * afterDeath.choice = "keep-private"; the guide/Home still say "Not chosen yet" until the
 //    patient picks one themselves (onboarding.afterDeathChosen).
 import { randomCode } from "./codes.js";

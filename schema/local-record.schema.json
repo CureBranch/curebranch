@@ -41,11 +41,55 @@
       "required": [
         "public"
       ],
+      "description": "Sharing level the patient picked. Nothing is preselected: with no level, nothing is shared.",
       "properties": {
         "public": {
           "type": "boolean",
-          "description": "The one switch. false = nothing is published. New records start false; only the patient turns it on.",
+          "description": "true only at level basic, detailed or full. New records start false; only the patient changes it.",
           "default": false
+        },
+        "level": {
+          "enum": [
+            "private",
+            "basic",
+            "detailed",
+            "full"
+          ],
+          "description": "1 private (device only), 2 basic public summary, 3 detailed public, 4 full public. No default: absent means not chosen yet (nothing shared)."
+        },
+        "highestShared": {
+          "enum": [
+            "basic",
+            "detailed",
+            "full"
+          ],
+          "description": "Highest level ever published. Moving down stops FUTURE sharing only; what was already published at this level stays public and can't be pulled back."
+        },
+        "history": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "level",
+              "at"
+            ],
+            "properties": {
+              "level": {
+                "enum": [
+                  "private",
+                  "basic",
+                  "detailed",
+                  "full"
+                ]
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
         }
       }
     },
@@ -512,6 +556,133 @@
             "other"
           ],
           "description": "The portal the patient picked on the 'Connect your hospital portal' step."
+        }
+      }
+    },
+    "recognition": {
+      "description": "Patient recognition. Everything off until the patient turns it on. The public page shows only the random code unless they choose more.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "showOnProfile": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "helped": {
+              "type": "boolean",
+              "default": false
+            },
+            "branch": {
+              "type": "boolean",
+              "default": false
+            },
+            "badges": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "acceptNotes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Accept anonymous 'this helped me' notes."
+        },
+        "shareCardIncludeCode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Put the random code on the share card image."
+        },
+        "firstSharedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Last numbers from the recognition source (local stub for now; example: true).",
+          "properties": {
+            "helpedCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "foundingNumber": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "nearby": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "at"
+                ],
+                "properties": {
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "path": {
+                    "type": "array",
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "maxLength": 60
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "type": "boolean"
+            },
+            "checkedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "notesSent": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "toCode",
+              "text",
+              "at",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "toCode": {
+                "type": "string",
+                "pattern": "^[0-9a-hjkmnp-tv-z]{6,12}$"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 280
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "status": {
+                "enum": [
+                  "saved-on-device",
+                  "sent"
+                ]
+              }
+            }
+          }
         }
       }
     }

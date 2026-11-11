@@ -4,6 +4,8 @@
 // It uses the app's own styles, so the Accessibility settings (text size, fonts, colors,
 // motion) apply here too. Pure step logic lives in onboarding.js (unit-tested).
 import { CONFIG } from "./config.js";
+import { privacyLevel, highestShared } from "./privacy.js";
+import { hasPending, cancelPending, refreshPickers } from "./privacy-ui.js";
 import { randomCode } from "./codes.js";
 import { putFile, deleteFile } from "./store.js";
 import { startSmartConnect } from "./smart.js";
@@ -134,11 +136,6 @@ function showConnect() {
   $("#wz-connect").textContent = real ? "Connect" : "Connect (demo)";
 }
 
-function renderPrivacyText() {
-  const on = !!rec().privacy.public;
-  const t = $("#wz-priv-state");
-  if (t) t.textContent = on ? "On: a short summary, under your code, can be shared." : "Off: nothing is shared.";
-}
 
 function renderAi() {
   const r = rec();
@@ -166,6 +163,7 @@ function nextLabel() {
   const id = stepId();
   if (id === "done") return "Go to my home screen";
   if (id === "records" && !rec().sources.length) return "Skip for now";
+  if (id === "privacy" && !privacyLevel(rec())) return "Skip for now (share nothing)";
   if (id === "ai" && !aiPicked()) return "Skip for now";
   return "Next";
 }
@@ -181,11 +179,11 @@ function fillStep() {
   if (id === "welcome") { renderVideo(); $("#wz-consent").checked = hasConsent(r, CONFIG.CONSENT_VIDEO_VERSION); }
   if (id === "profile") {
     $("#wz-code").textContent = r.code;
-    const locked = !!(r.privacy.public || r.afterDeath.stewardKeyHash);
+    const locked = !!(highestShared(r) || r.afterDeath.stewardKeyHash);
     $("#wz-new-code").hidden = locked;
   }
   if (id === "records") { renderPortals(); renderFiles(); }
-  if (id === "privacy") renderPrivacyText();
+  if (id === "privacy") refreshPickers();
   if (id === "after") {
     const chosen = r.onboarding && r.onboarding.afterDeathChosen;
     $$('input[name="wz-afterdeath"]').forEach((x) => { x.checked = !!chosen && x.value === r.afterDeath.choice; });
@@ -240,6 +238,10 @@ async function next() {
       if (!hasConsent(r, CONFIG.CONSENT_VIDEO_VERSION)) recordConsent(r, { videoVersion: CONFIG.CONSENT_VIDEO_VERSION });
       completeStep(r, id);
       await save("Setup guide: said I watched and understand the welcome");
+    } else if (id === "privacy") {
+      if (hasPending($("#wz-privacy"))) { err("#wz-privacy-err", "Please answer the warning first: pick Yes or No.", "#wz-privacy .pv-warn"); return; }
+      completeStep(r, id, { skipped: !privacyLevel(r) });
+      await save(null);
     } else if (id === "records") {
       completeStep(r, id, { skipped: !r.sources.length });
       await save("Setup guide: records step");
@@ -271,6 +273,7 @@ async function next() {
 
 async function back() {
   if (busy || index === 0) return;
+  cancelPending();
   const r = rec();
   if (stepId() === "after" && savePersonFields()) await save("Setup guide: updated my trusted person");
   setStep(r, STEP_IDS[index - 1]);
@@ -279,6 +282,7 @@ async function back() {
 }
 
 async function later() {
+  cancelPending();
   const r = rec();
   if (stepId() === "after" && savePersonFields()) await save("Setup guide: updated my trusted person");
   setStep(r, stepId());
@@ -369,7 +373,7 @@ function wire() {
   $("#wz-consent").addEventListener("change", () => { $("#wz-consent-err").textContent = ""; });
   $("#wz-new-code").addEventListener("click", async () => {
     const r = rec();
-    if (r.privacy.public || r.afterDeath.stewardKeyHash) return;
+    if (highestShared(r) || r.afterDeath.stewardKeyHash) return;
     r.code = randomCode(CONFIG.CODE_LENGTH);
     await save("Picked a different private code");
     $("#wz-code").textContent = r.code;
@@ -391,10 +395,10 @@ function wire() {
   $$('input[name="wz-afterdeath"]').forEach((x) => x.addEventListener("change", () => { $("#wz-after-err").textContent = ""; }));
 }
 
-/** Called by app.js after the privacy switch changes (it is shared with Home and Settings). */
+/** Called by app.js after the sharing level changes (the picker is shared with Settings). */
 export function refreshWizard() {
   if (!api || $("#wizard").hidden) return;
-  renderPrivacyText();
+  if (stepId() === "privacy") updateNav();
 }
 
 export function initWizard(options) {

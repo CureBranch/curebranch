@@ -13,6 +13,9 @@ import { initPwa, pushOptIn, pushOptOut } from "./pwa.js";
 import { AFTER_WORDS, needsOnboarding, chooseAfterDeath, removeSource } from "./onboarding.js";
 import { initWizard, openWizard, refreshWizard } from "./wizard.js";
 import { matchWords } from "./consistency.js";
+import { setPrivacyLevel, statusWords, levelName, isPublicLevel, privacyLevel } from "./privacy.js";
+import { mountPrivacyPicker, refreshPickers } from "./privacy-ui.js";
+import { noteFirstShare } from "./recognition.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -110,12 +113,10 @@ function renderHome() {
 }
 
 function renderPrivacy() {
-  const on = !!record.privacy.public;
-  $$("[data-privacy-switch]").forEach((b) => b.setAttribute("aria-checked", String(on)));
-  $("#privacy-title").textContent = on ? "Your summary is public" : "Your summary is private";
-  $("#privacy-help").textContent = on
-    ? "A short summary, under your random code, can be shared. Your records stay on this device."
-    : "Nothing is shared. Your records stay on this device.";
+  const st = statusWords(record);
+  $("#privacy-title").textContent = st.title;
+  $("#privacy-help").textContent = st.help;
+  refreshPickers();
   refreshWizard();
 }
 
@@ -160,7 +161,7 @@ async function renderSummary() {
   $("#summary-json").textContent = JSON.stringify(s, null, 2);
   $("#summary-state").textContent = s.visibility === "public"
     ? `Public. This is everything that would be shared, at ${profileUrl(record.code)}. It is signed with a key that stays on this device.`
-    : "Private. If shared, this would only ask for your code to be removed. Turn on the public switch to see the full summary.";
+    : "Private. If shared, this would only ask for your code to be removed. Pick a public sharing level in Settings to see the full summary.";
 }
 
 function renderTree() {
@@ -195,12 +196,12 @@ function renderSettings(fillInputs) {
   const link = $("#profile-link");
   link.textContent = profileUrl(record.code).replace(/^https:\/\//, "");
   link.href = localProfileHref(record.code);
+  $("#recognition-link").href = localProfileHref(record.code) + "#recognition";
   $("#profile-switch").setAttribute("aria-checked", String(!!record.share.profile));
   const ph = record.profile && record.profile.photo;
   $("#prof-preview").innerHTML = ph ? `<img src="data:${esc(ph.mediaType)};base64,${ph.data}" alt="${esc(ph.alt || "Your profile photo")}" style="max-width:160px;width:100%;border-radius:16px;margin-top:10px">` : "";
   $("#push-switch").setAttribute("aria-checked", String(!!(record.notifications && record.notifications.pushOptIn)));
   $("#build-id").textContent = document.querySelector('meta[name="cb-build"]').content;
-  if (CONFIG.DONATE_URL && !$("#donate-link")) $("#donate-text").insertAdjacentHTML("beforeend", ` <a class="link" id="donate-link" href="${esc(CONFIG.DONATE_URL)}" rel="noopener">Donate on Open Collective</a>`);
 }
 
 function render(entering) {
@@ -227,12 +228,13 @@ function showImport(kind, msg) {
 async function addSource(src) {
   record.sources.push(src);
   if (src.example) record.example = true;
+  noteFirstShare(record);
   await saveRecord(record, `Imported ${src.fileName || src.kind} (${src.verification.status})`);
   const f = facts();
   showImport(src.verification.status === "verified" ? "ok" : "",
     `<strong>${src.verification.status === "verified" ? "Imported and verified." : "Imported, but not verified."}</strong> ${esc(src.verification.detail)}
      <br>Found: ${esc(f.cancerType ? f.cancerType.label : "no cancer type")}, ${f.markers.length} markers, ${f.treatments.length} treatments.
-     Nothing has been shared. <a class="link" href="#repo" data-go="repo">Review my record</a>`);
+     ${isPublicLevel(privacyLevel(record)) ? `Your sharing level is ${esc(levelName(privacyLevel(record)))}, so a summary of this is shared under your code.` : "Nothing has been shared."} <a class="link" href="#repo" data-go="repo">Review my record</a>`);
 }
 
 export async function importText(text, fileName) {
@@ -273,12 +275,6 @@ function wire() {
     if (res && res.notSetUp) showImport("", "<strong>Not set up yet.</strong> Connecting a hospital portal needs a free patient-app registration with the hospital's software maker (for example Epic). The site owner does this once; see docs/architecture.md.");
   });
 
-  $$("[data-privacy-switch]").forEach((b) => b.addEventListener("click", async () => {
-    record.privacy.public = !record.privacy.public;
-    await saveRecord(record, record.privacy.public ? "Switched to public" : "Switched to private");
-    toast(record.privacy.public ? "Your summary is now public." : "Your summary is now private.");
-    render();
-  }));
 
   $$(".agree").forEach((c) => c.addEventListener("change", () => { $("#agree-next").disabled = !$$(".agree").every((x) => x.checked); }));
 
@@ -459,6 +455,16 @@ async function main() {
   go(TITLES[start] ? start : (returned ? "import" : "home"));
   if (returned) go("import");
   initPwa({ bannerHost: $("#banners") });
+  $$("[data-privacy-picker]").forEach((el) => mountPrivacyPicker(el, {
+    getRecord: () => record,
+    apply: async (level) => {
+      setPrivacyLevel(record, level);
+      noteFirstShare(record);
+      await saveRecord(record, `Sharing level: ${levelName(level)}`);
+      toast(isPublicLevel(level) ? `Saved. Sharing at ${levelName(level)}.` : "Saved. Nothing new will be shared.");
+      render();
+    },
+  }));
   initWizard({
     getRecord: () => record,
     save: (r, what) => saveRecord(r, what),
@@ -472,6 +478,9 @@ async function main() {
     },
   });
   window.CureBranchApp = { importText, go, getRecord: () => record, openWizard };
+  const wantsSetup = new URLSearchParams(location.search).get("setup") === "1"; // "Start the easy setup guide" links
+  if (wantsSetup) history.replaceState(null, "", location.pathname + location.hash);
   if (needsOnboarding(record)) await openWizard(); // also after coming back from a portal login: resumes at that step
+  else if (wantsSetup) await openWizard({ restart: true });
 }
 main();

@@ -38,12 +38,12 @@ Use 301 only once you're sure; browsers cache 301s for a long time. You can star
 
 ## Website footer tip link
 
-The public **website** (not the patient app) has a personal tip link to Buy Me a Coffee in its footer, with a note that tips go to the creator personally and not to the project or servers. It is separate from the Open Collective donation link. The patient app has no tip link.
+The public **website** (not the patient app) has a personal tip link to Buy Me a Coffee in its footer, with a note that tips go to the creator personally and not to the project or servers. The project takes no donations and no money of any kind. The patient app has no tip link.
 
 ## Before going live: checklist
 
 - [ ] `npm test` and `npm run test:browser` pass
-- [ ] `app/js/config.js`: `SMART_CLIENT_ID`, `DONATE_URL`, and later `PUBLIC_INDEX_URL` / `VAPID_PUBLIC_KEY`
+- [ ] `app/js/config.js`: `SMART_CLIENT_ID`, and later `PUBLIC_INDEX_URL` / `VAPID_PUBLIC_KEY`
 - [ ] Real trusted-issuer list in `app/data/trusted-issuers.json` (remove the EXAMPLE issuer)
 - [ ] Legal review of DISCLAIMER.md
 - [ ] Domain redirects tested

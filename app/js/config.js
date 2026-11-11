@@ -29,7 +29,4 @@ export const CONFIG = {
   CONSENT_VIDEO_CAPTIONS: "",
   CONSENT_VIDEO_VERSION: "placeholder",
 
-  // Donations (servers and outreach only) go through Open Collective. The project
-  // code never handles money. Fill in once the collective exists.
-  DONATE_URL: "",
 };

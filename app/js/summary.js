@@ -4,6 +4,8 @@
 import canonicalize from "../vendor/canonicalize.js";
 import { b64url, fromB64url, todayISO } from "./codes.js";
 import { extractFacts, suggestBranch } from "./fhir.js";
+import { publicRecognition } from "./recognition.js";
+import { privacyLevel, isPublicLevel } from "./privacy.js";
 
 export const DEFAULT_SHARE = Object.freeze({
   cancerType: true, stageGroup: true, ageBand: true, markers: true,
@@ -32,7 +34,7 @@ export function buildSummary(record, ownerPublicJwk, { on = new Date() } = {}) {
     schemaVersion: "0.1",
     code: record.code,
     example: !!record.example,
-    visibility: record.privacy && record.privacy.public ? "public" : "private",
+    visibility: isPublicLevel(privacyLevel(record)) ? "public" : "private",
     afterDeath: { choice: record.afterDeath.choice },
     branch: { path, placedBy: record.branchPlacedBy || "rules" },
     verification: combinedVerification(record.sources, on),
@@ -49,6 +51,29 @@ export function buildSummary(record, ownerPublicJwk, { on = new Date() } = {}) {
   if (share.outcomes && facts.outcomes.length) {
     s.outcomes = share.treatments ? facts.outcomes : facts.outcomes.map(({ afterTreatment, ...o }) => o);
   }
+  // Level of detail, picked by the patient. Basic keeps ranges and years; Detailed adds exact
+  // age and dates; Full adds city/state/country and full treatment data. Never name, birthday,
+  // street address or record numbers at any level.
+  const level = privacyLevel(record);
+  if (level === "basic" && s.outcomes) s.outcomes = s.outcomes.map(({ date, ...o }) => o);
+  if (level === "detailed" || level === "full") {
+    const d = facts.detail || {};
+    if (share.ageBand && Number.isInteger(d.age)) s.age = d.age;
+    if (share.stageGroup && d.stageText) s.stageDetail = d.stageText;
+    if (share.cancerType && d.diagnosisDate) s.diagnosisDate = d.diagnosisDate;
+    if (s.treatments) {
+      s.treatments = s.treatments.map((t, i) => {
+        const x = (d.treatments || [])[i] || {};
+        const out = { ...t, startDate: x.startDate };
+        if (level === "full") Object.assign(out, { endDate: x.endDate, status: x.status, dosage: x.dosage });
+        return out;
+      });
+    }
+    if (level === "full" && d.location && Object.keys(d.location).length) s.location = d.location;
+  }
+  if (isPublicLevel(level)) s.detailLevel = level;
+  const rec = publicRecognition(record);
+  if (rec) s.recognition = rec;
   if (share.publicContact && record.publicContact) s.publicContact = record.publicContact;
   if (share.profile && record.profile && (record.profile.displayName || record.profile.photo)) {
     s.profile = {};

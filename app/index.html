@@ -50,11 +50,11 @@
       <div class="card privacy-card">
         <div class="row">
           <div class="grow">
-            <p class="status-line" id="privacy-title">Your summary is private</p>
-            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared. Your records stay on this device.</p>
+            <p class="status-line" id="privacy-title">Sharing: not chosen yet</p>
+            <p class="sub" id="privacy-help" style="margin:0">Nothing is shared until you pick a level. Your records stay on this device.</p>
           </div>
-          <button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="privacy-title"><span class="track" aria-hidden="true"></span></button>
         </div>
+        <button type="button" class="btn" data-go="settings" data-focus="privacy-h" id="privacy-change" style="margin-top:8px">Change how much I share</button>
       </div>
 
       <div class="card tint" id="home-branch"></div>
@@ -77,7 +77,7 @@
         <button type="button" class="btn btn-ghost" data-go="settings" data-focus="after-death">Change this</button>
       </div>
 
-      <p class="dedication" style="font-style:italic;margin:16px 0">In honor of my dad, whose son wishes AI had come a few months sooner. Let tomorrow be decided by patients and their own medical records. Here's to you, Dad.</p>
+      <p style="margin:16px 0"><a class="link" href="/how-it-started.html">How it started</a></p>
       <p class="disc">Information, not medical advice. Tree figures are EXAMPLE DATA until a real public index exists.</p>
     </section>
 
@@ -89,7 +89,7 @@
       <ol class="stack">
         <li><strong>Your records stay with you.</strong> You import them into this app. They are saved only in this browser on this device.</li>
         <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (Grok, ChatGPT, Claude or any other). CureBranch never runs AI on your data.</li>
-        <li><strong>A tiny public summary, only if you say so.</strong> One switch. When it's on, a short summary (cancer type, markers, treatments, how it went) is shared under a random code like <span class="mono">k7x2m9</span>. Never your name, birthday or record numbers.</li>
+        <li><strong>You pick how much to share, from 4 levels.</strong> Private (device only), Basic public summary, Detailed public, or Full public. Nothing is picked for you. Anything public is shown under a random code like <span class="mono">k7x2m9</span>, never your name, birthday, street address or record numbers. You can move to a lower level any time, but what was already shared stays out there.</li>
         <li><strong>Only checked records count.</strong> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
         <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a person to carry it out.</li>
       </ol>
@@ -206,9 +206,10 @@
         <button type="button" class="btn btn-primary" id="rerun-wizard">Run the setup guide again</button>
       </div>
 
-      <h2>Public or private</h2>
+      <h2 id="privacy-h" tabindex="-1">How much to share</h2>
       <div class="card">
-        <div class="item"><div class="grow"><h3 id="vis-lbl">Share my summary publicly</h3><small>One switch. Off means nothing is shared.</small></div><button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="vis-lbl"><span class="track" aria-hidden="true"></span></button></div>
+        <p class="sub">Four levels. Nothing is picked for you. You can move to a lower level any time; that stops sharing from then on, but anything already shared stays out there.</p>
+        <div data-privacy-picker="set"></div>
       </div>
 
       <h2 id="after-death" tabindex="-1">After you're gone</h2>
@@ -234,6 +235,7 @@
       <h2>Profile page (optional)</h2>
       <div class="card">
         <p class="sub">Your public page is <a class="mono" id="profile-link" href="#">…</a>. By default it is anonymous. You can add a name and photo if you want.</p>
+        <p><a class="link" id="recognition-link" href="#">See my recognition: helped counter, badges and share card</a></p>
         <div class="item"><div class="grow"><h3 id="prof-lbl">Show a name and photo</h3><small>Only when your summary is public</small></div><button type="button" class="cb-switch" id="profile-switch" role="switch" aria-checked="false" aria-labelledby="prof-lbl"><span class="track" aria-hidden="true"></span></button></div>
         <label class="field-label" for="prof-name">Name to show (a nickname is fine)</label>
         <input class="field" id="prof-name" type="text" maxlength="60" autocomplete="off">
@@ -284,8 +286,6 @@
         <button type="button" class="btn btn-ghost" style="margin-top:8px" data-go="a11y">Read the accessibility statement</button>
       </div>
 
-      <h2>Support the project</h2>
-      <div class="card"><p class="sub" style="margin:0" id="donate-text">Donations pay only for servers and outreach, through Open Collective, where every dollar is shown publicly. This app never handles money.</p></div>
 
       <div class="card sky"><p class="sub" style="margin:0;font-size:.85rem">Open source, provided "as is", with no warranty. You own and are responsible for what you share. Information, not medical advice. Version <span class="mono" id="build-id"></span>.</p></div>
     </section>
@@ -402,23 +402,13 @@
 
     <!-- 4. Private or public -->
     <section class="wz-step" id="wz-privacy" data-step="privacy" aria-labelledby="wz-h-privacy" hidden>
-      <h1 id="wz-h-privacy" tabindex="-1">Private or public?</h1>
+      <h1 id="wz-h-privacy" tabindex="-1">How much do you want to share?</h1>
       <div data-listen-mount="#wz-privacy" data-listen-label="Listen to this step"></div>
-      <p class="wz-lead">One switch. You can change it any time.</p>
-      <div class="card wz-switch-card">
-        <div class="row">
-          <div class="grow">
-            <p class="wz-switch-label" id="wz-priv-lbl">Share a short summary publicly</p>
-            <p class="wz-note" id="wz-priv-state" style="margin:0">Off: nothing is shared.</p>
-          </div>
-          <button type="button" class="cb-switch" data-privacy-switch role="switch" aria-checked="false" aria-labelledby="wz-priv-lbl" aria-describedby="wz-priv-state"><span class="track" aria-hidden="true"></span></button>
-        </div>
-      </div>
-      <p class="notice"><strong>Only share what you'd be OK with the world knowing someday.</strong></p>
-      <ul class="wz-points">
-        <li><strong>Off (private):</strong> nothing is shared. This is how it starts.</li>
-        <li><strong>On (public):</strong> a short summary can be seen by anyone, under your random code. It has your cancer type, markers, treatments and how it went. Never your name, birthday or record numbers.</li>
-      </ul>
+      <p class="wz-lead">Pick one of four levels. Nothing is picked for you. If you skip this, nothing is shared.</p>
+      <p class="notice"><strong>Only share what you'd be OK with the world knowing someday.</strong> Once something is shared, it can't be pulled back.</p>
+      <div class="card" data-privacy-picker="wz"></div>
+      <p class="wz-err" id="wz-privacy-err" role="alert"></p>
+      <p class="wz-note">You can move to a lower level any time. That stops sharing new records, but what you already shared stays public.</p>
     </section>
 
     <!-- 5. After death -->

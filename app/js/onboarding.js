@@ -2,6 +2,14 @@
 // The guide only RECORDS the patient's choices in the local record (schema/local-record.schema.json,
 // "onboarding" and "files"). It never decides anything for them.
 
+import { privacyLevel, levelName, rank } from "./privacy.js";
+function sharingWords(record) {
+  const l = privacyLevel(record);
+  if (!l) return "Not chosen yet (nothing is shared)";
+  if (l === "private") return "Private (device only, nothing is shared)";
+  return `${levelName(l)} (level ${rank(l)} of 4, under your code)`;
+}
+
 export const ONBOARDING_VERSION = 1;
 
 /** The steps, in order. ids are stored in record.onboarding.step / stepsDone. */
@@ -117,7 +125,7 @@ export function choicesSummary(record) {
   return [
     { label: "Your private code", value: record.code },
     { label: "Records on this device", value: n === 0 ? "None yet" : `${n} ${n === 1 ? "item" : "items"}` },
-    { label: "Sharing", value: record.privacy && record.privacy.public ? "Public (a short summary, under your code)" : "Private (nothing is shared)" },
+    { label: "Sharing", value: sharingWords(record) },
     { label: "After you're gone", value: record.onboarding && record.onboarding.afterDeathChosen ? (AFTER_WORDS[ad.choice] || "Not chosen yet") : "Not chosen yet" },
     { label: "Your trusted person", value: person || "Not named yet" },
     { label: "Your AI", value: ai || "None" },
