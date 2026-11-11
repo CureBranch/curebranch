@@ -351,7 +351,8 @@
             "remove",
             "keep-public",
             "person-decides"
-          ]
+          ],
+          "default": "keep-private"
         },
         "stewardKeyHash": {
           "description": "SHA-256 (hex, prefixed 'sha256:') of the secret steward key the patient gave to the person they named. Whoever can show the matching key may carry out the choice. The person's name is never published.",

@@ -44,7 +44,8 @@
       "properties": {
         "public": {
           "type": "boolean",
-          "description": "The one switch. false = nothing is published (default)."
+          "description": "The one switch. false = nothing is published. New records start false; only the patient turns it on.",
+          "default": false
         }
       }
     },
@@ -62,7 +63,8 @@
             "keep-public",
             "person-decides"
           ],
-          "description": "keep-private: nothing is ever published. remove: ask for the public summary to be deleted. keep-public: make (or keep) the summary public. person-decides: the named person decides."
+          "description": "keep-private: nothing is ever published. remove: ask for the public summary to be deleted. keep-public: make (or keep) the summary public. person-decides: the named person decides. New records start as keep-private, so nothing becomes public unless the patient picks it; apps show it as 'Not chosen yet' until onboarding.afterDeathChosen is true.",
+          "default": "keep-private"
         },
         "person": {
           "description": "The person the patient named to carry out the choice. Stays on this device only; never published.",

@@ -12,7 +12,7 @@ import { stubPortalSource } from "../../app/js/portal-stub.js";
 import { checkClaims, checkAttachment, cleanClaims, attachmentsForAi, matchWords } from "../../app/js/consistency.js";
 import { extractFacts } from "../../app/js/fhir.js";
 import { buildSummary, newOwnerKeyPair } from "../../app/js/summary.js";
-import { randomCode } from "../../app/js/codes.js";
+import { newRecord } from "../../app/js/record.js";
 
 const J = (p) => JSON.parse(readFileSync(p, "utf8"));
 const publicSchema = J("schema/public-summary.schema.json");
@@ -23,18 +23,30 @@ ajv.addSchema(publicSchema);
 const validPublic = ajv.getSchema(publicSchema.$id);
 const validLocal = ajv.compile(localSchema);
 
-// Same shape as store.js newRecord() (store.js imports IndexedDB, so it isn't loaded in Node).
-function freshRecord() {
-  const now = new Date().toISOString();
-  return { schemaVersion: "0.1", code: randomCode(6), created: now, updated: now, privacy: { public: false },
-    afterDeath: { choice: "keep-public" }, sources: [], share: {}, editLog: [{ at: now, what: "Created on this device" }] };
-}
+const freshRecord = () => newRecord();
 
 test("setup guide has the 7 steps in order", () => {
   assert.deepEqual(STEP_IDS, ["welcome", "profile", "records", "privacy", "after", "ai", "done"]);
   assert.equal(STEPS.length, 7);
   // the schema lists exactly the same step ids
   assert.deepEqual(localSchema.properties.onboarding.properties.step.enum, STEP_IDS);
+});
+
+test("new record: nothing public unless the patient picks it", async () => {
+  const r = newRecord();
+  assert.ok(validLocal(r), JSON.stringify(validLocal.errors));
+  assert.equal(r.privacy.public, false);
+  assert.equal(r.afterDeath.choice, "keep-private");
+  assert.equal(r.share.profile, false);
+  assert.equal(choicesSummary(r).find((x) => x.label === "After you're gone").value, "Not chosen yet");
+  assert.equal(choicesSummary(r).find((x) => x.label === "Sharing").value, "Private (nothing is shared)");
+  const kp = await newOwnerKeyPair();
+  const s = buildSummary(r, await crypto.subtle.exportKey("jwk", kp.publicKey));
+  assert.equal(s.visibility, "private");
+  assert.equal(s.afterDeath.choice, "keep-private");
+  assert.ok(validPublic(s), JSON.stringify(validPublic.errors));
+  assert.equal(localSchema.properties.afterDeath.properties.choice.default, "keep-private");
+  assert.equal(localSchema.properties.privacy.properties.public.default, false);
 });
 
 test("a new record needs the guide; progress is saved and resumes at the same step", () => {

@@ -1,9 +1,8 @@
 // On-device storage only. IndexedDB via the vendored idb-keyval library (Apache-2.0).
 // Nothing in this file talks to a server.
 import { get, set, del, keys, delMany, createStore } from "../vendor/idb-keyval.js";
-import { randomCode } from "./codes.js";
-import { CONFIG } from "./config.js";
-import { DEFAULT_SHARE, newOwnerKeyPair } from "./summary.js";
+import { newOwnerKeyPair } from "./summary.js";
+import { newRecord } from "./record.js";
 
 const db = createStore("curebranch", "local");
 
@@ -16,20 +15,7 @@ export async function saveRecord(record, what) {
   return record;
 }
 
-export function newRecord() {
-  const now = new Date().toISOString();
-  return {
-    schemaVersion: "0.1",
-    code: randomCode(CONFIG.CODE_LENGTH),
-    created: now,
-    updated: now,
-    privacy: { public: false },
-    afterDeath: { choice: "keep-public" },
-    sources: [],
-    share: { ...DEFAULT_SHARE },
-    editLog: [{ at: now, what: "Created on this device" }],
-  };
-}
+export { newRecord };
 
 export async function getOrCreateRecord() {
   return (await loadRecord()) || saveRecord(newRecord(), null);

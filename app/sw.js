@@ -15,7 +15,7 @@ const PRECACHE = [
   "/css/a11y.css", "/css/app.css",
   "/js/a11y.js", "/js/app.js", "/js/config.js", "/js/codes.js", "/js/fhir.js", "/js/shc.js", "/js/summary.js",
   "/js/tree.js", "/js/store.js", "/js/smart.js", "/js/pwa.js", "/js/update.js", "/js/profile.js",
-  "/js/onboarding.js", "/js/wizard.js", "/js/portal-stub.js", "/js/consistency.js",
+  "/js/onboarding.js", "/js/wizard.js", "/js/portal-stub.js", "/js/consistency.js", "/js/record.js",
   "/vendor/idb-keyval.js", "/vendor/canonicalize.js",
   "/data/example-summaries.json", "/data/trusted-issuers.json",
   "/data/examples/example-fhir-bundle.json", "/data/examples/example-health-card.smart-health-card",

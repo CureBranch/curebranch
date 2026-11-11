@@ -187,7 +187,8 @@ def wizard_flow(b):
     pg.click("#wz-privacy [data-privacy-switch]"); pg.wait_for_timeout(300)
     check("wizard: and off again", pg.evaluate("window.CureBranchApp.getRecord().privacy.public") is False)
     pg.click("#wz-next"); wait_js(pg, "!document.querySelector('#wz-after').hidden")
-    check("wizard: no after-death choice is picked for the patient", pg.evaluate("!document.querySelector('input[name=wz-afterdeath]:checked')"))
+    check("wizard: no after-death choice is picked for the patient (stored default keep-private)", pg.evaluate("!document.querySelector('input[name=wz-afterdeath]:checked')")
+          and pg.evaluate("window.CureBranchApp.getRecord().afterDeath.choice") == "keep-private")
     pg.click("#wz-next"); pg.wait_for_timeout(150)
     check("wizard: must pick an after-death choice", pg.inner_text("#wz-count") == "Step 5 of 7" and "pick one" in pg.inner_text("#wz-after-err"))
     pg.check("input[name=wz-afterdeath][value=remove]")
@@ -263,6 +264,7 @@ def main():
         check("random code format", re.fullmatch(r"[0-9a-hjkmnp-tv-z]{6}", code), code)
         check("dedication present", "In honor of my dad, whose son wishes AI had come a few months sooner." in pg.inner_text("#s-home"))
         check("default is private", pg.get_attribute("[data-privacy-switch]", "aria-checked") == "false")
+        check("new record: after-death stored as keep-private", pg.evaluate("window.CureBranchApp.getRecord().afterDeath.choice") == "keep-private")
 
         go(pg, "import")
         pg.click("#try-shc"); pg.wait_for_selector("#import-result .notice")
