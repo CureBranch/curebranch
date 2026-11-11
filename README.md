@@ -10,7 +10,7 @@
 - **You decide everything.** You pick one of 4 sharing levels: Private (device only), Basic public summary, Detailed public, or Full public. Nothing is preselected. Moving to a lower level stops sharing from then on, and the app says plainly that what was already shared stays out there. You also choose what happens to that summary after you die, and you name the person who carries it out.
 - **No names, ever.** A public summary lives at a random address like `my.curebranch.ai/k7x2m9`. It never includes your name, birthday or record numbers. A name or photo appears only if you turn that on yourself.
 - **Only checked records count.** Records signed by a hospital or lab (SMART Health Cards), or pulled straight from a hospital portal (SMART on FHIR), count in the tree's numbers. Everything else is shown but not counted. One person counts once.
-- **Bring your own AI.** If you want an AI to read your records, you use your own (Grok, ChatGPT, Claude or any other) and pay for it yourself. CureBranch never runs AI on your data and stores no AI keys.
+- **Bring your own AI.** If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini or any other) and pay for it yourself. CureBranch never runs AI on your data and stores no AI keys.
 - **No money involved.** No prizes, no fees, no donations. The tree only shares information, and the code never touches money.
 - **Information, not medical advice.** See [DISCLAIMER.md](DISCLAIMER.md).
 
@@ -81,7 +81,7 @@ npm run test:browser           # every screen and setup-guide step at 320/390/76
 - **Code: Apache License 2.0** ([LICENSE](LICENSE)). Anyone, including companies and hospitals, can use, change and ship it. It includes an explicit patent grant, which matters in health tech, and it matches the licenses of the libraries we use.
 - **Data format and example data: CC0 1.0** ([schema/LICENSE-CC0.txt](schema/LICENSE-CC0.txt)). The schema and examples are public domain, so any app, hospital or researcher can adopt the format without asking or giving credit. A data format spreads best with no strings attached. (CC BY 4.0 would require credit; see [docs/open-choices.md](docs/open-choices.md).)
 - **Patients' own summaries** belong to the patients. The license a published summary carries is an open choice listed in [docs/open-choices.md](docs/open-choices.md).
-- Third-party pieces keep their own licenses: idb-keyval, canonicalize and fhirclient (Apache-2.0), jose (MIT) and js-base64 (BSD-3-Clause) inside the fhirclient bundle; fonts Inter, Fraunces, Atkinson Hyperlegible, Source Serif 4 and OpenDyslexic (SIL Open Font License 1.1). Copies are in `app/vendor/LICENSES/`. axe-core (MPL-2.0) and Ajv (MIT) are used only for testing and are not shipped.
+- Third-party pieces keep their own licenses: idb-keyval, canonicalize and fhirclient (Apache-2.0), jose (MIT) and js-base64 (BSD-3-Clause) inside the fhirclient bundle; Primer Primitives and Octicons (MIT); fonts Mona Sans, Atkinson Hyperlegible, Source Serif 4 and OpenDyslexic (SIL Open Font License 1.1); the home photo "Through the leaves" (CC0, see `app/img/CREDITS.txt`). Copies are in `app/vendor/LICENSES/`. axe-core (MPL-2.0) and Ajv (MIT) are used only for testing and are not shipped.
 
 ## Built on proven open tools
 

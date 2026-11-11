@@ -501,7 +501,7 @@
       '  <div class="a11y-fieldset"><legend>Font</legend>' +
       '    <label class="sr-only" for="a11y-font">Font</label>' +
       '    <select class="full" id="a11y-font">' +
-      '      <option value="default">Default (Inter)</option>' +
+      '      <option value="default">Default (Mona Sans)</option>' +
       '      <option value="system">System font</option>' +
       '      <option value="dyslexic">OpenDyslexic (dyslexia-friendly)</option>' +
       '      <option value="atkinson">Atkinson Hyperlegible</option>' +

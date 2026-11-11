@@ -106,6 +106,8 @@ function renderHome() {
     const done = !!(record.onboarding && record.onboarding.completedAt);
     const started = !!(record.onboarding && (record.onboarding.startedAt || record.onboarding.step));
     startBtn.hidden = done;
+    const steps = $("#home-steps");
+    if (steps) steps.hidden = done;
     if (!done) startBtn.textContent = started ? "Continue your branch" : "Create your branch";
   }
   const addr = $("#my-address");

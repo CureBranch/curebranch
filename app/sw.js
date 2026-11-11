@@ -20,8 +20,9 @@ const PRECACHE = [
   "/data/example-summaries.json", "/data/trusted-issuers.json",
   "/data/examples/example-fhir-bundle.json", "/data/examples/example-health-card.smart-health-card",
   "/icons/icon.svg", "/icons/icon-192.png", "/icons/icon-512.png",
-  "/fonts/inter-latin-400-normal.woff2", "/fonts/inter-latin-600-normal.woff2", "/fonts/inter-latin-700-normal.woff2",
-  "/fonts/fraunces-latin-600-normal.woff2",
+  "/fonts/mona-sans-latin-400-normal.woff2", "/fonts/mona-sans-latin-500-normal.woff2", "/fonts/mona-sans-latin-600-normal.woff2",
+  "/fonts/mona-sans-latin-700-normal.woff2", "/fonts/mona-sans-latin-800-normal.woff2",
+  "/vendor/primer/primer-light.css", "/js/octicons.js", "/img/leaves.jpg",
 ];
 
 self.addEventListener("install", (event) => {

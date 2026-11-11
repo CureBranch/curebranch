@@ -236,7 +236,7 @@ test("finish, then re-run from Settings keeps every answer", () => {
   recordConsent(r);
   for (const id of STEP_IDS.slice(0, -1)) completeStep(r, id);
   chooseAfterDeath(r, "keep-private");
-  r.ai = { name: "Grok" };
+  r.ai = { name: "ChatGPT" };
   finishOnboarding(r, new Date("2026-11-11T11:00:00Z"));
   assert.equal(needsOnboarding(r), false);
   assert.equal(shouldResumeOnboarding(r), false);
@@ -245,13 +245,13 @@ test("finish, then re-run from Settings keeps every answer", () => {
   assert.equal(needsOnboarding(r), true);
   assert.equal(resumeIndex(r), 0);
   assert.equal(r.afterDeath.choice, "keep-private");
-  assert.equal(r.ai.name, "Grok");
+  assert.equal(r.ai.name, "ChatGPT");
   assert.equal(hasConsent(r), true);
   assert.ok(validLocal(r), JSON.stringify(validLocal.errors));
   const sum = Object.fromEntries(choicesSummary(r).map((x) => [x.label, x.value]));
   assert.equal(sum["Sharing"], "Not chosen yet (nothing is shared)");
   assert.equal(sum["After you're gone"], "Keep it private");
-  assert.equal(sum["Your AI"], "Grok");
+  assert.equal(sum["Your AI"], "ChatGPT");
 });
 
 test("schema rejects made-up onboarding fields and AI keys in the record", () => {
@@ -259,6 +259,6 @@ test("schema rejects made-up onboarding fields and AI keys in the record", () =>
   r.onboarding = { version: 1, step: "start", apiKey: "sk-123" };
   assert.equal(validLocal(r), false);
   const r2 = freshRecord();
-  r2.ai = { name: "Grok", apiKey: "xai-123" };
+  r2.ai = { name: "ChatGPT", apiKey: "sk-example-123" };
   assert.equal(validLocal(r2), false, "the record format has no place for AI keys");
 });

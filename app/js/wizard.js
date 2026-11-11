@@ -41,7 +41,7 @@ function renderDots() {
   $("#wz-dots").innerHTML = STEPS.map((s, i) => {
     const state = i < index ? "done" : i === index ? "now" : "todo";
     const words = state === "done" ? "done" : state === "now" ? "you are here" : "not yet";
-    return `<li class="${state}"${i === index ? ' aria-current="step"' : ""}><span class="sr-only">Step ${i + 1}, ${esc(s.title)}: ${words}</span></li>`;
+    return `<li class="${state}"${i === index ? ' aria-current="step"' : ""}><span class="wz-bar" aria-hidden="true"></span><span class="wz-lbl" aria-hidden="true">${esc(s.title)}</span><span class="sr-only">Step ${i + 1}, ${esc(s.title)}: ${words}</span></li>`;
   }).join("");
 }
 

@@ -116,7 +116,7 @@ def finish_wizard(pg, on_step=None, show_errors=False, fill_records=False):
         if sid == "choices":
             if not pg.evaluate("!!document.querySelector('input[name=wz-afterdeath]:checked')"):
                 pg.check("input[name=wz-afterdeath][value=keep-private]")
-            pg.check("input[name=wz-ai][value=Grok]")
+            pg.check("input[name=wz-ai][value=ChatGPT]")
         if on_step: on_step(sid)
         if sid == "start": pg.check("#wz-consent")
         pg.click("#wz-next")
@@ -243,11 +243,11 @@ def wizard_flow(b):
     pg.check("input[name=wz-afterdeath][value=remove]")
     check("wizard: AI part is optional", "This part is optional" in pg.inner_text("#wz-ai") and not pg.is_visible("#wz-ai-steps")
           and pg.inner_text("#wz-next") == "Go to my home screen")
-    pg.check("input[name=wz-ai][value=Grok]"); pg.wait_for_timeout(100)
-    check("wizard: picking an AI shows the guided steps", pg.is_visible("#wz-ai-steps") and "Open Grok" in pg.inner_text("#wz-ai-steps"))
+    pg.check("input[name=wz-ai][value=ChatGPT]"); pg.wait_for_timeout(100)
+    check("wizard: picking an AI shows the guided steps", pg.is_visible("#wz-ai-steps") and "Open ChatGPT" in pg.inner_text("#wz-ai-steps"))
     check("wizard: no AI key field anywhere", pg.locator("#wizard input[type=password]").count() == 0)
     sm = pg.inner_text("#wz-summary")
-    check("wizard: done screen sums up every choice", all(x in sm for x in [code2, "2 items", "Private", "Delete my summary", "EXAMPLE Trusted Person", "Grok"]), sm)
+    check("wizard: done screen sums up every choice", all(x in sm for x in [code2, "2 items", "Private", "Delete my summary", "EXAMPLE Trusted Person", "ChatGPT"]), sm)
     check("wizard: done screen says it can be changed in Settings", "Settings" in pg.inner_text("#wz-done"))
     pg.click("#wz-next"); wait_js(pg, "document.querySelector('#wizard').hidden"); pg.wait_for_timeout(300)
     check("wizard: finishing lands on Home", pg.is_visible("#s-home") and pg.inner_text("#after-status") == "Delete my summary")
