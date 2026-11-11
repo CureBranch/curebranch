@@ -704,15 +704,11 @@
   ],
   "onboarding": {
     "version": 1,
-    "step": "done",
+    "step": "choices",
     "stepsDone": [
-      "welcome",
-      "profile",
+      "start",
       "records",
-      "privacy",
-      "after",
-      "ai",
-      "done"
+      "choices"
     ],
     "consent": {
       "watchedAndUnderstood": true,

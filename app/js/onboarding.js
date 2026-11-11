@@ -14,13 +14,9 @@ export const ONBOARDING_VERSION = 1;
 
 /** The steps, in order. ids are stored in record.onboarding.step / stepsDone. */
 export const STEPS = Object.freeze([
-  { id: "welcome", title: "Welcome" },
-  { id: "profile", title: "Your private profile" },
-  { id: "records", title: "Add records" },
-  { id: "privacy", title: "Private or public" },
-  { id: "after", title: "After you're gone" },
-  { id: "ai", title: "Your own AI" },
-  { id: "done", title: "All set" },
+  { id: "start", title: "Get started" },
+  { id: "records", title: "Your records" },
+  { id: "choices", title: "Your choices" },
 ]);
 export const STEP_IDS = STEPS.map((s) => s.id);
 
@@ -39,6 +35,11 @@ export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 /** true when the guide should open by itself: never finished on this device. */
 export function needsOnboarding(record) {
   return !(record && record.onboarding && record.onboarding.completedAt);
+}
+
+/** true when the guide was started but not finished: resume it (for example after a portal login). */
+export function shouldResumeOnboarding(record) {
+  return needsOnboarding(record) && !!(record && record.onboarding && (record.onboarding.startedAt || record.onboarding.step));
 }
 
 /** Where to pick up. Unknown or missing step -> the first step. */
@@ -63,20 +64,22 @@ export function setStep(record, stepId) {
   return record;
 }
 
-/** Mark a step finished (or skipped) and move to the next one. */
-export function completeStep(record, stepId, { skipped = false } = {}) {
+/** Mark a step finished (or skipped) and move to the next one.
+ *  skipId: when a combined step skips only one part (for example "ai" on "choices"). */
+export function completeStep(record, stepId, { skipped = false, skipId } = {}) {
   if (!STEP_IDS.includes(stepId)) throw new Error("unknown step " + stepId);
   const o = ensure(record);
   if (!o.stepsDone.includes(stepId)) o.stepsDone.push(stepId);
-  o.skipped = (o.skipped || []).filter((s) => s !== stepId);
-  if (skipped) o.skipped.push(stepId);
+  const flag = skipId || stepId;
+  o.skipped = (o.skipped || []).filter((s) => s !== flag);
+  if (skipped) o.skipped.push(flag);
   if (!o.skipped.length) delete o.skipped;
   const next = STEP_IDS[Math.min(STEP_IDS.indexOf(stepId) + 1, STEP_IDS.length - 1)];
   o.step = next;
   return record;
 }
 
-/** Step 1 is the only gate: the patient must say they watched and understood. */
+/** Step 1 is the only gate: the patient must say they watched and understood (the welcome part of Get started). */
 export function recordConsent(record, { videoVersion = "placeholder", on = new Date() } = {}) {
   const o = ensure(record);
   o.consent = { watchedAndUnderstood: true, at: on.toISOString(), videoVersion: String(videoVersion).slice(0, 60) };
@@ -97,8 +100,9 @@ export function chooseAfterDeath(record, choice) {
 
 export function finishOnboarding(record, on = new Date()) {
   const o = ensure(record);
-  if (!o.stepsDone.includes("done")) o.stepsDone.push("done");
-  o.step = "done";
+  const last = STEP_IDS[STEP_IDS.length - 1];
+  if (!o.stepsDone.includes(last)) o.stepsDone.push(last);
+  o.step = last;
   o.completedAt = on.toISOString();
   return record;
 }
@@ -114,7 +118,7 @@ export function restartOnboarding(record) {
   return record;
 }
 
-/** What the "All set" screen shows. Plain words; only things saved on this device. */
+/** What the summary on Your choices shows. Plain words; only things saved on this device. */
 export function choicesSummary(record) {
   const files = (record.files || []).length;
   const sources = (record.sources || []).length;

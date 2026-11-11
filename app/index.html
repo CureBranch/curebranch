@@ -43,11 +43,16 @@
 
     <!-- HOME -->
     <section class="screen active" id="s-home" aria-labelledby="home-title">
+      <div class="home-intro" id="home-intro">
+        <h1 id="home-title">CureBranch</h1>
+        <div data-listen-mount="#s-home" data-listen-label="Listen to this Home screen"></div>
+        <p class="home-intro-copy" id="home-intro-copy">Join others: add your cancer treatment records to a public, open-source digital tree where anyone, with the help of AI, can work toward a cure. You choose your privacy level. Create your branch in 3 easy steps, see how many lives your story could save, and discover treatments that worked for people like you.</p>
+        <button type="button" class="btn btn-primary" id="home-start-branch">Create your branch</button>
+      </div>
       <div class="home-greet">
         <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="#">…</a></p>
-        <h1 id="home-title">Welcome</h1>
+        <p class="home-hello" id="home-hello">Welcome</p>
       </div>
-      <div data-listen-mount="#s-home" data-listen-label="Listen to this Home screen"></div>
 
       <div class="card privacy-card">
         <div class="row">
@@ -317,7 +322,7 @@
 
 </div>
 
-<!-- FIRST-RUN SETUP GUIDE (app/js/wizard.js). Full screen, one question per step. -->
+<!-- FIRST-RUN SETUP GUIDE (app/js/wizard.js). Full screen, 3 steps. -->
 <div class="wizard" id="wizard" hidden>
   <div class="wz-top">
     <div class="brand"><span class="mark" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 21V11M12 11L7 6M12 11l5-5M7 6V3M17 6V3"/></svg></span>CureBranch</div>
@@ -326,14 +331,14 @@
   <div id="wz-banners"></div>
   <main class="wz-main" id="wz-main" aria-label="Setup guide">
     <div class="wz-progress">
-      <p class="wz-count" id="wz-count">Step 1 of 7</p>
+      <p class="wz-count" id="wz-count">Step 1 of 3</p>
       <ol class="wz-dots" id="wz-dots" aria-label="Progress"></ol>
     </div>
 
-    <!-- 1. Welcome + consent -->
-    <section class="wz-step" id="wz-welcome" data-step="welcome" aria-labelledby="wz-h-welcome">
-      <h1 id="wz-h-welcome" tabindex="-1">Welcome to CureBranch</h1>
-      <div data-listen-mount="#wz-welcome" data-listen-label="Listen to this step"></div>
+    <!-- 1. Get started: welcome, consent, private code -->
+    <section class="wz-step" id="wz-start" data-step="start" aria-labelledby="wz-h-start">
+      <h1 id="wz-h-start" tabindex="-1">Get started</h1>
+      <div data-listen-mount="#wz-start" data-listen-label="Listen to this step"></div>
       <p class="wz-lead">This app keeps your cancer records in one place. You decide who sees what.</p>
       <div class="wz-video" id="wz-video">
         <div class="video wz-video-placeholder" id="wz-video-placeholder">
@@ -355,12 +360,7 @@
         <span>I watched and understand</span>
       </label>
       <p class="wz-err" id="wz-consent-err" role="alert"></p>
-    </section>
-
-    <!-- 2. Private profile -->
-    <section class="wz-step" id="wz-profile" data-step="profile" aria-labelledby="wz-h-profile" hidden>
-      <h1 id="wz-h-profile" tabindex="-1">Your private profile</h1>
-      <div data-listen-mount="#wz-profile" data-listen-label="Listen to this step"></div>
+      <h2>Your private profile</h2>
       <p class="wz-lead">No account. No password. No email.</p>
       <div class="card tint wz-code-card">
         <p class="wz-code-label">Your private code</p>
@@ -372,10 +372,11 @@
       <p class="wz-note" id="wz-code-note" aria-live="polite"></p>
     </section>
 
-    <!-- 3. Connect hospital portal (official records only; photos/files only as supporting attachments) -->
+    <!-- 2. Your records: portal connect + sharing choice -->
     <section class="wz-step" id="wz-records" data-step="records" aria-labelledby="wz-h-records" hidden>
-      <h1 id="wz-h-records" tabindex="-1">Connect your hospital portal</h1>
+      <h1 id="wz-h-records" tabindex="-1">Your records</h1>
       <div data-listen-mount="#wz-records" data-listen-label="Listen to this step"></div>
+      <h2>Connect your hospital portal</h2>
       <p class="wz-lead">Bring in your records straight from your hospital. Records from the hospital are checked, so they count.</p>
       <fieldset class="wz-choices">
         <legend>Which portal does your hospital use?</legend>
@@ -404,23 +405,22 @@
       <ul class="wz-files" id="wz-files" aria-labelledby="wz-connected-h"></ul>
       <p class="wz-note">You can add a photo or file only to a record from your hospital. It is marked <strong>supporting, from patient</strong> and is not counted. It stays on this device.</p>
       <p class="wz-note">You can skip this and connect later.</p>
+      <div id="wz-privacy">
+        <h2 id="wz-h-privacy">How much do you want to share?</h2>
+        <p class="wz-lead">Pick one of four levels. Nothing is picked for you. If you skip this, nothing is shared.</p>
+        <p class="notice"><strong>Only share what you'd be OK with the world knowing someday.</strong> Once something is shared, it can't be pulled back.</p>
+        <div class="card" data-privacy-picker="wz"></div>
+        <p class="wz-err" id="wz-privacy-err" role="alert"></p>
+        <p class="wz-note">You can move to a lower level any time. That stops sharing new records, but what you already shared stays public.</p>
+      </div>
     </section>
 
-    <!-- 4. Private or public -->
-    <section class="wz-step" id="wz-privacy" data-step="privacy" aria-labelledby="wz-h-privacy" hidden>
-      <h1 id="wz-h-privacy" tabindex="-1">How much do you want to share?</h1>
-      <div data-listen-mount="#wz-privacy" data-listen-label="Listen to this step"></div>
-      <p class="wz-lead">Pick one of four levels. Nothing is picked for you. If you skip this, nothing is shared.</p>
-      <p class="notice"><strong>Only share what you'd be OK with the world knowing someday.</strong> Once something is shared, it can't be pulled back.</p>
-      <div class="card" data-privacy-picker="wz"></div>
-      <p class="wz-err" id="wz-privacy-err" role="alert"></p>
-      <p class="wz-note">You can move to a lower level any time. That stops sharing new records, but what you already shared stays public.</p>
-    </section>
-
-    <!-- 5. After death -->
-    <section class="wz-step" id="wz-after" data-step="after" aria-labelledby="wz-h-after" hidden>
-      <h1 id="wz-h-after" tabindex="-1">After you're gone</h1>
-      <div data-listen-mount="#wz-after" data-listen-label="Listen to this step"></div>
+    <!-- 3. Your choices: after-death, AI, summary -->
+    <section class="wz-step" id="wz-choices" data-step="choices" aria-labelledby="wz-h-choices" hidden>
+      <h1 id="wz-h-choices" tabindex="-1">Your choices</h1>
+      <div data-listen-mount="#wz-choices" data-listen-label="Listen to this step"></div>
+      <div id="wz-after">
+      <h2 id="wz-h-after">After you're gone</h2>
       <p class="wz-lead">This is hard to think about. Your choice can be changed any time.</p>
       <fieldset class="wz-choices" aria-describedby="wz-after-err">
         <legend>What should happen to your summary?</legend>
@@ -437,13 +437,11 @@
       <label class="field-label" for="wz-person-reach">How to reach them (optional)</label>
       <input class="field" id="wz-person-reach" type="text" maxlength="200" autocomplete="off">
       <p class="wz-note">Later, in Settings, you can make a secret key to give them.</p>
-    </section>
+      </div>
 
-    <!-- 6. Own AI -->
-    <section class="wz-step" id="wz-ai" data-step="ai" aria-labelledby="wz-h-ai" hidden>
-      <h1 id="wz-h-ai" tabindex="-1">Use your own AI</h1>
-      <div data-listen-mount="#wz-ai" data-listen-label="Listen to this step"></div>
-      <p class="wz-lead">An AI can explain your records in plain words. This step is optional.</p>
+      <div id="wz-ai">
+      <h2 id="wz-h-ai">Use your own AI</h2>
+      <p class="wz-lead">An AI can explain your records in plain words. This part is optional.</p>
       <p>CureBranch has no AI of its own. If you want one, you use your own and pay for it yourself.</p>
       <fieldset class="wz-choices">
         <legend>Which AI do you use?</legend>
@@ -459,15 +457,14 @@
         </ol>
         <p class="wz-note" style="margin:0">CureBranch never asks for your AI password or key. It only sends your AI what you paste.</p>
       </div>
-    </section>
+      </div>
 
-    <!-- 7. Done -->
-    <section class="wz-step" id="wz-done" data-step="done" aria-labelledby="wz-h-done" hidden>
-      <h1 id="wz-h-done" tabindex="-1">You're all set</h1>
-      <div data-listen-mount="#wz-done" data-listen-label="Listen to this step"></div>
+      <div id="wz-done">
+      <h2 id="wz-h-done">You're all set</h2>
       <p class="wz-lead">Here is what you chose. It is all saved on this device.</p>
       <dl class="wz-summary" id="wz-summary"></dl>
       <p>You can change any of this later in <strong>Settings</strong>. You can also run this guide again from there.</p>
+      </div>
     </section>
 
     <p class="disc">Information, not medical advice.</p>

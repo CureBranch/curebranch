@@ -11,7 +11,7 @@ import { livingTreeSvg, parsePathKey } from "./living-tree.js";
 import { newStewardKey, stewardKeyHash, todayISO } from "./codes.js";
 import { startSmartConnect, finishSmartConnectIfReturning } from "./smart.js";
 import { initPwa, pushOptIn, pushOptOut } from "./pwa.js";
-import { AFTER_WORDS, needsOnboarding, chooseAfterDeath, removeSource } from "./onboarding.js";
+import { AFTER_WORDS, needsOnboarding, shouldResumeOnboarding, chooseAfterDeath, removeSource } from "./onboarding.js";
 import { initWizard, openWizard, refreshWizard } from "./wizard.js";
 import { matchWords } from "./consistency.js";
 import { setPrivacyLevel, statusWords, levelName, isPublicLevel, privacyLevel } from "./privacy.js";
@@ -99,7 +99,15 @@ function workedHtml(path) {
 }
 
 function renderHome() {
-  $("#home-title").textContent = (() => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; })();
+  const hello = $("#home-hello");
+  if (hello) hello.textContent = (() => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; })();
+  const startBtn = $("#home-start-branch");
+  if (startBtn) {
+    const done = !!(record.onboarding && record.onboarding.completedAt);
+    const started = !!(record.onboarding && (record.onboarding.startedAt || record.onboarding.step));
+    startBtn.hidden = done;
+    if (!done) startBtn.textContent = started ? "Continue your branch" : "Create your branch";
+  }
   const addr = $("#my-address");
   addr.textContent = profileUrl(record.code).replace(/^https:\/\//, "");
   addr.href = localProfileHref(record.code);
@@ -327,6 +335,8 @@ function wire() {
     }
   });
   $("#rerun-wizard").addEventListener("click", () => openWizard({ restart: true }));
+  const startBranch = $("#home-start-branch");
+  if (startBranch) startBranch.addEventListener("click", () => openWizard());
   document.addEventListener("change", async (e) => {
     const cb = e.target.closest("[data-share]");
     if (!cb) return;
@@ -512,7 +522,7 @@ async function main() {
   window.CureBranchApp = { importText, go, getRecord: () => record, openWizard };
   const wantsSetup = new URLSearchParams(location.search).get("setup") === "1"; // "Start the easy setup guide" links
   if (wantsSetup) history.replaceState(null, "", location.pathname + location.hash);
-  if (needsOnboarding(record)) await openWizard(); // also after coming back from a portal login: resumes at that step
-  else if (wantsSetup) await openWizard({ restart: true });
+  if (wantsSetup) await openWizard({ restart: !needsOnboarding(record) });
+  else if (shouldResumeOnboarding(record)) await openWizard(); // resume after Finish later or a portal login
 }
 main();

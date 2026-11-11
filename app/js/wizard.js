@@ -1,8 +1,9 @@
-// First-run setup guide (the "wizard"): full screen, one question per step, Back/Next,
-// progress dots, a Listen button on every step. Every answer is saved on this device as
-// soon as it is given, so the patient can close the app and pick up where they left off.
-// It uses the app's own styles, so the Accessibility settings (text size, fonts, colors,
-// motion) apply here too. Pure step logic lives in onboarding.js (unit-tested).
+// First-run setup guide (the "wizard"): full screen, 3 steps (Get started, Your records,
+// Your choices), Back/Next, progress dots, a Listen button on every step. Every answer is
+// saved on this device as soon as it is given, so the patient can close the app and pick
+// up where they left off. It uses the app's own styles, so the Accessibility settings
+// (text size, fonts, colors, motion) apply here too. Pure step logic lives in onboarding.js
+// (unit-tested).
 import { CONFIG } from "./config.js";
 import { privacyLevel, highestShared } from "./privacy.js";
 import { hasPending, cancelPending, refreshPickers } from "./privacy-ui.js";
@@ -161,38 +162,36 @@ function renderSummary() {
 
 function nextLabel() {
   const id = stepId();
-  if (id === "done") return "Go to my home screen";
-  if (id === "records" && !rec().sources.length) return "Skip for now";
-  if (id === "privacy" && !privacyLevel(rec())) return "Skip for now (share nothing)";
-  if (id === "ai" && !aiPicked()) return "Skip for now";
+  if (id === "choices") return "Go to my home screen";
+  if (id === "records" && !privacyLevel(rec())) return "Skip for now (share nothing)";
   return "Next";
 }
 function updateNav() {
   $("#wz-back").hidden = index === 0;
   $("#wz-next").textContent = nextLabel();
-  $("#wz-later").hidden = stepId() === "done";
+  $("#wz-later").hidden = false;
 }
 
 function fillStep() {
   const r = rec();
   const id = stepId();
-  if (id === "welcome") { renderVideo(); $("#wz-consent").checked = hasConsent(r, CONFIG.CONSENT_VIDEO_VERSION); }
-  if (id === "profile") {
+  if (id === "start") {
+    renderVideo();
+    $("#wz-consent").checked = hasConsent(r, CONFIG.CONSENT_VIDEO_VERSION);
     $("#wz-code").textContent = r.code;
     const locked = !!(highestShared(r) || r.afterDeath.stewardKeyHash);
     $("#wz-new-code").hidden = locked;
   }
-  if (id === "records") { renderPortals(); renderFiles(); }
-  if (id === "privacy") refreshPickers();
-  if (id === "after") {
+  if (id === "records") { renderPortals(); renderFiles(); refreshPickers(); }
+  if (id === "choices") {
     const chosen = r.onboarding && r.onboarding.afterDeathChosen;
     $$('input[name="wz-afterdeath"]').forEach((x) => { x.checked = !!chosen && x.value === r.afterDeath.choice; });
     const p = r.afterDeath.person || {};
     $("#wz-person").value = p.name || "";
     $("#wz-person-reach").value = p.howToReach || "";
+    renderAi();
+    renderSummary();
   }
-  if (id === "ai") renderAi();
-  if (id === "done") renderSummary();
   $$(".wz-err").forEach((e) => { e.textContent = ""; });
 }
 
@@ -233,32 +232,24 @@ async function next() {
   try {
     const r = rec();
     const id = stepId();
-    if (id === "welcome") {
+    if (id === "start") {
       if (!$("#wz-consent").checked) { err("#wz-consent-err", "Please check the box to go on.", "#wz-consent"); return; }
       if (!hasConsent(r, CONFIG.CONSENT_VIDEO_VERSION)) recordConsent(r, { videoVersion: CONFIG.CONSENT_VIDEO_VERSION });
       completeStep(r, id);
       await save("Setup guide: said I watched and understand the welcome");
-    } else if (id === "privacy") {
-      if (hasPending($("#wz-privacy"))) { err("#wz-privacy-err", "Please answer the warning first: pick Yes or No.", "#wz-privacy .pv-warn"); return; }
-      completeStep(r, id, { skipped: !privacyLevel(r) });
-      await save(null);
     } else if (id === "records") {
+      if (hasPending($("#wz-privacy"))) { err("#wz-privacy-err", "Please answer the warning first: pick Yes or No.", "#wz-privacy .pv-warn"); return; }
       completeStep(r, id, { skipped: !r.sources.length });
-      await save("Setup guide: records step");
-    } else if (id === "after") {
+      await save("Setup guide: records and sharing");
+    } else if (id === "choices") {
       const pick = $('input[name="wz-afterdeath"]:checked');
       if (!pick) { err("#wz-after-err", "Please pick one choice to go on. You can change it later.", 'input[name="wz-afterdeath"]'); return; }
       chooseAfterDeath(r, pick.value);
       savePersonFields();
-      completeStep(r, id);
-      await save(`Setup guide: after-death choice: ${AFTER_WORDS[pick.value]}`);
-    } else if (id === "ai") {
       const v = aiPicked();
       if (v && v !== NO_AI) r.ai = { name: v };
       else if (v === NO_AI) delete r.ai;
-      completeStep(r, id, { skipped: !v || v === NO_AI });
-      await save(v && v !== NO_AI ? `Setup guide: I use ${v}` : "Setup guide: skipped the AI step");
-    } else if (id === "done") {
+      completeStep(r, id, { skipped: !v || v === NO_AI, skipId: "ai" });
       finishOnboarding(r);
       await save("Finished the setup guide");
       close(true);
@@ -275,7 +266,7 @@ async function back() {
   if (busy || index === 0) return;
   cancelPending();
   const r = rec();
-  if (stepId() === "after" && savePersonFields()) await save("Setup guide: updated my trusted person");
+  if (stepId() === "choices" && savePersonFields()) await save("Setup guide: updated my trusted person");
   setStep(r, STEP_IDS[index - 1]);
   await save(null);
   show(index - 1);
@@ -284,7 +275,7 @@ async function back() {
 async function later() {
   cancelPending();
   const r = rec();
-  if (stepId() === "after" && savePersonFields()) await save("Setup guide: updated my trusted person");
+  if (stepId() === "choices" && savePersonFields()) await save("Setup guide: updated my trusted person");
   setStep(r, stepId());
   await save(null);
   close(false);
@@ -391,14 +382,28 @@ function wire() {
     const b = e.target.closest("[data-wz-remove]");
     if (b) removeItem(b.dataset.wzRemove);
   });
-  $("#wz-ai-list").addEventListener("change", () => { showAiSteps(); updateNav(); });
-  $$('input[name="wz-afterdeath"]').forEach((x) => x.addEventListener("change", () => { $("#wz-after-err").textContent = ""; }));
+  $("#wz-ai-list").addEventListener("change", async () => {
+    showAiSteps(); updateNav();
+    const r = rec();
+    const v = aiPicked();
+    if (v && v !== NO_AI) r.ai = { name: v };
+    else if (v === NO_AI) delete r.ai;
+    await save(v && v !== NO_AI ? `Setup guide: I use ${v}` : "Setup guide: skipped the AI step");
+    if (stepId() === "choices") renderSummary();
+  });
+  $$('input[name="wz-afterdeath"]').forEach((x) => x.addEventListener("change", async () => {
+    $("#wz-after-err").textContent = "";
+    chooseAfterDeath(rec(), x.value);
+    await save(`Setup guide: after-death choice: ${AFTER_WORDS[x.value]}`);
+    if (stepId() === "choices") renderSummary();
+  }));
+  $("#wz-person").addEventListener("input", () => { if (stepId() === "choices") { savePersonFields(); renderSummary(); } });
 }
 
 /** Called by app.js after the sharing level changes (the picker is shared with Settings). */
 export function refreshWizard() {
   if (!api || $("#wizard").hidden) return;
-  if (stepId() === "privacy") updateNav();
+  if (stepId() === "records") updateNav();
 }
 
 export function initWizard(options) {

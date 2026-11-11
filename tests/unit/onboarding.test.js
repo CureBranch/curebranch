@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import {
-  STEPS, STEP_IDS, needsOnboarding, resumeIndex, setStep, completeStep, recordConsent, hasConsent,
+  STEPS, STEP_IDS, needsOnboarding, shouldResumeOnboarding, resumeIndex, setStep, completeStep, recordConsent, hasConsent,
   chooseAfterDeath, finishOnboarding, restartOnboarding, choicesSummary, AFTER_WORDS,
   attachmentMeta, canAttach, isOfficial, removeSource, PORTALS,
 } from "../../app/js/onboarding.js";
@@ -25,9 +25,10 @@ const validLocal = ajv.compile(localSchema);
 
 const freshRecord = () => newRecord();
 
-test("setup guide has the 7 steps in order", () => {
-  assert.deepEqual(STEP_IDS, ["welcome", "profile", "records", "privacy", "after", "ai", "done"]);
-  assert.equal(STEPS.length, 7);
+test("setup guide has the 3 steps in order", () => {
+  assert.deepEqual(STEP_IDS, ["start", "records", "choices"]);
+  assert.deepEqual(STEPS.map((s) => s.title), ["Get started", "Your records", "Your choices"]);
+  assert.equal(STEPS.length, 3);
   // the schema lists exactly the same step ids
   assert.deepEqual(localSchema.properties.onboarding.properties.step.enum, STEP_IDS);
 });
@@ -52,17 +53,18 @@ test("new record: nothing public unless the patient picks it", async () => {
 test("a new record needs the guide; progress is saved and resumes at the same step", () => {
   const r = freshRecord();
   assert.equal(needsOnboarding(r), true);
+  assert.equal(shouldResumeOnboarding(r), false);
   assert.equal(resumeIndex(r), 0);
   recordConsent(r, { videoVersion: "placeholder" });
-  completeStep(r, "welcome");
-  completeStep(r, "profile");
+  assert.equal(shouldResumeOnboarding(r), true, "opening the guide starts it, so a reload should resume");
+  completeStep(r, "start");
   completeStep(r, "records", { skipped: true });
-  assert.equal(r.onboarding.step, "privacy");
-  assert.equal(resumeIndex(r), 3);
+  assert.equal(r.onboarding.step, "choices");
+  assert.equal(resumeIndex(r), 2);
   assert.deepEqual(r.onboarding.skipped, ["records"]);
   // simulate closing the app: a JSON round trip (what IndexedDB stores) keeps the place
   const back = JSON.parse(JSON.stringify(r));
-  assert.equal(resumeIndex(back), 3);
+  assert.equal(resumeIndex(back), 2);
   assert.ok(validLocal(back), JSON.stringify(validLocal.errors));
   // an unknown step (older/newer version) falls back to step 1 instead of breaking
   assert.equal(resumeIndex({ onboarding: { step: "nope" } }), 0);
@@ -237,6 +239,7 @@ test("finish, then re-run from Settings keeps every answer", () => {
   r.ai = { name: "Grok" };
   finishOnboarding(r, new Date("2026-11-11T11:00:00Z"));
   assert.equal(needsOnboarding(r), false);
+  assert.equal(shouldResumeOnboarding(r), false);
   assert.ok(validLocal(r), JSON.stringify(validLocal.errors));
   restartOnboarding(r);
   assert.equal(needsOnboarding(r), true);
@@ -253,7 +256,7 @@ test("finish, then re-run from Settings keeps every answer", () => {
 
 test("schema rejects made-up onboarding fields and AI keys in the record", () => {
   const r = freshRecord();
-  r.onboarding = { version: 1, step: "welcome", apiKey: "sk-123" };
+  r.onboarding = { version: 1, step: "start", apiKey: "sk-123" };
   assert.equal(validLocal(r), false);
   const r2 = freshRecord();
   r2.ai = { name: "Grok", apiKey: "xai-123" };

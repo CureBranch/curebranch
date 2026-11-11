@@ -120,7 +120,7 @@ const record = {
   files: [{ id: "file-1", linkedSourceId: "src-1", role: "supporting-from-patient", name: "EXAMPLE photo of a paper report.jpg", mediaType: "image/jpeg", size: 245760, kind: "photo",
     addedAt: "2026-11-01T12:00:00.000Z", verification: "unverified",
     claims: { date: "2026-03-20", testType: "PD-L1", keyValues: ["70%"] }, matchStatus: "matches", checkedAt: "2026-11-01T12:00:00.000Z", ignoreForAiMatching: false }],
-  onboarding: { version: 1, step: "done", stepsDone: ["welcome", "profile", "records", "privacy", "after", "ai", "done"],
+  onboarding: { version: 1, step: "choices", stepsDone: ["start", "records", "choices"],
     consent: { watchedAndUnderstood: true, at: "2026-11-01T12:00:00.000Z", videoVersion: "placeholder" },
     afterDeathChosen: true, startedAt: "2026-11-01T12:00:00.000Z", completedAt: "2026-11-01T12:00:00.000Z" },
   editLog: [{ at: "2026-11-01T12:00:00.000Z", what: "Created (EXAMPLE)" }],

@@ -3,6 +3,8 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;max-width:100%}
 body{overflow-x:clip} /* safety net only; tests check every element so real overflow is still caught */
+[hidden]{display:none !important}
+
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px 8px;border-bottom:1px solid var(--line);flex:0 0 auto;min-width:0}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.04em;font-size:.95rem;min-width:0;overflow-wrap:anywhere}
 .mark{width:26px;height:26px;border-radius:8px;background:var(--green);color:var(--btn-fg);display:grid;place-items:center;flex:0 0 auto}
@@ -80,7 +82,11 @@ p{margin:0 0 10px;overflow-wrap:anywhere}
 .choice-list label:first-of-type{border-top:0}
 .choice-list input{width:20px;height:20px;flex:0 0 auto;margin-top:2px;accent-color:var(--green)}
 .back-btn{display:inline-flex;align-items:center;gap:4px;min-height:44px;min-width:44px;border:0;background:none;color:var(--green-d);font:inherit;font-weight:700;cursor:pointer;padding:0 4px 0 0}
+.home-intro{margin:0 0 16px;min-width:0}
+.home-intro-copy{font-size:1.08rem;line-height:1.45;margin:0 0 14px;overflow-wrap:anywhere}
+.home-intro .btn{margin:0}
 .home-greet{margin-bottom:8px}
+.home-hello{font-family:var(--font-display);font-weight:600;font-size:1.2rem;margin:8px 0 0;overflow-wrap:anywhere}
 .qa-icon{font-size:1.1rem}
 .listen-bar{margin-top:4px}
 /* ---- Full-page layout (replaces the mockup's phone frame) ---- */
@@ -139,7 +145,7 @@ html{scroll-padding-top:72px;scroll-padding-bottom:96px}
 .tree-list summary::-webkit-details-marker{display:none}
 .tree-list summary::before{content:"▸";display:inline-block;width:1em;color:var(--green-d)}
 .tree-list details[open]>summary::before{content:"▾"}
-/* ---- First-run setup guide (app/js/wizard.js): full screen, one question per step ---- */
+/* ---- First-run setup guide (app/js/wizard.js): full screen, 3 steps ---- */
 .wz-open .app,.wz-open .skip-link{display:none !important}
 .wizard [hidden],.wizard[hidden]{display:none !important}
 .wz-open{scroll-padding-top:16px;scroll-padding-bottom:180px}
