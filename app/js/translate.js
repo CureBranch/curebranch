@@ -136,7 +136,10 @@ export async function translatePage(lang) {
   if (!hasApi()) { status("This browser can't translate here. Use your browser's translate steps below."); return false; }
   status(`Checking ${langName(lang)}…`);
   let avail;
-  try { avail = await self.Translator.availability({ sourceLanguage: "en", targetLanguage: lang }); } catch { avail = "unavailable"; }
+  // Some browsers expose the API but never answer (no language packs on this device): give up after 10 seconds.
+  const late = new Promise((res) => setTimeout(() => res("no-answer"), 10000));
+  try { avail = await Promise.race([self.Translator.availability({ sourceLanguage: "en", targetLanguage: lang }), late]); } catch { avail = "unavailable"; }
+  if (avail === "no-answer") { status(`This browser did not answer, so it can't translate here right now. Use your browser's translate steps below.`); return false; }
   if (avail === "unavailable") { status(`This browser can't translate to ${langName(lang)} on this device. Use your browser's translate steps below.`); return false; }
   let t;
   try {

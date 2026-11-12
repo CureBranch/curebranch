@@ -694,3 +694,6 @@ a.btn{text-decoration:none}
 .site-header .brand{max-width:100%;min-width:0}
 .site-header .brand-name{min-width:0;overflow-wrap:anywhere;white-space:normal}
 .steps-ol li,.how-use li,.what-is,.faq dd{overflow-wrap:anywhere}
+.hh > h2 > .oct:first-child,.hh > h3 > .oct:first-child{margin-right:8px;vertical-align:-2px}
+/* Current section: thicker look without changing width, so the links do not shift between pages. */
+.sh-nav a[aria-current]{font-weight:500;text-shadow:0 0 .5px currentColor,0 0 .5px currentColor}

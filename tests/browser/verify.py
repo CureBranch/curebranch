@@ -17,7 +17,7 @@
    Translate (on-device API mocked, browser steps), header audit at 6 widths, no read-aloud left
  * no console errors / CSP violations
 """
-import json, sys, re, subprocess
+import json, os, sys, re, subprocess
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from server import start
@@ -56,6 +56,7 @@ OVERFLOW_JS = """() => {
 
 def check(name, cond, detail=""):
     results["flows"].append({"check": name, "ok": bool(cond), "detail": detail})
+    if os.environ.get("CB_VERBOSE"): print(("ok   " if cond else "FAIL ") + name, flush=True)
     if not cond: fails.append(f"{name}: {detail}")
 
 def wait_js(pg, expr, timeout=10000):
@@ -575,7 +576,13 @@ def translate_flow(b):
     pg.click("#tr-btn"); pg.click("#tr-undo"); pg.wait_for_timeout(200)
     check("translate: 'Show the original' restores English", pg.inner_text("#cancer-title") == "HER2-positive breast cancer" and pg.evaluate("document.documentElement.lang") == "en"
           and not pg.evaluate("document.body.innerText.includes('[es]')"))
-    pg.select_option("#tr-lang", "ar"); pg.click("#tr-go"); wait_js(pg, "document.documentElement.lang === 'ar'")
+    pg.evaluate("() => { window.Translator.availability = () => new Promise(() => {}); }")   # a browser that never answers
+    pg.select_option("#tr-lang", "fr"); pg.click("#tr-go"); pg.wait_for_timeout(10600)
+    check("translate: if the browser never answers, it says so after 10 seconds and points to the browser steps",
+          "did not answer" in pg.inner_text("#tr-status") and pg.evaluate("document.documentElement.lang") == "en", pg.inner_text("#tr-status"))
+    pg.select_option("#tr-lang", "ar")
+    pg.evaluate("() => { window.Translator.availability = async () => 'available'; }")
+    pg.click("#tr-go"); wait_js(pg, "document.documentElement.lang === 'ar'")
     check("translate: right-to-left languages set dir=rtl", pg.evaluate("document.documentElement.dir") == "rtl")
     r = pg.evaluate(OVERFLOW_JS)
     check("translate: right-to-left page has no sideways scrolling", r["overflow"] <= 1, str(r)[:300])
