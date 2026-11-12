@@ -88,7 +88,6 @@ p{margin:0 0 10px;overflow-wrap:anywhere}
 .home-greet{margin-bottom:8px}
 .home-hello{font-family:var(--font-display);font-weight:600;font-size:1.2rem;margin:8px 0 0;overflow-wrap:anywhere}
 .qa-icon{font-size:1.1rem}
-.listen-bar{margin-top:4px}
 /* ---- Full-page layout (replaces the mockup's phone frame) ---- */
 body{font-family:var(--font-sans);color:var(--ink);background:var(--page-bg,var(--bg));min-height:100vh;line-height:var(--lh);letter-spacing:var(--ls);font-size:1rem}
 .app{width:100%;max-width:760px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--surface);color:var(--ink);min-width:0}
@@ -308,9 +307,9 @@ h3{font-weight:600}
 .chrome{background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow-sm)}
 .topbar{border-bottom:0;padding:8px 16px;min-height:56px;max-width:1012px;width:100%;margin:0 auto}
 .brand{letter-spacing:0;font-size:1rem;font-weight:600;gap:10px}
-.mark{width:28px;height:28px;border-radius:8px;background:none;color:var(--green)}
+.mark{width:28px;height:28px;border-radius:7px;background:none;color:var(--logo-bg,#15462b)}
 .mark svg{display:block}
-.mark .lf{fill:var(--btn-fg)}
+.mark .lf{fill:var(--logo-fg,#ffffff)}
 .screens{width:100%;max-width:768px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
 /* Boxes */
 .card{border-radius:var(--r-lg);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
@@ -455,7 +454,6 @@ html[data-cb-theme] .wz-check,html[data-cb-theme] .wz-choice{border-color:var(--
 .his-cta-btn{border-radius:var(--r)}
 /* Headings get focus only so screen readers announce a new screen; they are not controls */
 .screen h1[tabindex="-1"]:focus,.screen h2[tabindex="-1"]:focus{outline:none}
-.hero-listen{margin-top:14px}
 /* ===================== Desktop-first layout + cancer-tree navigation ===================== */
 .topbar{max-width:1440px}
 .nav-toggle{display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:.875rem;cursor:pointer;flex:0 0 auto}
@@ -556,3 +554,143 @@ tr[tabindex="-1"]:focus{outline:2px solid var(--focus);outline-offset:-2px}
 .patients-card .pt-count{color:var(--green-d)}
 .screens h1+.sub{margin-top:0}
 a.btn{text-decoration:none}
+
+/* ===================== v3: site header, footer, help "?" buttons, translate, page explainers ===================== */
+/* Header: logo + name on the left, a few clear links, then Translate and Accessibility on the right. */
+.site-header{background:var(--surface)}
+.sh-inner{display:flex;align-items:center;gap:8px;max-width:1440px;margin:0 auto;padding:8px 16px;min-height:64px;min-width:0}
+.site-header .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:700;font-size:1.0625rem;letter-spacing:0;min-height:44px;flex:0 0 auto;border-radius:var(--r);padding:0 4px 0 0;margin:0}
+.site-header .brand:hover .brand-name{text-decoration:underline}
+.sh-nav{display:none;min-width:0}
+.sh-nav ul{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}
+.sh-nav a{position:relative;display:flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:var(--r);color:var(--ink);text-decoration:none;font-weight:500;font-size:.9375rem;white-space:nowrap}
+.sh-nav a:hover{background:var(--bg)}
+.sh-nav a[aria-current]{font-weight:700}
+.sh-nav a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:-10px;height:3px;border-radius:3px;background:var(--green)}
+.sh-end{display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto}
+.sh-btn,.site-header .a11y-launch{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:.875rem;line-height:1.2;cursor:pointer;white-space:nowrap}
+.sh-btn:hover,.site-header .a11y-launch:hover{background:var(--bg);border-color:var(--ink)}
+.sh-btn[aria-expanded="true"]{background:var(--green-l);border-color:var(--green)}
+.sh-btn .oct,.site-header .a11y-launch svg{width:16px;height:16px;flex:0 0 auto}
+.site-header .a11y-launch > span:not(.sr-only){position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;white-space:nowrap}
+@media (min-width:1024px){
+  .sh-nav{display:block;margin-left:20px}
+  .sh-menu{display:none}
+}
+@media (max-width:1023px){.site-header .brand{margin-right:auto}}
+@media (max-width:599px){
+  .sh-inner{padding:6px 10px;gap:4px;min-height:60px}
+  .sh-end{gap:4px}
+  .sh-btn,.site-header .a11y-launch{flex-direction:column;gap:2px;padding:4px 6px;min-width:52px;font-size:.6875rem;font-weight:600;border-color:transparent}
+  .sh-btn .oct,.site-header .a11y-launch svg{width:20px;height:20px}
+}
+@media (max-width:359px){.site-header .brand-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}}
+/* The old top bar and bottom tab bar are gone. */
+.screens{padding-bottom:32px}
+@media (min-width:1024px){.screens{padding-bottom:40px}}
+
+/* Menu drawer (phones and tablets): site links first, then the cancer list. */
+.sidenav .nl-head{padding:12px 12px 0;margin:0}
+.site-links{padding:4px 12px 8px;border-bottom:1px solid var(--line)}
+.site-links ul{list-style:none;margin:0;padding:0}
+.site-links a{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px;border-radius:var(--r);color:var(--ink);text-decoration:none;font-weight:500}
+.site-links a:hover{background:var(--bg)}
+.site-links a .oct{color:var(--muted)}
+.site-links a[aria-current]{background:var(--green-l);font-weight:700}
+.nl-ct{margin:4px 0 8px}
+@media (min-width:1024px){.sidenav .nl-head,.site-links{display:none}}
+
+/* Footer */
+.site-footer{border-top:1px solid var(--line);background:var(--surface);padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+.sf-nav ul{display:flex;flex-wrap:wrap;gap:4px 8px;list-style:none;margin:0 auto;padding:0;max-width:1440px}
+.sf-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;color:var(--sky-d);font-size:.9375rem}
+.sf-note{max-width:1440px;margin:8px auto 0;padding:0 8px;color:var(--muted);font-size:.875rem}
+
+/* Translate panel */
+.tr-wrap{position:relative}
+.tr-panel{position:absolute;top:calc(100% + 8px);right:0;z-index:30;width:min(400px,calc(100vw - 24px));max-height:calc(100vh - var(--chrome-h,64px) - 24px);overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-md);padding:12px 16px 16px;white-space:normal}
+@media (max-width:599px){.tr-panel{position:fixed;top:calc(var(--chrome-h,60px) + 4px);left:12px;right:12px;width:auto}}
+.tr-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tr-head h2{font-size:1.0625rem;margin:0}
+.tr-close{display:inline-grid;place-items:center;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);cursor:pointer}
+.tr-panel .field{width:100%}
+.tr-panel .btn{margin-top:10px;width:100%;justify-content:center}
+.tr-note{margin:8px 0 0}
+.tr-status{min-height:1.2em;margin:8px 0 0;font-weight:600}
+.tr-status:empty{margin:0}
+.tr-sub{font-size:1rem;margin:16px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+.tr-how,.ai-how{border:1px solid var(--line);border-radius:var(--r);margin:8px 0;background:var(--surface)}
+.tr-how summary,.ai-how summary{display:flex;align-items:center;min-height:44px;padding:4px 12px;font-weight:600;cursor:pointer}
+.tr-how ol,.ai-how ol{margin:0;padding:0 12px 12px 36px}
+.tr-how li,.ai-how li{margin:4px 0}
+
+/* "What is this page?" box */
+.what-is{background:var(--sky);border:1px solid var(--line);border-left:4px solid var(--sky-d);border-radius:var(--r);padding:12px 16px;margin:0 0 20px;color:var(--ink)}
+.what-is-h{font-size:1rem;margin:0 0 6px}
+.what-is p{margin:0 0 8px}
+.what-is p:last-child,.what-is ol:last-child{margin-bottom:0}
+.screen .what-is{max-width:920px}
+#s-home .what-is{margin-top:16px}
+
+/* "?" help buttons (disclosure pattern: a button that shows a short explanation below it) */
+.hh{display:flex;align-items:center;flex-wrap:wrap;gap:0 2px;min-width:0}
+.hh > h1,.hh > h2,.hh > h3,.hh > p{margin-top:0;margin-bottom:0}
+.sec > .hh:first-child,.screen > .hh{margin:24px 0 8px}
+.card > .hh{margin:0 0 8px}
+.stat-card .hh{margin:0 0 4px}
+.hh .help-wrap{display:contents}
+.hh .help-pop{flex:1 0 100%}
+.help-wrap{display:inline}
+.help-btn{display:inline-grid;place-items:center;width:26px;height:26px;min-width:26px;margin:0 2px 0 6px;padding:0;border:1.5px solid var(--sky-d);border-radius:50%;background:var(--surface);color:var(--sky-d);font:inherit;font-size:.8125rem;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;text-transform:none;letter-spacing:0}
+.help-btn:hover{background:var(--sky)}
+.help-btn[aria-expanded="true"]{background:var(--sky-d);color:var(--surface)}
+.help-pop{display:block;margin:8px 0;padding:10px 12px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--sky-d);border-radius:var(--r);font-size:.9375rem;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;max-width:64ch;white-space:normal}
+.help-pop[hidden]{display:none}
+.help-more{display:inline-block;margin-top:4px;color:var(--sky-d)}
+.q-sample{display:inline-grid;place-items:center;width:20px;height:20px;border:1.5px solid var(--sky-d);border-radius:50%;color:var(--sky-d);font-size:.75rem;font-weight:700;vertical-align:middle}
+.eyebrow .help-wrap{display:inline}
+
+/* Cancer pages: breadcrumb, how-to, jump links, sub-page links, AI prompt */
+.crumbs ol{display:flex;flex-wrap:wrap;gap:0 6px;list-style:none;margin:0 0 8px;padding:0;font-size:.875rem}
+.crumbs li+li::before{content:"/";color:var(--muted);margin-right:6px}
+.crumbs a{color:var(--sky-d)}
+.crumbs a[aria-current]{color:var(--ink);text-decoration:none;font-weight:600}
+.how-use{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:4px 16px 12px;margin:0 0 16px;max-width:920px}
+.how-use h2{display:flex;align-items:center;gap:8px}
+.how-use h2 .oct,.ai-sec h2 .oct{color:var(--green)}
+.steps-ol{margin:8px 0;padding-left:1.6rem}
+.steps-ol li{margin:6px 0;padding-left:2px}
+.otp{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 16px}
+.otp-h{margin:0;font-weight:600;font-size:.875rem}
+.otp ul,.pill-links{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.otp a,.pill-links a{display:inline-flex;align-items:center;min-height:36px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--sky-d);font-size:.875rem;text-decoration:none;font-weight:500}
+.otp a:hover,.pill-links a:hover{border-color:var(--sky-d);text-decoration:underline}
+.pill-links{margin:8px 0 12px}
+.prompt-card{max-width:920px}
+.prompt-box{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8125rem;line-height:1.5;resize:vertical;min-height:12rem}
+.prompt-actions{gap:12px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.prompt-actions .btn .oct{margin-right:6px}
+.ai-steps{max-width:920px}
+.ai-sec .notice{max-width:920px}
+.notice.advice{border-color:var(--sky-d);background:var(--sky)}
+.tight{margin:4px 0;padding-left:1.4rem}
+.tight li{margin:2px 0}
+/* All cancer trees */
+.ci-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px;list-style:none;margin:8px 0 0;padding:0}
+.ci-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px;min-width:0}
+.ci-link{font-weight:700;font-size:1.0625rem;color:var(--sky-d)}
+.ci-meta{margin:4px 0 0}
+/* Help page */
+.faq{margin:0}
+.faq-item{padding:12px 0;border-bottom:1px solid var(--line)}
+.faq dt{font-weight:700;font-size:1.0625rem;margin:0 0 4px}
+.faq dt:focus{outline:none}
+.faq dd{margin:0;max-width:72ch}
+.faq-sec h2{margin-top:28px}
+/* Large text (Accessibility > Text size up to 200%): let the header wrap onto more rows instead of scrolling sideways. */
+.sh-inner{flex-wrap:wrap;row-gap:4px}
+.sh-end{flex-wrap:wrap;justify-content:flex-end;max-width:100%;min-width:0}
+.sh-nav ul{flex-wrap:wrap}
+.site-header .brand{max-width:100%;min-width:0}
+.site-header .brand-name{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.steps-ol li,.how-use li,.what-is,.faq dd{overflow-wrap:anywhere}

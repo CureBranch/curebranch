@@ -10,7 +10,7 @@
 //   It waits until this page posts {type:"SKIP_WAITING"}.
 // * In the first ~8 s after opening, the update is applied silently, unless a
 //   form field is focused. Otherwise an accessible, dismissible banner offers
-//   "Refresh" / "Later" (role=status, with a Listen button).
+//   "Refresh" / "Later" (role=status).
 // * Refresh: SKIP_WAITING -> wait for controllerchange -> reload once. If no
 //   takeover within 2 s: unregister SW, clear caches, reload with a cache-busting URL.
 // * Loop guard: keyed to the target version id, in sessionStorage with an
@@ -100,14 +100,6 @@ export async function applyUpdate(target) {
 
 // ---------- banner ----------
 function removeBanner() { const b = document.getElementById("update-banner"); if (b) b.remove(); }
-function speak(text) {
-  if (!("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const v = window.CureBranchA11y && CureBranchA11y.bestVoice && CureBranchA11y.bestVoice(document.documentElement.lang || "en");
-  if (v) u.voice = v;
-  speechSynthesis.speak(u);
-}
 function showBanner(target) {
   if (!host || document.getElementById("update-banner")) return;
   const el = document.createElement("div");
@@ -118,14 +110,12 @@ function showBanner(target) {
     <div class="cb-banner-actions">
       <button type="button" class="btn btn-primary" data-act="refresh">Refresh</button>
       <button type="button" class="btn btn-ghost" data-act="later">Later</button>
-      <button type="button" class="btn btn-ghost" data-act="listen" aria-label="Listen to this message">Listen</button>
     </div>`;
   el.addEventListener("click", (e) => {
     const act = e.target.closest("[data-act]");
     if (!act) return;
     if (act.dataset.act === "refresh") { act.disabled = true; act.textContent = "Refreshing…"; applyUpdate(target); }
     if (act.dataset.act === "later") { mem.dismissed = target; ssSet("cb-update-later", target); removeBanner(); }
-    if (act.dataset.act === "listen") speak("New version available. Choose Refresh to update now, or Later.");
   });
   host.prepend(el);
 }

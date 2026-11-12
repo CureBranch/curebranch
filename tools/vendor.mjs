@@ -79,7 +79,7 @@ copyLicense("@primer/primitives", "primer-primitives-LICENSE.txt");
 const ICONS = ["home", "download", "file", "git-branch", "gear", "people", "shield-lock", "key", "file-added", "heart", "code",
   "device-mobile", "law", "check-circle-fill", "alert-fill", "unmute", "play", "sync", "copy", "arrow-right", "arrow-left",
   "chevron-right", "info", "pulse", "lock", "globe", "book", "accessibility", "repo", "person", "history", "x", "trash",
-  "upload", "link-external", "eye", "milestone", "check", "repo-forked", "search", "beaker", "graph", "three-bars", "chevron-down", "filter", "table", "organization", "note"];
+  "upload", "link-external", "eye", "milestone", "check", "repo-forked", "search", "beaker", "graph", "three-bars", "chevron-down", "filter", "table", "organization", "note", "question", "light-bulb", "list-ordered", "comment-discussion", "sparkle", "chevron-left"];
 const odata = JSON.parse(readFileSync(join(NM, "@primer/octicons/build/data.json"), "utf8"));
 const paths = {};
 for (const n of ICONS) {

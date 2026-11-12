@@ -51,6 +51,8 @@ html{
 }
 
 html[data-cb-theme="hc-dark"]{
+  --logo-bg:#ffff00;
+  --logo-fg:#000000;
   --bg:#000000;
   --surface:#000000;
   --ink:#ffffff;
@@ -84,6 +86,8 @@ html[data-cb-theme="hc-dark"]{
   --shadow:none;
 }
 html[data-cb-theme="hc-light"]{
+  --logo-bg:#000000;
+  --logo-fg:#ffffff;
   --bg:#ffffff;
   --surface:#ffffff;
   --ink:#000000;
@@ -263,8 +267,6 @@ html[data-cb-motion="on"] *::after{
 /* 44px minimum for interactive a11y controls */
 .a11y-launch,
 .a11y-close,
-.listen-btn,
-.listen-speed select,
 .a11y-panel button,
 .a11y-panel select,
 .a11y-panel input[type="color"],
@@ -293,55 +295,7 @@ html[data-cb-motion="on"] *::after{
 .a11y-launch svg{width:22px;height:22px;flex:0 0 auto}
 .a11y-launch:hover{border-color:var(--ink)}
 
-/* Listen / read-aloud */
-.listen-bar{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:8px;
-  margin:8px 0 14px;
-  padding:8px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:var(--surface);
-  min-width:0;
-}
-.listen-bar .listen-label{
-  font-size:.82rem;
-  font-weight:650;
-  color:var(--ink);
-  margin-right:4px;
-}
-.listen-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
-.listen-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:8px 12px;
-  border-radius:10px;
-  border:2px solid var(--line);
-  background:var(--surface);
-  color:var(--ink);
-  font:inherit;
-  font-size:.85rem;
-  font-weight:650;
-  cursor:pointer;
-}
-.listen-btn[data-act="play"]{background:var(--green);color:var(--btn-fg);border-color:transparent}
-.listen-btn:disabled{opacity:.55;cursor:not-allowed}
-.listen-speed{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:650;color:var(--ink)}
-.listen-speed select{
-  font:inherit;
-  font-size:.85rem;
-  padding:6px 8px;
-  border-radius:8px;
-  border:2px solid var(--line);
-  background:var(--surface);
-  color:var(--ink);
-}
-.listen-status{margin:0;font-size:.8rem;color:var(--muted);flex:1 1 100%}
-.listen-bar.is-unsupported .listen-controls{display:none}
+
 
 /* Accessibility settings panel */
 .a11y-backdrop{
@@ -535,7 +489,6 @@ html[data-cb-theme="hc-light"] .cb-switch .track{border-color:#000}
 
 /* Generic helpers used by both mockups once themes apply */
 html[data-cb-theme="hc-dark"] .btn-primary,
-html[data-cb-theme="hc-dark"] .listen-btn[data-act="play"],
 html[data-cb-theme="hc-dark"] .btn-primary{color:#000;background:#ffff00}
 html[data-cb-theme="hc-light"] button.btn-primary,
 html[data-cb-theme="hc-light"] .btn-primary{background:#000;color:#fff;border:2px solid #000}

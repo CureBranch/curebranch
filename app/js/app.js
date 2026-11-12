@@ -16,7 +16,10 @@ import { matchWords } from "./consistency.js";
 import { setPrivacyLevel, statusWords, levelName, isPublicLevel, privacyLevel } from "./privacy.js";
 import { mountPrivacyPicker, refreshPickers } from "./privacy-ui.js";
 import { noteFirstShare } from "./recognition.js";
-import { loadPublicData, cancerById, publicTreeRoot, exploreListHtml, navHtml, wireNav, markCurrent, cancerPageHtml, sourcesPageHtml, branchPublicHtml } from "./public-data.js";
+import { loadPublicData, publicData, publicTreeRoot, exploreListHtml, cancerPageHtml, cancersIndexHtml, sourcesPageHtml, branchPublicHtml } from "./public-data.js";
+import { SITE, resolvePath, pageMeta, legacyToPath } from "./routes.js";
+import { faqHtml } from "./help.js";
+import { closeMenu, markNav, fillCancerNav } from "./site.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -49,86 +52,84 @@ function download(name, blob) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
 }
 
-// ---------- navigation ----------
-const TITLES = { home: "Home", import: "Import", repo: "My record", tree: "The tree", settings: "Settings", start: "How it works", a11y: "Accessibility", cancer: "Cancer tree", sources: "Sources and licenses" };
+// ---------- navigation: every page has a real address (no "#" routes) ----------
 let currentCancer = null;
-function go(route, focusId) {
-  let [name, ...rest] = String(route || "").split("/");
-  let hash = name;
-  if (name === "cancer") {
-    const c = cancerById(rest[0]);
-    if (!c) name = "tree";
-    else {
-      currentCancer = c;
-      $("#cancer-body").innerHTML = cancerPageHtml(c);
-      hash = `cancer/${c.id}`;
-      if (rest[1] && !focusId) focusId = rest[1];
-    }
+let currentRoute = null;
+function setMeta(meta) {
+  document.title = meta.page && meta.page.name === "home" ? meta.title : `${meta.title} | CureBranch`;
+  const d = document.querySelector('meta[name="description"]'); if (d) d.content = meta.desc;
+  const c = document.querySelector('link[rel="canonical"]'); if (c) c.href = SITE + meta.path;
+  const ou = document.querySelector('meta[property="og:url"]'); if (ou) ou.content = SITE + meta.path;
+}
+/** Show the page for `route`. `route` is an address ("/cancers/breast/") or an old screen name ("tree"). */
+function go(route, focusId, opts = {}) {
+  let target = String(route || "/");
+  if (!target.startsWith("/")) target = legacyToPath(target) || "/";
+  const u = new URL(target, location.origin);
+  const r = resolvePath(u.pathname, publicData());
+  if (!r) { location.assign(u.pathname + u.search + u.hash); return; } // a real page (or the 404 page)
+  const meta = pageMeta(r);
+  const frag = focusId || (u.hash ? decodeURIComponent(u.hash.slice(1)) : "");
+  const screen = r.page ? r.page.screen : "cancer";
+  currentRoute = r;
+  if (r.cancer) {
+    currentCancer = r.cancer;
+    $("#cancer-body").innerHTML = cancerPageHtml(r.cancer, r.sub);
   }
-  if (name === "sources") $("#sources-body").innerHTML = sourcesPageHtml();
-  if (!TITLES[name]) name = hash = "home";
-  closeNav(false);
-  markCurrent($("#cancer-nav"), name === "cancer" ? currentCancer.id : null);
-  if (window.CureBranchA11y) CureBranchA11y.stopSpeech();
-  $$(".screen").forEach((s) => s.classList.toggle("active", s.id === "s-" + name));
-  const tabFor = { start: "home", a11y: "settings" }[name] || name;
-  $$("#tabs button").forEach((b) => {
-    const on = b.dataset.go === tabFor;
-    b.classList.toggle("on", on);
-    if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
-  });
-  document.title = `CureBranch: ${name === "cancer" ? currentCancer.name : TITLES[name]}`;
-  window.scrollTo(0, 0);
-  if (location.hash !== "#" + hash) history.replaceState(null, "", "#" + hash);
-  const target = focusId ? document.getElementById(focusId) : $("#s-" + name + " h1");
-  if (target) {
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus({ preventScroll: !focusId });
-    if (focusId) target.scrollIntoView({ block: "center" });
-    const det = target.closest("details"); if (det) det.open = true;
-  }
+  if (screen === "sources") $("#sources-body").innerHTML = sourcesPageHtml();
+  if (screen === "cancers") $("#cancers-body").innerHTML = cancersIndexHtml();
+  if (screen === "help" && !$("#help-body").dataset.ready) { $("#help-body").innerHTML = faqHtml(); $("#help-body").dataset.ready = "1"; }
+  closeMenu(false);
+  markNav(r.page ? r.page.name : "cancer", r.cancer && r.cancer.id, meta.path);
+  $$(".screen").forEach((s) => s.classList.toggle("active", s.id === "s-" + screen));
+  setMeta({ ...meta, page: r.page });
+  const url = meta.path + (opts.keepSearch ? location.search : "") + (frag ? "#" + encodeURIComponent(frag).replace(/%2F/g, "/") : "");
+  if (opts.history === "push") history.pushState({ cb: 1 }, "", url);
+  else if (opts.history !== "none" && location.pathname + location.search + location.hash !== url) history.replaceState({ cb: 1 }, "", url);
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+  focusTarget(frag, screen, !!opts.initial);
   render(true);
 }
+function focusTarget(frag, screen, initial) {
+  const t = frag ? document.getElementById(frag) : (initial ? null : $("#s-" + screen + " h1"));
+  if (!t) return;
+  if (!t.hasAttribute("tabindex")) t.setAttribute("tabindex", "-1");
+  const det = t.closest("details"); if (det) det.open = true;
+  t.focus({ preventScroll: !frag });
+  if (frag) t.scrollIntoView({ block: "start" });
+}
+// Same-site links are handled here so the page doesn't reload; the address still changes,
+// and Back, Forward, Refresh and "open in new tab" all work.
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-go]");
-  if (!b || b.disabled) return;
+  if (b && !b.disabled) { e.preventDefault(); go(b.dataset.go, b.dataset.focus, { history: "push" }); return; }
+  const a = e.target.closest("a[href]");
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (a.target && a.target !== "_self") return;
+  if (a.hasAttribute("download")) return;
+  const u = new URL(a.href, location.href);
+  if (u.origin !== location.origin) return;
+  if (u.pathname === location.pathname && u.search === location.search && u.hash) {
+    // Jump within this page: let the browser scroll, then move focus there too.
+    e.preventDefault();
+    const id = decodeURIComponent(u.hash.slice(1));
+    history.pushState({ cb: 1 }, "", u.hash);
+    focusTarget(id, null, false);
+    return;
+  }
+  if (!resolvePath(u.pathname, publicData())) return; // not an app page: normal navigation
   e.preventDefault();
-  go(b.dataset.go, b.dataset.focus);
+  go(u.pathname + u.hash, null, { history: "push" });
+});
+window.addEventListener("popstate", () => {
+  const r = currentRoute && resolvePath(location.pathname, publicData());
+  if (r && pageMeta(r).path === pageMeta(currentRoute).path) {
+    if (location.hash) focusTarget(decodeURIComponent(location.hash.slice(1)), null, false);
+    return;
+  }
+  go(location.pathname + location.hash, null, { history: "none" });
 });
 
-// ---------- cancer-tree navigation: left column on wide screens, a drawer on phones ----------
-const wideNav = () => window.matchMedia("(min-width: 1024px)").matches;
-function openNav() {
-  const nav = $("#sidenav"); if (!nav || wideNav()) return;
-  nav.classList.add("open");
-  nav.setAttribute("role", "dialog"); nav.setAttribute("aria-modal", "true");
-  $("#nav-backdrop").hidden = false;
-  $("#nav-toggle").setAttribute("aria-expanded", "true");
-  ["#screens", "#tabs", ".topbar"].forEach((q) => { const el = $(q); if (el) el.inert = true; });
-  document.documentElement.classList.add("nav-open");
-  $("#nav-search").focus();
-}
-function closeNav(returnFocus = true) {
-  const nav = $("#sidenav"); if (!nav || !nav.classList.contains("open")) return;
-  nav.classList.remove("open"); nav.removeAttribute("role"); nav.removeAttribute("aria-modal");
-  $("#nav-backdrop").hidden = true;
-  $("#nav-toggle").setAttribute("aria-expanded", "false");
-  ["#screens", "#tabs", ".topbar"].forEach((q) => { const el = $(q); if (el) el.inert = false; });
-  document.documentElement.classList.remove("nav-open");
-  if (returnFocus) $("#nav-toggle").focus();
-}
-function initNav() {
-  const setH = () => document.documentElement.style.setProperty("--chrome-h", `${$(".chrome").offsetHeight}px`);
-  setH(); new ResizeObserver(setH).observe($(".chrome"));
-  const host = $("#cancer-nav");
-  host.innerHTML = navHtml();
-  wireNav(host);
-  $("#nav-toggle").addEventListener("click", () => ($("#sidenav").classList.contains("open") ? closeNav() : openNav()));
-  $("#nav-close").addEventListener("click", () => closeNav());
-  $("#nav-backdrop").addEventListener("click", () => closeNav());
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#sidenav").classList.contains("open")) { e.preventDefault(); closeNav(); } });
-  window.matchMedia("(min-width: 1024px)").addEventListener("change", () => closeNav(false));
-}
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-open-wizard]");
   if (b) { e.preventDefault(); openWizard({ restart: !needsOnboarding(record) }); }
@@ -163,9 +164,9 @@ function renderHome() {
   $("#home-branch").innerHTML = path
     ? `<h2>Your branch</h2><p class="sub" style="margin:0 0 8px">${esc(path.join(" › "))}</p>
        ${(facts().markers || []).slice(0, 6).map((m) => `<span class="chip">${esc(m.gene)}${m.change ? " " + esc(m.change) : ""}</span>`).join("")}
-       <button type="button" class="btn btn-primary" data-go="tree" style="margin-top:8px">View my branch</button>`
+       <a class="btn btn-primary" href="/tree/" style="margin-top:8px">View my branch</a>`
     : `<h2>Find your branch</h2><p class="sub">Import your records to see where you sit on the tree. You can try it with example records first.</p>
-       <button type="button" class="btn btn-primary" data-go="import">Import records</button>`;
+       <a class="btn btn-primary" href="/import/">Add records</a>`;
   $("#home-worked").innerHTML = branchPublicHtml(path || ["Lung"]);
   $("#after-status").textContent = afterWords(record);
 }
@@ -184,7 +185,7 @@ function renderRepo() {
     ? record.sources.map((s) => `<div class="item"><div class="dot ${s.verification.status === "verified" ? "g" : ""}" aria-hidden="true">${s.verification.status === "verified" ? "✓" : "!"}</div>
         <div class="grow"><h3>${esc(s.fileName || s.kind)}</h3><small>${s.verification.status === "verified" ? "Verified" : "Unverified"} · ${esc(s.verification.detail || s.verification.method)}</small>
         <button type="button" class="link" data-remove-source="${esc(s.id)}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit">Remove this record</button></div></div>`).join("")
-    : `<p class="sub" style="margin:0">No records yet. <a class="link" href="#import" data-go="import">Import records</a></p>`;
+    : `<p class="sub" style="margin:0">No records yet. <a class="link" href="/import/">Add records</a></p>`;
   const files = record.files || [];
   $("#files-list").innerHTML = files.length
     ? files.map((f) => `<div class="item"><div class="dot" aria-hidden="true">${f.kind === "photo" ? "▣" : "▤"}</div>
@@ -306,7 +307,7 @@ async function addSource(src) {
   showImport(src.verification.status === "verified" ? "ok" : "",
     `<strong>${src.verification.status === "verified" ? "Imported and verified." : "Imported, but not verified."}</strong> ${esc(src.verification.detail)}
      <br>Found: ${esc(f.cancerType ? f.cancerType.label : "no cancer type")}, ${f.markers.length} markers, ${f.treatments.length} treatments.
-     ${isPublicLevel(privacyLevel(record)) ? `Your sharing level is ${esc(levelName(privacyLevel(record)))}, so a summary of this is shared under your code.` : "Nothing has been shared."} <a class="link" href="#repo" data-go="repo">Review my record</a>`);
+     ${isPublicLevel(privacyLevel(record)) ? `Your sharing level is ${esc(levelName(privacyLevel(record)))}, so a summary of this is shared under your code.` : "Nothing has been shared."} <a class="link" href="/my-branch/">Review my branch</a>`);
 }
 
 export async function importText(text, fileName) {
@@ -532,12 +533,14 @@ async function main() {
   wire();
   record = await getOrCreateRecord();
   await loadPublicData();
-  initNav();
+  await fillCancerNav();
   const returned = await finishSmartConnectIfReturning();
   if (returned) { await addSource(returned); }
-  const start = decodeURIComponent(location.hash.replace("#", ""));
-  go(TITLES[start.split("/")[0]] ? start : (returned ? "import" : "home"));
-  if (returned) go("import");
+  // Old "#tree" or "#/cancer/lung" style links still work: they move to the new address.
+  const legacy = location.pathname === "/" && location.hash.length > 1 ? legacyToPath(location.hash) : null;
+  if (returned) go("/import/", null, { initial: true });
+  else if (legacy) go(legacy, null, { initial: true });
+  else go(location.pathname + location.hash, null, { initial: true, keepSearch: true, keepScroll: !location.hash });
   initPwa({ bannerHost: $("#banners") });
   $$("[data-privacy-picker]").forEach((el) => mountPrivacyPicker(el, {
     getRecord: () => record,

@@ -11,7 +11,7 @@ const BUILD_ID = "__BUILD_ID__";
 const APP_CACHE = `cb-app-${BUILD_ID}`;
 const PAGES_CACHE = "cb-pages";
 const PRECACHE = [
-  "/", "/index.html", "/profile.html", "/how-it-started.html", "/manifest.webmanifest",
+  "/", "/index.html", "/profile.html", "/how-it-started/", "/manifest.webmanifest",
   "/css/a11y.css", "/css/app.css",
   "/js/a11y.js", "/js/app.js", "/js/config.js", "/js/codes.js", "/js/fhir.js", "/js/shc.js", "/js/summary.js",
   "/js/tree.js", "/js/living-tree.js", "/js/store.js", "/js/smart.js", "/js/pwa.js", "/js/update.js", "/js/profile.js",
@@ -19,10 +19,11 @@ const PRECACHE = [
   "/vendor/idb-keyval.js", "/vendor/canonicalize.js",
   "/data/example-summaries.json", "/data/public-cancer-data.json", "/data/trusted-issuers.json",
   "/data/examples/example-fhir-bundle.json", "/data/examples/example-health-card.smart-health-card",
-  "/icons/icon.svg", "/icons/icon-192.png", "/icons/icon-512.png",
+  "/icons/icon.svg", "/icons/favicon.svg", "/favicon.ico", "/icons/icon-192.png", "/icons/icon-512.png",
   "/fonts/mona-sans-latin-400-normal.woff2", "/fonts/mona-sans-latin-500-normal.woff2", "/fonts/mona-sans-latin-600-normal.woff2",
   "/fonts/mona-sans-latin-700-normal.woff2", "/fonts/mona-sans-latin-800-normal.woff2",
   "/vendor/primer/primer-light.css", "/js/octicons.js", "/img/leaves.jpg",
+  "/js/site.js", "/js/help.js", "/js/translate.js", "/js/routes.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -54,14 +55,19 @@ self.addEventListener("fetch", (event) => {
 
   if (req.mode === "navigate") {
     event.respondWith((async () => {
+      // Every page has its own address (/cancers/breast/ ...). Each visit keeps an offline copy of
+      // that page; offline, an unvisited app page falls back to the app shell, which routes by address.
+      const key = isProfilePath(url) ? "/profile.html" : url.pathname.endsWith("/") ? url.pathname : url.pathname + "/";
       const shellKey = isProfilePath(url) ? "/profile.html" : "/index.html";
       try {
-        const res = await fetch(req); // index.html is served with Cache-Control: no-cache (see _headers)
-        if (res.ok) { const copy = res.clone(); caches.open(PAGES_CACHE).then((c) => c.put(shellKey, copy)); return res; }
+        const res = await fetch(req); // pages are served with Cache-Control: no-cache (see _headers)
+        if (res.ok) { const copy = res.clone(); caches.open(PAGES_CACHE).then((c) => c.put(key, copy)); return res; }
         if (res.status < 500) return res; // e.g. a real 404
         throw new Error("server error"); // 5xx: treat like offline
       } catch {
-        return (await caches.match(shellKey, { cacheName: PAGES_CACHE })) ||
+        return (await caches.match(key, { cacheName: PAGES_CACHE })) ||
+               (await caches.match(key, { cacheName: APP_CACHE })) ||
+               (await caches.match(shellKey, { cacheName: PAGES_CACHE })) ||
                (await caches.match(shellKey, { cacheName: APP_CACHE })) ||
                new Response("<h1>Offline</h1><p>CureBranch could not load. Check your connection.</p>", { headers: { "Content-Type": "text/html" } });
       }
@@ -85,7 +91,7 @@ self.addEventListener("push", (event) => {
     body: data.body || "There is news on your branch.",
     icon: "/icons/icon-192.png",
     badge: "/icons/icon-192.png",
-    data: { url: data.url || "/#tree" },
+    data: { url: data.url || "/tree/" },
   }));
 });
 

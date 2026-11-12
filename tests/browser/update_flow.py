@@ -95,7 +95,7 @@ def main():
         role = pg.evaluate("document.querySelector('#update-banner') && document.querySelector('#update-banner').getAttribute('role')")
         check("2. later: banner shown (role=status), no reload", shown and role == "status" and not navs(state), f"shown={shown} role={role} navs={navs(state)}")
         txt = pg.inner_text("#update-banner") if shown else ""
-        check("2. banner has Refresh / Later / Listen", all(w in txt for w in ["New version available", "Refresh", "Later", "Listen"]), txt)
+        check("2. banner has Refresh / Later (no read-aloud button)", all(w in txt for w in ["New version available", "Refresh", "Later"]) and "Listen" not in txt, txt)
         pg.click("#update-banner [data-act=later]"); time.sleep(0.5)
         pg.evaluate("window.CureBranchUpdate.check()"); time.sleep(3)
         check("2. Later hides it and it stays hidden", not pg.evaluate("!!document.querySelector('#update-banner')") and not navs(state))
@@ -119,7 +119,7 @@ def main():
         ctx, pg = fresh(b); open_controlled(pg)
         if not pg.evaluate("document.querySelector('#wizard').hidden"):
             pg.click("#wz-later"); time.sleep(0.3)   # close the first-run setup guide
-        pg.evaluate("window.CureBranchApp.go('import'); document.querySelector('#shc-text').focus()")
+        pg.evaluate("window.CureBranchApp.go('/import/'); document.querySelector('#shc-text').focus()")
         deploy("buildB"); state["hits"].clear(); state["navs"] = []
         pg.evaluate("window.CureBranchUpdate.check()")
         shown = wait_js(pg, "document.querySelector('#update-banner')", 8000)

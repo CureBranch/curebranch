@@ -1,5 +1,5 @@
 // First-run setup guide (the "wizard"): full screen, 3 steps (Get started, Your records,
-// Your choices), Back/Next, progress dots, a Listen button on every step. Every answer is
+// Your choices), Back/Next, progress dots. Every answer is
 // saved on this device as soon as it is given, so the patient can close the app and pick
 // up where they left off. It uses the app's own styles, so the Accessibility settings
 // (text size, fonts, colors, motion) apply here too. Pure step logic lives in onboarding.js
@@ -51,7 +51,7 @@ function renderVideo() {
   box.dataset.ready = "1";
   box.innerHTML = `<video class="wz-video-el" controls preload="metadata" playsinline src="${esc(CONFIG.CONSENT_VIDEO_URL)}">
     ${CONFIG.CONSENT_VIDEO_CAPTIONS ? `<track kind="captions" srclang="en" label="English" src="${esc(CONFIG.CONSENT_VIDEO_CAPTIONS)}" default>` : ""}
-    Your browser can't play this video. Press Listen above to hear the main points.</video>`;
+    Your browser can't play this video. Read the main points below.</video>`;
 }
 
 function sourceNote(src) {
@@ -197,7 +197,6 @@ function fillStep() {
 
 function show(i, { focus = true } = {}) {
   index = Math.max(0, Math.min(STEPS.length - 1, i));
-  if (window.CureBranchA11y) CureBranchA11y.stopSpeech();
   $$("#wizard .wz-step").forEach((s) => { s.hidden = s.dataset.step !== stepId(); });
   renderDots();
   fillStep();
@@ -282,7 +281,6 @@ async function later() {
 }
 
 function close(finished) {
-  if (window.CureBranchA11y) CureBranchA11y.stopSpeech();
   $("#wizard").hidden = true;
   document.documentElement.classList.remove("wz-open");
   api.onClose({ finished });

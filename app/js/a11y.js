@@ -1,4 +1,4 @@
-/* CureBranch shared accessibility + read-aloud. Free Web Speech API only. */
+/* CureBranch shared accessibility settings (text size, font, spacing, themes, motion, links, focus). */
 (function () {
   "use strict";
   var KEY = "curebranch-a11y-v1";
@@ -15,8 +15,7 @@
     customAccent: "#1f5e4f",
     reduceMotion: "system", /* system | on | off */
     underlineLinks: false,
-    bigCursorFocus: false,
-    speechRate: "1"
+    bigCursorFocus: false
   };
 
   function load() {
@@ -159,202 +158,6 @@
     if (big) big.setAttribute("aria-checked", s.bigCursorFocus ? "true" : "false");
   }
 
-  /* ---------- Speech (Web Speech API) ---------- */
-  var speech = {
-    supported: typeof window !== "undefined" && "speechSynthesis" in window,
-    queue: [],
-    index: 0,
-    rate: 1,
-    bar: null,
-    paused: false,
-    utter: null
-  };
-
-  function setStatus(bar, msg) {
-    if (!bar) return;
-    var s = bar.querySelector(".listen-status");
-    if (s) s.textContent = msg || "";
-  }
-  function setButtons(bar, state) {
-    if (!bar) return;
-    var play = bar.querySelector('[data-act="play"]');
-    var pause = bar.querySelector('[data-act="pause"]');
-    var stop = bar.querySelector('[data-act="stop"]');
-    if (play) play.disabled = state === "play";
-    if (pause) {
-      pause.disabled = state !== "play" && state !== "pause";
-      pause.textContent = state === "pause" ? "Resume" : "Pause";
-      pause.setAttribute("aria-label", state === "pause" ? "Resume read-aloud" : "Pause read-aloud");
-    }
-    if (stop) stop.disabled = state === "idle";
-  }
-  function stopSpeech() {
-    try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {}
-    speech.queue = [];
-    speech.index = 0;
-    speech.paused = false;
-    speech.utter = null;
-    if (speech.bar) {
-      setButtons(speech.bar, "idle");
-      setStatus(speech.bar, "");
-    }
-    speech.bar = null;
-  }
-  function chunkText(text) {
-    var parts = text.match(/[^.!?]+[.!?]+|\S[^.!?]*/g) || [text];
-    var chunks = [], buf = "";
-    parts.forEach(function (p) {
-      if ((buf + " " + p).trim().length > 240) {
-        if (buf.trim()) chunks.push(buf.trim());
-        buf = p;
-      } else buf += " " + p;
-    });
-    if (buf.trim()) chunks.push(buf.trim());
-    return chunks;
-  }
-  function textOf(target) {
-    var el = typeof target === "string" ? document.querySelector(target) : target;
-    if (!el) return "";
-    var clone = el.cloneNode(true);
-    clone.querySelectorAll(".listen-bar, .a11y-panel, .a11y-backdrop, .a11y-launch, .skip-link, script, style, noscript, nav.tabs, .status, .sr-only").forEach(function (n) { n.remove(); });
-    var t = (clone.innerText || clone.textContent || "").replace(/\s+/g, " ").trim();
-    return t;
-  }
-  /* Pick the most natural-sounding voice the device offers. Free, on-device:
-     prefers voices whose names say Enhanced / Premium / Natural / Neural, then
-     the language match, then local (offline) voices. Returns null to use the default. */
-  var bestVoiceCache = null;
-  function bestVoice(lang) {
-    if (bestVoiceCache && bestVoiceCache.lang === lang) return bestVoiceCache.voice;
-    var voices = [];
-    try { voices = speechSynthesis.getVoices() || []; } catch (e) { return null; }
-    if (!voices.length) return null;
-    var base = (lang || "en").toLowerCase().split("-")[0];
-    function score(v) {
-      var n = (v.name || "").toLowerCase(), l = (v.lang || "").toLowerCase(), sc = 0;
-      if (l.split(/[-_]/)[0] !== base) return -1;
-      if (/natural|neural/.test(n)) sc += 40;
-      if (/premium/.test(n)) sc += 35;
-      if (/enhanced/.test(n)) sc += 30;
-      if (/google/.test(n)) sc += 10;
-      if (v.localService) sc += 5;
-      if (l === (lang || "").toLowerCase()) sc += 3;
-      if (v["default"]) sc += 1;
-      return sc;
-    }
-    var best = null, bestScore = -1;
-    voices.forEach(function (v) { var s = score(v); if (s > bestScore) { best = v; bestScore = s; } });
-    bestVoiceCache = { lang: lang, voice: best };
-    return best;
-  }
-  if (typeof speechSynthesis !== "undefined" && "onvoiceschanged" in speechSynthesis) {
-    speechSynthesis.addEventListener("voiceschanged", function () { bestVoiceCache = null; });
-  }
-  function speakNext() {
-    if (!speech.queue.length || speech.index >= speech.queue.length) {
-      if (speech.bar) {
-        setButtons(speech.bar, "idle");
-        setStatus(speech.bar, "Finished reading.");
-      }
-      speech.bar = null;
-      return;
-    }
-    var u = new SpeechSynthesisUtterance(speech.queue[speech.index]);
-    u.rate = speech.rate;
-    u.lang = document.documentElement.lang || "en";
-    var v = bestVoice(u.lang);
-    if (v) u.voice = v;
-    speech.utter = u;
-    u.onend = function () {
-      if (speech.paused) return;
-      speech.index += 1;
-      speakNext();
-    };
-    u.onerror = function () {
-      speech.index += 1;
-      speakNext();
-    };
-    speechSynthesis.speak(u);
-  }
-  function play(bar) {
-    if (!speech.supported) return;
-    var sel = bar.getAttribute("data-listen-for");
-    var target = sel ? document.querySelector(sel) : bar.closest("section, main, footer, .screen") || document.body;
-    var text = textOf(target);
-    if (!text) {
-      setStatus(bar, "Nothing to read in this section.");
-      return;
-    }
-    if (speech.bar && speech.bar !== bar) stopSpeech();
-    if (speech.paused && speech.bar === bar) {
-      try { speechSynthesis.resume(); } catch (e) {}
-      speech.paused = false;
-      setButtons(bar, "play");
-      setStatus(bar, "Reading…");
-      /* If resume is a no-op (known in some Chromium builds), restart */
-      setTimeout(function () {
-        if (speech.bar === bar && !speech.paused && speechSynthesis && !speechSynthesis.speaking && !speechSynthesis.pending) {
-          speakNext();
-        }
-      }, 80);
-      return;
-    }
-    stopSpeech();
-    var speedSel = bar.querySelector(".listen-speed select");
-    speech.rate = parseFloat((speedSel && speedSel.value) || settings.speechRate || "1") || 1;
-    speech.queue = chunkText(text);
-    speech.index = 0;
-    speech.bar = bar;
-    speech.paused = false;
-    setButtons(bar, "play");
-    setStatus(bar, "Reading… Voices depend on your device and browser.");
-    /* Some browsers need a voices warmup */
-    try { speechSynthesis.getVoices(); } catch (e) {}
-    speakNext();
-  }
-  function pause(bar) {
-    if (!speech.supported || speech.bar !== bar) return;
-    if (speech.paused) {
-      play(bar);
-      return;
-    }
-    speech.paused = true;
-    try { speechSynthesis.pause(); } catch (e) {}
-    setButtons(bar, "pause");
-    setStatus(bar, "Paused.");
-  }
-
-  function wireListenBars() {
-    document.querySelectorAll(".listen-bar").forEach(function (bar) {
-      if (!speech.supported) {
-        bar.classList.add("is-unsupported");
-        setStatus(bar, "Read aloud isn’t available in this browser. Try Chrome, Edge, Safari, or Firefox — or use your device’s built-in screen reader (VoiceOver, Narrator, NVDA, or TalkBack).");
-        return;
-      }
-      bar.addEventListener("click", function (e) {
-        var btn = e.target.closest("[data-act]");
-        if (!btn) return;
-        var act = btn.getAttribute("data-act");
-        if (act === "play") play(bar);
-        else if (act === "pause") pause(bar);
-        else if (act === "stop") {
-          stopSpeech();
-          setButtons(bar, "idle");
-          setStatus(bar, "Stopped.");
-        }
-      });
-      var sel = bar.querySelector(".listen-speed select");
-      if (sel) {
-        sel.value = settings.speechRate || "1";
-        sel.addEventListener("change", function () {
-          settings.speechRate = sel.value;
-          save(settings);
-          speech.rate = parseFloat(sel.value) || 1;
-        });
-      }
-    });
-  }
-
   /* ---------- Panel open/close + focus trap ---------- */
   var lastFocus = null;
   function panelEls() {
@@ -463,7 +266,6 @@
     if (reset) reset.addEventListener("click", function () {
       settings = Object.assign({}, defaults);
       apply(settings);
-      stopSpeech();
     });
 
     document.addEventListener("keydown", function (e) {
@@ -561,31 +363,13 @@
       '<span>Accessibility</span></button>';
   }
 
-  function listenBarHTML(selector, label) {
-    label = label || "Listen to this section";
-    return '<div class="listen-bar" data-listen-for="' + selector + '">' +
-      '<span class="listen-label">' + label + '</span>' +
-      '<div class="listen-controls">' +
-      '<button type="button" class="listen-btn" data-act="play" aria-label="Listen: play read-aloud">Listen</button>' +
-      '<button type="button" class="listen-btn" data-act="pause" aria-label="Pause read-aloud" disabled>Pause</button>' +
-      '<button type="button" class="listen-btn" data-act="stop" aria-label="Stop read-aloud" disabled>Stop</button>' +
-      '<label class="listen-speed"><span>Speed</span> <select aria-label="Read-aloud speed">' +
-      '<option value="0.75">0.75×</option><option value="1" selected>1×</option>' +
-      '<option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option>' +
-      '</select></label>' +
-      '</div><p class="listen-status" role="status" aria-live="polite"></p></div>';
-  }
-
   window.CureBranchA11y = {
     apply: function () { apply(settings); },
     set: function (partial) { settings = Object.assign({}, settings, partial || {}); apply(settings); },
     getSettings: function () { return settings; },
-    bestVoice: bestVoice,
     openPanel: openPanel,
     closePanel: closePanel,
-    stopSpeech: stopSpeech,
     launchButtonHTML: launchButtonHTML,
-    listenBarHTML: listenBarHTML,
     panelHTML: panelHTML,
     contrast: contrast,
     init: function () {
@@ -595,20 +379,12 @@
         wrap.innerHTML = panelHTML();
         while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
       }
-      document.querySelectorAll("[data-listen-mount]").forEach(function (el) {
-        if (el.getAttribute("data-mounted")) return;
-        var sel = el.getAttribute("data-listen-mount");
-        var label = el.getAttribute("data-listen-label") || "Listen to this section";
-        el.innerHTML = listenBarHTML(sel, label);
-        el.setAttribute("data-mounted", "1");
-      });
       document.querySelectorAll("[data-a11y-launch]").forEach(function (el) {
         if (el.getAttribute("data-mounted")) return;
         el.innerHTML = launchButtonHTML(el.getAttribute("data-a11y-launch") || "");
         el.setAttribute("data-mounted", "1");
       });
       wirePanel();
-      wireListenBars();
       apply(settings);
     }
   };

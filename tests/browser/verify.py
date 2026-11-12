@@ -11,6 +11,10 @@
    with the consistency check (matches / mismatch), resume after reload, re-run from Settings,
    saved record matches schema/local-record.schema.json; every wizard step also gets the
    overflow (320-1280 px, 200% text) and axe (all themes) checks
+ * every page has a real address (no "#" routes): all sitemap pages load directly with their own title,
+   description, canonical and h1; Back/Forward/Refresh; old "#" links redirect; no "#/" links
+ * "?" help buttons (disclosure pattern, keyboard), "What is this page?" boxes, AI prompt + copy,
+   Translate (on-device API mocked, browser steps), header audit at 6 widths, no read-aloud left
  * no console errors / CSP violations
 """
 import json, sys, re, subprocess
@@ -25,7 +29,8 @@ PORT = 37111
 BASE = f"http://127.0.0.1:{PORT}"
 AXE = (REPO / "node_modules/axe-core/axe.min.js").read_text()
 WIDTHS = [320, 390, 768, 1024, 1280, 1440]
-SCREENS = ["home", "start", "import", "repo", "tree", "settings", "a11y", "cancer/lung", "cancer/aml", "cancer/tumor-agnostic", "sources"]
+SCREENS = ["/", "/how-it-works/", "/import/", "/my-branch/", "/tree/", "/settings/", "/accessibility/", "/cancers/", "/help/", "/privacy/", "/sources/",
+           "/cancers/lung/", "/cancers/aml/", "/cancers/tumor-agnostic/", "/cancers/breast/her2-positive/", "/cancers/lung/lung-adenocarcinoma/"]
 THEMES = ["default", "hc-dark", "hc-light", "cb-blue", "cb-purple"]
 results = {"overflow": [], "axe": [], "flows": [], "console": []}
 STATE = {}
@@ -144,14 +149,14 @@ def wizard_flow(b):
     pg.on("pageerror", lambda e: results["console"].append(f"pageerror: {e}"))
     pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
     INTRO = "Join others: add your cancer treatment records to a public, open-source digital tree where anyone, with the help of AI, can work toward a cure. You choose your privacy level. Create your branch in 3 easy steps, see how many lives your story could save, and discover treatments that worked for people like you."
-    check("home: first visit shows what CureBranch is, wizard stays closed", (not wizard_open(pg)) and pg.is_visible("#s-home") and pg.is_visible("#tabs")
+    check("home: first visit shows what CureBranch is, wizard stays closed", (not wizard_open(pg)) and pg.is_visible("#s-home") and pg.is_visible(".site-header")
           and pg.inner_text("#home-intro-copy") == INTRO and pg.is_visible("#home-start-branch"))
     check("home: Create your branch opens the setup guide", True)
     pg.click("#home-start-branch"); wait_js(pg, "!document.querySelector('#wizard').hidden")
-    check("wizard: opens from the home button, step 1 of 3, 3 progress dots, current one marked", wizard_open(pg) and not pg.is_visible("#tabs")
+    check("wizard: opens from the home button, step 1 of 3, 3 progress dots, current one marked", wizard_open(pg) and not pg.is_visible(".site-header")
           and pg.inner_text("#wz-count") == "Step 1 of 3"
           and pg.locator("#wz-dots li").count() == 3 and pg.locator("#wz-dots li[aria-current=step]").count() == 1)
-    check("wizard: a Listen button on every step", pg.evaluate("[...document.querySelectorAll('#wizard .wz-step')].every(s => s.querySelectorAll('.listen-bar [data-act=play]').length === 1)"))
+    check("wizard: no read-aloud (Listen) controls on any step", pg.evaluate("!document.querySelector('.listen-bar, [data-listen-mount]') && !/Listen/.test(document.querySelector('#wizard').innerText)"))
     check("wizard: Back hidden on step 1", not pg.is_visible("#wz-back"))
     check("wizard: consent video slot + disclaimer shown", pg.is_visible("#wz-video") and "not medical advice" in pg.inner_text("#wz-start"))
     check("wizard: private code shown on Get started", True)
@@ -339,12 +344,12 @@ def nav_flow(b):
     d = pg.evaluate("""() => { const r = s => document.querySelector(s).getBoundingClientRect();
       return { nav: r('#sidenav').width, navVis: getComputedStyle(document.querySelector('#sidenav')).display !== 'none', main: r('#screens').width,
         layout: r('.layout').width, toggle: getComputedStyle(document.querySelector('#nav-toggle')).display, links: document.querySelectorAll('#cancer-nav .nl-link').length,
-        groups: document.querySelectorAll('#cancer-nav .nl-group').length, a11yText: getComputedStyle(document.querySelector('.topbar .a11y-launch span')).width }; }""")
+        groups: document.querySelectorAll('#cancer-nav .nl-group').length, a11yText: getComputedStyle(document.querySelector('.site-header .a11y-launch span')).width }; }""")
     check("desktop 1440: full-width layout (main column at least 1000px, layout at least 1400px)", d["main"] >= 1000 and d["layout"] >= 1400, str(d))
     check("desktop 1440: left navigation always shown, no menu button", d["navVis"] and 240 <= d["nav"] <= 360 and d["toggle"] == "none", str(d))
     check("nav: lists every cancer tree, grouped", d["links"] == len(data["cancers"]) and d["groups"] == len({c["group"] for c in data["cancers"]}), str(d))
     check("accessibility button: visible 'Accessibility' text on desktop, name includes it", d["a11yText"] not in ("1px", "0px")
-          and "Accessibility" in pg.get_attribute(".topbar .a11y-launch", "aria-label") and pg.evaluate("document.querySelector('.topbar .a11y-launch').getBoundingClientRect().height") >= 44)
+          and "Accessibility" in pg.get_attribute(".site-header .a11y-launch", "aria-label") and pg.evaluate("document.querySelector('.site-header .a11y-launch').getBoundingClientRect().height") >= 44)
     pg.fill("#nav-search", "EGFR"); pg.wait_for_timeout(400)
     vis = pg.evaluate("[...document.querySelectorAll('#cancer-nav [data-nl-item]:not([hidden]) .nl-link')].map(a => a.textContent)")
     check("nav search: EGFR finds lung cancer and filters the list", "Lung cancer" in vis and len(vis) < len(data["cancers"]) and "match" in pg.inner_text("#nav-search-status"), str(vis))
@@ -360,11 +365,12 @@ def nav_flow(b):
     check("cancer page: real SEER figure with source shown", pg.is_visible("#s-cancer") and "Lung cancer" in pg.inner_text("#cancer-title") and nc in t and "Source: SEER" in t and "retrieved" in t, t[:300])
     check("cancer page: FDA drugs, trials, genes and a sources section", "FDA-approved drugs" in t and "recruiting studies" in t and "Tumors with a mutation" in t and "Sources and licenses" in t and "ODbL" in t)
     check("cancer page: patient-shared branches start at 0, no example patients", "Patient-shared branches: 0" in t and "EXAMPLE" not in t)
-    check("nav: current cancer marked", pg.get_attribute('#cancer-nav [data-nl-cancer="lung"]', "aria-current") == "page" and pg.evaluate("location.hash") == "#cancer/lung")
+    check("nav: current cancer marked", pg.get_attribute('#cancer-nav [data-nl-cancer="lung"]', "aria-current") == "page" and pg.evaluate("location.pathname + location.hash") == "/cancers/lung/")
     gene = lung["genomics"][0]["genes"][1]["gene"]
     pg.click('#cancer-nav .nl-toggle[aria-controls="nls-lung"]') if not pg.is_visible("#nls-lung") else None
-    pg.click(f'#nls-lung a[data-go="cancer/lung/g-lung-{gene}"]'); pg.wait_for_timeout(300)
-    check("nav: gene link moves focus to that gene's row", pg.evaluate("document.activeElement.id") == f"g-lung-{gene}", pg.evaluate("document.activeElement.id"))
+    pg.click(f'#nls-lung a[href="/cancers/lung/#g-lung-{gene}"]'); pg.wait_for_timeout(300)
+    check("nav: gene link moves focus to that gene's row, address is a real path + #fragment", pg.evaluate("document.activeElement.id") == f"g-lung-{gene}"
+          and pg.evaluate("location.pathname + location.hash") == f"/cancers/lung/#g-lung-{gene}", pg.evaluate("document.activeElement.id + ' ' + location.href"))
     ctx.close()
     # phone: drawer
     ctx = b.new_context(viewport={"width": 390, "height": 844})
@@ -375,16 +381,239 @@ def nav_flow(b):
     check("phone: nav hidden until the menu button is used", not pg.is_visible("#sidenav") and pg.is_visible("#nav-toggle") and pg.get_attribute("#nav-toggle", "aria-expanded") == "false")
     pg.click("#nav-toggle"); pg.wait_for_timeout(200)
     st = pg.evaluate("""() => ({ open: document.querySelector('#sidenav').classList.contains('open'), exp: document.querySelector('#nav-toggle').getAttribute('aria-expanded'),
-      modal: document.querySelector('#sidenav').getAttribute('aria-modal'), focus: document.activeElement.id, inert: document.querySelector('#screens').inert })""")
-    check("phone: drawer opens as a modal, focus in search, page behind inert", st == {"open": True, "exp": "true", "modal": "true", "focus": "nav-search", "inert": True}, str(st))
+      modal: document.querySelector('#sidenav').getAttribute('aria-modal'), focus: document.activeElement.closest('.site-links') ? 'site-links' : document.activeElement.id,
+      inert: document.querySelector('#screens').inert && document.querySelector('.chrome').inert, search: !!document.querySelector('#sidenav #nav-search') })""")
+    check("phone: menu opens as a modal with site links first, then the cancer search; page behind inert", st == {"open": True, "exp": "true", "modal": "true", "focus": "site-links", "inert": True, "search": True}, str(st))
     r = pg.evaluate(OVERFLOW_JS)
     check("phone: open drawer causes no sideways scrolling", r["overflow"] <= 1 and not r["offenders"], str(r))
     run_axe(pg, "390px nav-drawer")
     pg.keyboard.press("Escape"); pg.wait_for_timeout(150)
-    check("phone: Escape closes the drawer and returns focus", not pg.is_visible("#sidenav") and pg.evaluate("document.activeElement.id") == "nav-toggle" and not pg.evaluate("document.querySelector('#screens').inert"))
+    check("phone: Escape closes the menu and returns focus", not pg.is_visible("#sidenav") and pg.evaluate("document.activeElement.id") == "nav-toggle" and not pg.evaluate("document.querySelector('#screens').inert || document.querySelector('.chrome').inert"))
     pg.click("#nav-toggle"); pg.click('#cancer-nav [data-nl-cancer="breast"]'); pg.wait_for_timeout(300)
     check("phone: picking a cancer closes the drawer and opens its page", not pg.is_visible("#sidenav") and "Breast cancer" in pg.inner_text("#cancer-title"))
     ctx.close()
+
+
+SITE = "https://curebranch.ai"
+NO_HASH_ROUTES_JS = """() => {
+  const bad = [];
+  for (const a of document.querySelectorAll('a[href]')) {
+    const h = a.getAttribute('href');
+    if (/^\\/?#\\//.test(h) || /^\\/#/.test(h)) bad.push(h);                       // "#/x" or "/#x" style routes
+    else if (h.startsWith('#') && h.length > 1 && !a.closest('.screen:not(.active), [hidden]') && !document.getElementById(decodeURIComponent(h.slice(1)))) bad.push('missing target ' + h);
+  }
+  for (const b of document.querySelectorAll('a[data-go]')) bad.push('link uses data-go ' + b.getAttribute('href'));
+  return bad;
+}"""
+
+def sitemap_paths():
+    return re.findall(r"<loc>https://curebranch\.ai(/[^<]*)</loc>", (DIST / "sitemap.xml").read_text())
+
+def routes_flow(b):
+    """Every page has a real address: load each one directly (like a refresh or a shared link)."""
+    paths = sitemap_paths()
+    app_paths = [x for x in paths if x != "/how-it-started/"]
+    check("routes: sitemap lists every page (app pages, cancer pages, sub-pages, How it started)", len(paths) >= 100 and "/cancers/breast/her2-positive/" in paths and "/how-it-started/" in paths, str(len(paths)))
+    files = [f for f in DIST.rglob("*.html")]
+    bad_files = [str(f.relative_to(DIST)) for f in files if re.search(r'href="/?#/|href="/#[a-z]', f.read_text())]
+    check("no '#/' or '/#name' links in any built page", not bad_files, str(bad_files[:5]))
+    ctx = b.new_context(viewport={"width": 1280, "height": 900}); pg = ctx.new_page()
+    errs = []
+    pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    if wizard_open(pg): finish_wizard(pg)
+    problems, hash_links = [], []
+    for path in paths:
+        r = pg.goto(BASE + path, wait_until="domcontentloaded")
+        served = pg.evaluate("""() => ({ title: document.title, canon: (document.querySelector('link[rel=canonical]') || {}).href,
+          desc: (document.querySelector('meta[name=description]') || {}).content || '' })""")
+        if path != "/how-it-started/":
+            wait_js(pg, "window.CureBranchApp && document.querySelector('.screen.active h1')")
+            pg.wait_for_timeout(50)
+        st = pg.evaluate("""() => ({ path: location.pathname, title: document.title, canon: document.querySelector('link[rel=canonical]').href,
+          h1: (document.querySelector('.screen.active h1') || document.querySelector('main h1') || {}).textContent || '', whatIs: !!document.querySelector('.screen.active .what-is, main .what-is'),
+          screens: document.querySelectorAll('.screen.active').length })""")
+        ok = (r.status == 200 and st["path"] == path and served["canon"] == SITE + path and st["canon"] == SITE + path and served["title"] == st["title"]
+              and len(served["desc"]) > 40 and st["h1"].strip() and st["whatIs"] and st["screens"] == 1)
+        if not ok: problems.append(f"{path}: status={r.status} {served} {st}")
+        if path.count("/") <= 3 or path in ("/cancers/breast/her2-positive/",):
+            hl = pg.evaluate(NO_HASH_ROUTES_JS)
+            if hl: hash_links.append(f"{path}: {hl[:4]}")
+    check(f"routes: all {len(paths)} pages load directly with their own title, description, canonical, h1 and 'What is this page?' box", not problems, "; ".join(problems[:4]))
+    check("links: no '#/' routes, no data-go links, every in-page #link has a target", not hash_links, "; ".join(hash_links[:4]))
+    titles = {}
+    for path in app_paths[:40]:
+        pg.goto(BASE + path, wait_until="domcontentloaded"); titles[path] = pg.title()
+    check("routes: page titles are unique", len(set(titles.values())) == len(titles), str(titles)[:300])
+    # Back, Forward and Refresh with normal links
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    navs_before = len(STATE["hits"])
+    pg.click(".sh-nav a[href='/cancers/']"); wait_js(pg, "location.pathname === '/cancers/' && document.querySelector('#s-cancers.active')")
+    pg.click("#cancers-body a[href='/cancers/breast/']"); wait_js(pg, "location.pathname === '/cancers/breast/'")
+    pg.click("#cancer-body .pill-links a[href='/cancers/breast/her2-positive/']"); wait_js(pg, "location.pathname === '/cancers/breast/her2-positive/'")
+    h1 = pg.inner_text("#cancer-title")
+    check("links: header -> Cancer trees -> Breast -> HER2-positive, each a real address", h1 == "HER2-positive breast cancer" and pg.title() == "HER2-positive breast cancer | CureBranch", h1)
+    pg.go_back(); wait_js(pg, "location.pathname === '/cancers/breast/'"); pg.wait_for_timeout(150)
+    check("Back button returns to the previous page", pg.inner_text("#cancer-title") == "Breast cancer" and pg.title() == "Breast cancer | CureBranch")
+    pg.go_back(); wait_js(pg, "location.pathname === '/cancers/'"); pg.wait_for_timeout(150)
+    check("Back again: All cancer trees", pg.is_visible("#s-cancers") and pg.title() == "All cancer trees | CureBranch")
+    pg.go_forward(); wait_js(pg, "location.pathname === '/cancers/breast/'")
+    check("Forward works", pg.inner_text("#cancer-title") == "Breast cancer")
+    pg.reload(wait_until="networkidle"); wait_js(pg, "window.CureBranchApp && document.querySelector('#cancer-title')")
+    check("Refresh on a deep link stays on that page", pg.evaluate("location.pathname") == "/cancers/breast/" and pg.inner_text("#cancer-title") == "Breast cancer")
+    pg.click(".otp a[href^='#ai-']"); pg.wait_for_timeout(300)
+    check("'On this page' jump link moves focus and keeps the real address", pg.evaluate("document.activeElement.id") == "ai-breast-h" and pg.evaluate("location.pathname + location.hash") == "/cancers/breast/#ai-breast-h",
+          pg.evaluate("document.activeElement.id + ' ' + location.href"))
+    # Old hash addresses move to the new ones
+    for old, new in (("/#cancer/lung", "/cancers/lung/"), ("/#/repo", "/my-branch/"), ("/#tree", "/tree/"), ("/#start", "/how-it-works/"), ("/#cancer/lung/g-lung-EGFR", "/cancers/lung/#g-lung-EGFR")):
+        pg.goto(BASE + old, wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.wait_for_timeout(200)
+        got = pg.evaluate("location.pathname + location.hash")
+        check(f"old link {old} redirects to {new}", got == new, got)
+    pg.goto(BASE + "/how-it-started.html", wait_until="networkidle"); pg.wait_for_timeout(800)
+    check("old /how-it-started.html forwards to /how-it-started/", pg.evaluate("location.pathname") == "/how-it-started/" and "In honor of my dad" in pg.inner_text("main"))
+    check("routes: no console errors", not errs, str(errs[:3]))
+    ctx.close()
+
+def help_flow(b):
+    """'?' help buttons: disclosure pattern, keyboard and screen-reader friendly, never hover-only."""
+    ctx = b.new_context(viewport={"width": 1440, "height": 900}); pg = ctx.new_page()
+    pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp && document.querySelector('#cancer-body .help-btn')")
+    if wizard_open(pg): finish_wizard(pg); pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "document.querySelector('#cancer-body .help-btn')")
+    info = pg.evaluate("""() => { const b = [...document.querySelectorAll('#cancer-body .help-btn')];
+      return { n: b.length, terms: [...new Set(b.map(x => x.dataset.help))],
+        ok: b.every(x => x.tagName === 'BUTTON' && x.getAttribute('aria-expanded') === 'false' && document.getElementById(x.getAttribute('aria-controls')) && document.getElementById(x.getAttribute('aria-controls')).hidden && /What does ".+" mean\\?/.test(x.textContent)),
+        size: b.every(x => { const r = x.getBoundingClientRect(); return r.width >= 24 && r.height >= 24; }) }; }""")
+    need = {"cancer-tree", "seer", "survival", "new-cases", "deaths", "stage", "subtype", "biomarker", "mutation-rate", "tcga", "fda", "trial", "ai", "shared-branches"}
+    check("help: '?' buttons next to the terms on a cancer page (SEER, TCGA, survival, subtype, biomarker, trial, ...)", info["ok"] and info["size"] and need <= set(info["terms"]), str(info)[:400])
+    btn = pg.locator("#cancer-body .stat-card .help-btn").first
+    btn.focus(); pg.keyboard.press("Enter"); pg.wait_for_timeout(100)
+    pid = btn.get_attribute("aria-controls")
+    st = pg.evaluate(f"() => ({{ exp: document.activeElement.getAttribute('aria-expanded'), vis: !document.getElementById('{pid}').hidden, txt: document.getElementById('{pid}').innerText }})")
+    check("help: Enter opens the explanation right after the button (aria-expanded=true)", st["exp"] == "true" and st["vis"] and "estimate" in st["txt"], str(st))
+    pg.keyboard.press("Tab")
+    check("help: Tab moves into the explanation ('More in Help' link)", pg.evaluate("document.activeElement.classList.contains('help-more')"))
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(100)
+    check("help: Escape closes it and returns focus to the button", pg.evaluate(f"document.getElementById('{pid}').hidden") and pg.evaluate("document.activeElement.classList.contains('help-btn')") and btn.get_attribute("aria-expanded") == "false")
+    pg.keyboard.press("Space"); pg.wait_for_timeout(100)
+    check("help: Space toggles it too", btn.get_attribute("aria-expanded") == "true")
+    pg.hover("#cancer-body .help-btn >> nth=3"); pg.wait_for_timeout(200)
+    check("help: nothing opens on hover alone", pg.evaluate("document.querySelectorAll('#cancer-body .help-btn[aria-expanded=true]').length") == 1)
+    run_axe(pg, "1440px cancer page with a help explanation open")
+    pg.click(f"#{pid} .help-more"); wait_js(pg, "location.pathname === '/help/'"); pg.wait_for_timeout(300)
+    check("help: 'More in Help' opens the Help page at that question", pg.evaluate("location.hash") == "#q-new-cases" and pg.evaluate("document.activeElement.id") == "q-new-cases")
+    n = pg.evaluate("document.querySelectorAll('#help-body .faq dt').length")
+    check("help page: many plain questions and answers", n >= 40, str(n))
+    for path in ("/", "/how-it-works/", "/my-branch/", "/settings/", "/import/", "/privacy/"):
+        pg.goto(BASE + path, wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+        c = pg.evaluate("document.querySelectorAll('.screen.active .help-btn').length")
+        if not c: check(f"help: '?' buttons on {path}", False, "none")
+    check("help: '?' buttons on home, how it works, my branch, settings, add records and privacy", True)
+    # AI section
+    pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "document.querySelector('#ai-breast')")
+    ai = pg.inner_text("#ai-breast")
+    check("cancer page: explainer, numbered how-to, and 'How to use this with your AI' with steps for each AI",
+          pg.is_visible("#cancer-body .what-is") and pg.locator("#cancer-body .how-use ol li").count() >= 5
+          and all(x in ai for x in ["ChatGPT", "Claude", "Gemini", "Grok", "Copilot", "Another AI", "not medical advice", "Talk with your doctor"]), ai[:300])
+    prompt = pg.input_value("#ai-breast-prompt")
+    check("AI prompt: has the page address, sourced facts and a place to paste records", "https://curebranch.ai/cancers/breast/" in prompt and "(SEER)" in prompt
+          and "[Paste your pathology report" in prompt and "not medical advice" in prompt, prompt[:200])
+    ctx.grant_permissions(["clipboard-read", "clipboard-write"], origin=BASE)
+    pg.click("#ai-breast [data-copy]"); pg.wait_for_timeout(300)
+    clip = pg.evaluate("navigator.clipboard.readText()")
+    check("AI prompt: one button copies it, and says so", clip == prompt and "Copied" in pg.inner_text("#ai-breast .copy-status"))
+    pg.goto(BASE + "/cancers/breast/her2-positive/", wait_until="networkidle"); wait_js(pg, "document.querySelector('#ai-breast-her2-positive-prompt')")
+    t = pg.inner_text("#cancer-body")
+    check("biomarker page: plain explainer, FDA drugs, trials, AI prompt", "Positive" in t and "Enhertu" in t and "recruiting studies" in t
+          and "HER2" in pg.input_value("#ai-breast-her2-positive-prompt") and "https://curebranch.ai/cancers/breast/her2-positive/" in pg.input_value("#ai-breast-her2-positive-prompt"))
+    txt = pg.evaluate("document.body.innerText")
+    check("no read-aloud anywhere ('Listen to this' removed)", "Listen to this" not in txt and not pg.evaluate("!!document.querySelector('.listen-bar, [data-listen-mount], .hero-listen')"))
+    ctx.close()
+
+MOCK_TRANSLATOR = """
+window.Translator = {
+  availability: async ({ targetLanguage }) => (targetLanguage === 'xx' ? 'unavailable' : 'available'),
+  create: async ({ targetLanguage, monitor }) => { if (monitor) monitor({ addEventListener() {} }); return { translate: async (t) => '[' + targetLanguage + '] ' + t }; },
+};"""
+
+def translate_flow(b):
+    """Translate: on-device translation where the browser has it (mocked here), browser steps everywhere."""
+    ctx = b.new_context(viewport={"width": 1440, "height": 900}); pg = ctx.new_page()
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+    if wizard_open(pg): finish_wizard(pg)
+    pg.click("#tr-btn"); pg.wait_for_timeout(150)
+    st = pg.evaluate("""() => ({ exp: document.querySelector('#tr-btn').getAttribute('aria-expanded'), open: !document.querySelector('#tr-panel').hidden,
+      focus: document.activeElement.id, device: !document.querySelector('#tr-device').hidden, how: document.querySelectorAll('#tr-howto details').length,
+      langs: document.querySelectorAll('#tr-lang option').length, api: 'Translator' in self })""")
+    check("translate: labelled header button opens the panel with 30+ languages and browser steps", st["exp"] == "true" and st["open"] and st["focus"] == "tr-lang"
+          and st["device"] == st["api"] and st["how"] >= 6 and st["langs"] >= 30, str(st))
+    run_axe(pg, "1440px translate panel open")
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(100)
+    check("translate: Escape closes the panel and returns focus", pg.evaluate("document.querySelector('#tr-panel').hidden && document.activeElement.id === 'tr-btn'"))
+    ctx.close()
+    ctx = b.new_context(viewport={"width": 1440, "height": 900}); ctx.add_init_script("delete self.Translator; delete window.Translator;"); pg = ctx.new_page()
+    pg.goto(BASE + "/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp"); pg.click("#tr-btn"); pg.wait_for_timeout(100)
+    check("translate: in browsers without on-device translation, only the browser's own steps are offered (opened for this browser)",
+          pg.evaluate("document.querySelector('#tr-device').hidden && !!document.querySelector('#tr-howto details[open]')"))
+    ctx.close()
+    ctx = b.new_context(viewport={"width": 1440, "height": 900}); ctx.add_init_script(MOCK_TRANSLATOR); pg = ctx.new_page()
+    errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp && document.querySelector('#cancer-title')")
+    if wizard_open(pg): finish_wizard(pg); pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "document.querySelector('#cancer-title')")
+    pg.click("#tr-btn"); pg.select_option("#tr-lang", "es")
+    check("translate: 'Translate on this device' offered when the browser supports it", pg.is_visible("#tr-go"))
+    pg.click("#tr-go"); wait_js(pg, "document.querySelector('#cancer-title').textContent.startsWith('[es]')")
+    st = pg.evaluate("""() => ({ lang: document.documentElement.lang, h1: document.querySelector('#cancer-title').textContent, brand: document.querySelector('.brand-name').textContent,
+      label: document.querySelector('#nav-search').getAttribute('placeholder'), undo: !document.querySelector('#tr-undo').hidden, status: document.querySelector('#tr-status').textContent })""")
+    check("translate: page text and labels translated on the device, <html lang> set, brand name kept", st["lang"] == "es" and st["h1"] == "[es] Breast cancer"
+          and st["brand"] == "CureBranch" and st["label"].startswith("[es]") and st["undo"], str(st))
+    pg.screenshot(path=str(REPO / "tests/browser/out/translate-mock.png"))
+    pg.keyboard.press("Escape")
+    pg.click("#cancer-body .pill-links a[href='/cancers/breast/her2-positive/']"); wait_js(pg, "location.pathname === '/cancers/breast/her2-positive/'")
+    wait_js(pg, "document.querySelector('#cancer-title').textContent.startsWith('[es]')")
+    check("translate: new pages opened from links are translated too", pg.inner_text("#cancer-title").startswith("[es] "))
+    pg.click("#tr-btn"); pg.click("#tr-undo"); pg.wait_for_timeout(200)
+    check("translate: 'Show the original' restores English", pg.inner_text("#cancer-title") == "HER2-positive breast cancer" and pg.evaluate("document.documentElement.lang") == "en"
+          and not pg.evaluate("document.body.innerText.includes('[es]')"))
+    pg.select_option("#tr-lang", "ar"); pg.click("#tr-go"); wait_js(pg, "document.documentElement.lang === 'ar'")
+    check("translate: right-to-left languages set dir=rtl", pg.evaluate("document.documentElement.dir") == "rtl")
+    r = pg.evaluate(OVERFLOW_JS)
+    check("translate: right-to-left page has no sideways scrolling", r["overflow"] <= 1, str(r)[:300])
+    pg.click("#tr-undo")
+    check("translate: no errors", not errs, str(errs[:3]))
+    ctx.close()
+
+HEADER_JS = """() => {
+  const vis = (e) => e && e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden';
+  const items = [document.querySelector('.site-header .brand'), ...document.querySelectorAll('.sh-nav a'), document.querySelector('#tr-btn'),
+                 document.querySelector('.site-header .a11y-launch'), document.querySelector('#nav-toggle')].filter(vis);
+  const R = items.map((e) => { const r = e.getBoundingClientRect(); return { id: e.id || e.className || e.tagName, l: r.left, r: r.right, t: r.top, b: r.bottom, h: r.height }; });
+  let overlap = [];
+  for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) {
+    const a = R[i], b = R[j]; if (a.l < b.r - 1 && b.l < a.r - 1 && a.t < b.b - 1 && b.t < a.b - 1) overlap.push(a.id + ' x ' + b.id);
+  }
+  const head = document.querySelector('.site-header').getBoundingClientRect();
+  return { n: R.length, rows: (Math.max(...R.map((x) => (x.t + x.b) / 2)) - Math.min(...R.map((x) => (x.t + x.b) / 2))) <= 8 ? 1 : 2, overlap, minH: Math.min(...R.map((x) => x.h)),
+    navVisible: vis(document.querySelector('.sh-nav')), menuVisible: vis(document.querySelector('#nav-toggle')), height: head.height,
+    trLabel: document.querySelector('#tr-btn').innerText.trim(), a11yLabel: document.querySelector('.site-header .a11y-launch').innerText.trim(),
+    right: Math.max(...R.map((x) => x.r)), vw: document.documentElement.clientWidth };
+}"""
+
+def header_flow(b):
+    """Header audit at 1440, 1280, 1024, 768, 390 and 320: one tidy row, nothing overlaps, every control 44px+, menu on small screens."""
+    for w in (1440, 1280, 1024, 768, 390, 320):
+        ctx = b.new_context(viewport={"width": w, "height": 900}); pg = ctx.new_page()
+        pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+        if wizard_open(pg): finish_wizard(pg); pg.goto(BASE + "/cancers/breast/", wait_until="networkidle"); wait_js(pg, "window.CureBranchApp")
+        d = pg.evaluate(HEADER_JS)
+        wide = w >= 1024
+        ok = (d["rows"] == 1 and not d["overlap"] and d["minH"] >= 44 and d["navVisible"] == wide and d["menuVisible"] == (not wide)
+              and d["trLabel"] == "Translate" and d["a11yLabel"] == "Accessibility" and d["right"] <= d["vw"] and d["height"] <= 80
+              and d["n"] == (1 + 5 + 2 if wide else 1 + 3))
+        check(f"header {w}px: logo + name, {'5 links' if wide else 'Menu button'}, Translate and Accessibility in one row, no overlap, 44px targets", ok, str(d))
+        if wide:
+            check(f"header {w}px: current section marked", pg.get_attribute(".sh-nav a[href='/cancers/']", "aria-current") is not None)
+        ctx.close()
 
 def main():
     httpd, state = start(DIST, PORT)
@@ -394,6 +623,10 @@ def main():
         wizard_flow(b)
         tree_flow(b)
         nav_flow(b)
+        routes_flow(b)
+        help_flow(b)
+        translate_flow(b)
+        header_flow(b)
         # ---------- flows ----------
         ctx = b.new_context(viewport={"width": 390, "height": 844})
         pg = ctx.new_page()
@@ -565,7 +798,7 @@ def main():
                 finish_wizard(pg, on_step=wz_overflow_plus, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
-                    if s == "tree":
+                    if s == "/tree/":
                         pg.click("#tab-explore"); pg.evaluate("document.querySelectorAll('#tree-list details').forEach(d=>d.open=true)")
                     r = pg.evaluate(OVERFLOW_JS)
                     results["overflow"].append({"w": w, "scale": sc, "screen": s, **r})
@@ -602,7 +835,7 @@ def main():
                 finish_wizard(pg, on_step=wz_axe, show_errors=True, fill_records=True)
                 for s in SCREENS:
                     go(pg, s)
-                    if s == "tree": pg.click("#tab-explore")
+                    if s == "/tree/": pg.click("#tab-explore")
                     run_axe(pg, f"{w}px {th} {s}")
                 pg.evaluate("CureBranchA11y.openPanel()"); pg.wait_for_timeout(200)
                 run_axe(pg, f"{w}px {th} a11y-panel"); pg.evaluate("CureBranchA11y.closePanel()")

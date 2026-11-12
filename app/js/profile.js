@@ -138,7 +138,7 @@ function drawCard(lines) {
   const c = document.createElement("canvas");
   c.width = 1080; c.height = 1080;
   const g = c.getContext("2d");
-  g.fillStyle = "#1f5e4f"; g.fillRect(0, 0, 1080, 1080);
+  g.fillStyle = "#15462b"; g.fillRect(0, 0, 1080, 1080);
   g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 28; g.lineCap = "round";
   g.beginPath(); g.moveTo(540, 1000); g.lineTo(540, 820); g.quadraticCurveTo(540, 760, 420, 700); g.moveTo(540, 820); g.quadraticCurveTo(540, 760, 660, 700); g.stroke();
   g.fillStyle = "#fff"; g.textAlign = "center";
@@ -214,8 +214,17 @@ let render = async () => {};
 async function main() {
   const box = document.getElementById("profile");
   const code = codeFromUrl();
+  if (!code && !/^\/profile(\.html)?\/?$/.test(location.pathname)) {
+    // GitHub Pages serves this file for any unknown address: show a real "Page not found" page.
+    document.title = "Page not found | CureBranch";
+    box.innerHTML = `<h1 id="p-title">Page not found</h1>
+      <p>Sorry, there is no page at <span class="mono">${esc(location.pathname)}</span>. It may have moved.</p>
+      <p>Try one of these:</p>
+      <ul class="tight"><li><a href="/">Home</a></li><li><a href="/cancers/">All cancer trees</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/help/">Help: questions and answers</a></li></ul>`;
+    return;
+  }
   if (!code) { box.innerHTML = `<h1 id="p-title">No profile code</h1><p>Profile addresses look like ${esc(CONFIG.PUBLIC_BASE)}k7x2m9.</p>`; return; }
-  document.title = `CureBranch: ${code}`;
+  document.title = `Patient ${code} | CureBranch`;
   const found = await findSummary(code);
   if (!found) { box.innerHTML = `<h1 id="p-title">Not found</h1><p>No public summary uses the code <span class="mono">${esc(code)}</span>.</p>`; return; }
   const s = found.summary;
@@ -233,6 +242,7 @@ async function main() {
     <div class="row" style="margin-bottom:10px">${pic}<div class="grow">
       <h1 id="p-title">${esc(p.displayName || "Anonymous patient")}</h1>
       <p class="sub mono" style="margin:0">${esc(CONFIG.PUBLIC_BASE.replace(/^https:\/\//, ""))}${esc(code)}</p></div></div>
+    <aside class="what-is" aria-labelledby="wi-profile"><h2 class="what-is-h" id="wi-profile">What is this page?</h2><p>This is one patient's public page. They chose to share this short summary of their own records, under a random code instead of their name. It shows their branch on the tree, and what they tried. It is one person's story, not medical advice.</p></aside>
     <p><span class="chip ${s.verification.status === "verified" ? "" : "amber"}">${s.verification.status === "verified" ? "Verified records" : "Unverified: shown, not counted"}</span>
        ${signed ? `<span class="chip sky">Signed by the patient</span>` : ""}</p>
     <div class="card tint"><h2>Branch</h2><p style="margin:0">${esc(s.branch.path.join(" › "))}</p>

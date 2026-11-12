@@ -6,12 +6,13 @@
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="cb-build" content="__BUILD_ID__">
-<title>CureBranch</title>
-<meta name="description" content="CureBranch: an open-source, patient-owned cancer knowledge tree. Your records stay on your device; you choose what to share.">
-<link rel="canonical" href="https://curebranch.ai/">
+<title>__TITLE__</title>
+<meta name="description" content="__DESC__">
+<link rel="canonical" href="__CANONICAL__">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#ffffff">
-<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CureBranch">
@@ -21,31 +22,10 @@
 <script src="/js/a11y.js" defer></script>
 <script type="module" src="/js/app.js"></script>
 </head>
-<body>
+<body data-app="1">
 <a class="skip-link" href="#screens">Skip to main content</a>
 <div class="app" id="app">
-  <div class="chrome">
-  <header class="topbar">
-    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="sidenav"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"></path></svg><span>Cancer trees</span></button>
-    <div class="brand"><span class="mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32" focusable="false"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M16 5.5c6.6 3.2 9.4 10.6 0 21-9.4-10.4-6.6-17.8 0-21Z" class="lf" fill="#fff"/><path d="M16 26.2V12.5M16 17.6l3.6-3.6M16 21.8l-3.8-3.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></span><span class="brand-name">CureBranch</span></div>
-    <div class="topbar-end"><span data-a11y-launch="compact"></span></div>
-  </header>
-  <nav class="tabs" id="tabs" aria-label="Main">
-    <button type="button" class="on" aria-current="page" data-go="home"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M11.03 2.59a1.501 1.501 0 0 1 1.94 0l7.5 6.363a1.5 1.5 0 0 1 .53 1.144V19.5a1.5 1.5 0 0 1-1.5 1.5h-5.75a.75.75 0 0 1-.75-.75V14h-2v6.25a.75.75 0 0 1-.75.75H4.5A1.5 1.5 0 0 1 3 19.5v-9.403c0-.44.194-.859.53-1.144ZM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v6.25h5v-9.403Z"></path></svg><span>Home</span></button>
-    <button type="button" data-go="import"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4.75 17.25a.75.75 0 0 1 .75.75v2.25c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V18a.75.75 0 0 1 1.5 0v2.25A1.75 1.75 0 0 1 18.25 22H5.75A1.75 1.75 0 0 1 4 20.25V18a.75.75 0 0 1 .75-.75Z"></path><path d="M5.22 9.97a.749.749 0 0 1 1.06 0l4.97 4.969V2.75a.75.75 0 0 1 1.5 0v12.189l4.97-4.969a.749.749 0 1 1 1.06 1.06l-6.25 6.25a.749.749 0 0 1-1.06 0l-6.25-6.25a.749.749 0 0 1 0-1.06Z"></path></svg><span>Import</span></button>
-    <button type="button" data-go="repo"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 3a2 2 0 0 1 2-2h9.982a2 2 0 0 1 1.414.586l4.018 4.018A2 2 0 0 1 21 7.018V21a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm2-.5a.5.5 0 0 0-.5.5v18a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V8.5h-4a2 2 0 0 1-2-2v-4Zm10 0v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 0-.146-.336l-4.018-4.018A.5.5 0 0 0 15 2.5Z"></path></svg><span>Record</span></button>
-    <button type="button" data-go="tree"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M15 4.75a3.25 3.25 0 1 1 6.5 0 3.25 3.25 0 0 1-6.5 0ZM2.5 19.25a3.25 3.25 0 1 1 6.5 0 3.25 3.25 0 0 1-6.5 0Zm0-14.5a3.25 3.25 0 1 1 6.5 0 3.25 3.25 0 0 1-6.5 0ZM5.75 6.5a1.75 1.75 0 1 0-.001-3.501A1.75 1.75 0 0 0 5.75 6.5Zm0 14.5a1.75 1.75 0 1 0-.001-3.501A1.75 1.75 0 0 0 5.75 21Zm12.5-14.5a1.75 1.75 0 1 0-.001-3.501A1.75 1.75 0 0 0 18.25 6.5Z"></path><path d="M5.75 16.75A.75.75 0 0 1 5 16V8a.75.75 0 0 1 1.5 0v8a.75.75 0 0 1-.75.75Z"></path><path d="M17.5 8.75v-1H19v1a3.75 3.75 0 0 1-3.75 3.75h-7a1.75 1.75 0 0 0-1.75 1.75H5A3.25 3.25 0 0 1 8.25 11h7a2.25 2.25 0 0 0 2.25-2.25Z"></path></svg><span>Tree</span></button>
-    <button type="button" data-go="settings"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm-1.5 0a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path><path d="M12 1c.266 0 .532.009.797.028.763.055 1.345.617 1.512 1.304l.352 1.45c.019.078.09.171.225.221.247.089.49.19.728.302.13.061.246.044.315.002l1.275-.776c.603-.368 1.411-.353 1.99.147.402.349.78.726 1.128 1.129.501.578.515 1.386.147 1.99l-.776 1.274c-.042.069-.058.185.002.315.112.238.213.481.303.728.048.135.142.205.22.225l1.45.352c.687.167 1.249.749 1.303 1.512.038.531.038 1.063 0 1.594-.054.763-.616 1.345-1.303 1.512l-1.45.352c-.078.019-.171.09-.221.225-.089.248-.19.491-.302.728-.061.13-.044.246-.002.315l.776 1.275c.368.603.353 1.411-.147 1.99-.349.402-.726.78-1.129 1.128-.578.501-1.386.515-1.99.147l-1.274-.776c-.069-.042-.185-.058-.314.002a8.606 8.606 0 0 1-.729.303c-.135.048-.205.142-.225.22l-.352 1.45c-.167.687-.749 1.249-1.512 1.303-.531.038-1.063.038-1.594 0-.763-.054-1.345-.616-1.512-1.303l-.352-1.45c-.019-.078-.09-.171-.225-.221a8.138 8.138 0 0 1-.728-.302c-.13-.061-.246-.044-.315-.002l-1.275.776c-.603.368-1.411.353-1.99-.147-.402-.349-.78-.726-1.128-1.129-.501-.578-.515-1.386-.147-1.99l.776-1.274c.042-.069.058-.185-.002-.314a8.606 8.606 0 0 1-.303-.729c-.048-.135-.142-.205-.22-.225l-1.45-.352c-.687-.167-1.249-.749-1.304-1.512a11.158 11.158 0 0 1 0-1.594c.055-.763.617-1.345 1.304-1.512l1.45-.352c.078-.019.171-.09.221-.225.089-.248.19-.491.302-.728.061-.13.044-.246.002-.315l-.776-1.275c-.368-.603-.353-1.411.147-1.99.349-.402.726-.78 1.129-1.128.578-.501 1.386-.515 1.99-.147l1.274.776c.069.042.185.058.315-.002.238-.112.481-.213.728-.303.135-.048.205-.142.225-.22l.352-1.45c.167-.687.749-1.249 1.512-1.304C11.466 1.01 11.732 1 12 1Zm-.69 1.525c-.055.004-.135.05-.161.161l-.353 1.45a1.832 1.832 0 0 1-1.172 1.277 7.147 7.147 0 0 0-.6.249 1.833 1.833 0 0 1-1.734-.074l-1.274-.776c-.098-.06-.186-.036-.228 0a9.774 9.774 0 0 0-.976.976c-.036.042-.06.131 0 .228l.776 1.274c.314.529.342 1.18.074 1.734a7.147 7.147 0 0 0-.249.6 1.831 1.831 0 0 1-1.278 1.173l-1.45.351c-.11.027-.156.107-.16.162a9.63 9.63 0 0 0 0 1.38c.004.055.05.135.161.161l1.45.353a1.832 1.832 0 0 1 1.277 1.172c.074.204.157.404.249.6.268.553.24 1.204-.074 1.733l-.776 1.275c-.06.098-.036.186 0 .228.301.348.628.675.976.976.042.036.131.06.228 0l1.274-.776a1.83 1.83 0 0 1 1.734-.075c.196.093.396.176.6.25a1.831 1.831 0 0 1 1.173 1.278l.351 1.45c.027.11.107.156.162.16a9.63 9.63 0 0 0 1.38 0c.055-.004.135-.05.161-.161l.353-1.45a1.834 1.834 0 0 1 1.172-1.278 6.82 6.82 0 0 0 .6-.248 1.831 1.831 0 0 1 1.733.074l1.275.776c.098.06.186.036.228 0 .348-.301.675-.628.976-.976.036-.042.06-.131 0-.228l-.776-1.275a1.834 1.834 0 0 1-.075-1.733c.093-.196.176-.396.25-.6a1.831 1.831 0 0 1 1.278-1.173l1.45-.351c.11-.027.156-.107.16-.162a9.63 9.63 0 0 0 0-1.38c-.004-.055-.05-.135-.161-.161l-1.45-.353c-.626-.152-1.08-.625-1.278-1.172a6.576 6.576 0 0 0-.248-.6 1.833 1.833 0 0 1 .074-1.734l.776-1.274c.06-.098.036-.186 0-.228a9.774 9.774 0 0 0-.976-.976c-.042-.036-.131-.06-.228 0l-1.275.776a1.831 1.831 0 0 1-1.733.074 6.88 6.88 0 0 0-.6-.249 1.835 1.835 0 0 1-1.173-1.278l-.351-1.45c-.027-.11-.107-.156-.162-.16a9.63 9.63 0 0 0-1.38 0Z"></path></svg><span>Settings</span></button>
-  </nav>
-  </div>
-
-  <div id="banners"></div>
-
-  <div class="layout">
-  <aside class="sidenav" id="sidenav" aria-labelledby="sidenav-title">
-    <nav class="navlist" id="cancer-nav" aria-label="Cancer trees"></nav>
-  </aside>
-  <div class="nav-backdrop" id="nav-backdrop" hidden></div>
+<!--@header-->
   <main class="screens" id="screens" tabindex="-1">
 
     <!-- HOME -->
@@ -59,15 +39,24 @@
           <p class="home-intro-copy" id="home-intro-copy">Join others: add your cancer treatment records to a public, open-source digital tree where anyone, with the help of AI, can work toward a cure. You choose your privacy level. Create your branch in 3 easy steps, see how many lives your story could save, and discover treatments that worked for people like you.</p>
           <div class="hero-actions">
             <button type="button" class="btn btn-primary btn-lg" id="home-start-branch">Create your branch</button>
-            <button type="button" class="btn btn-ghost btn-lg" data-go="tree"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg>Explore the tree</button>
+            <a class="btn btn-ghost btn-lg" href="/cancers/"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg>Find your cancer</a>
+            <a class="btn btn-ghost btn-lg" href="/how-it-works/">How it works</a>
           </div>
-          <div class="hero-listen" data-listen-mount="#s-home" data-listen-label="Listen to this Home screen"></div>
         </div>
       </div>
 
+      <aside class="what-is" aria-labelledby="wi-home"><h2 class="what-is-h" id="wi-home">What is this page?</h2>
+        <p>This is the CureBranch home page. CureBranch has two parts:</p>
+        <ol class="tight">
+          <li><strong>Cancer trees</strong><span data-help-slot="cancer-tree"></span>: free facts about each kind of cancer, in plain English, from trusted public sources. Anyone can read them. <a href="/cancers/">Find your cancer</a>.</li>
+          <li><strong>Your branch</strong><span data-help-slot="branch"></span>: if you have cancer, you can add your own records. They stay on your device. You decide if any part is ever shared.</li>
+        </ol>
+        <p class="sub" style="margin:0">New here? Read <a href="/how-it-works/">How it works</a> or the <a href="/help/">questions and answers</a>. Press any <span class="q-sample" aria-hidden="true">?</span> button to learn what a word means.</p>
+      </aside>
+
       <div class="home-greet">
         <p class="home-hello" id="home-hello">Welcome</p>
-        <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="#">…</a></p>
+        <p class="sub" style="margin:0">Your address: <a class="mono" id="my-address" href="/my-branch/">…</a></p>
       </div>
       <div class="home-cols">
         <div class="home-col">
@@ -80,18 +69,18 @@
         </ol>
       </section>
       <section class="sec" aria-labelledby="home-worked-h">
-        <h2 id="home-worked-h">What published research says about your branch</h2>
+        <div class="hh"><h2 id="home-worked-h">What published research says about your branch</h2><span data-help-slot="branch" data-help-label="your branch"></span></div>
         <p class="sub">Real public figures with their sources. Patient-shared branches start at zero. Information, not medical advice.</p>
         <div id="home-worked"></div>
       </section>
       <section class="sec" aria-labelledby="home-qa-h">
         <h2 id="home-qa-h">Quick actions</h2>
         <ul class="box list">
-          <li><button class="row-item" type="button" data-go="import"><span class="tile t-blue" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span class="grow"><b>Import records</b><small>A health card, a FHIR file or example records.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></button></li>
-          <li><button class="row-item" type="button" data-go="repo"><span class="tile t-purple" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg></span><span class="grow"><b>My record</b><small>What your records show, your branch and your summary.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></button></li>
-          <li><button class="row-item" type="button" data-go="tree"><span class="tile t-green" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></span><span class="grow"><b>Explore the tree</b><small>See what people on each branch tried.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></button></li>
-          <li><button class="row-item" type="button" data-go="start"><span class="tile t-gray" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path></svg></span><span class="grow"><b>How it works</b><small>The plain-English agreement.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></button></li>
-          <li><a class="row-item" href="/how-it-started.html"><span class="tile t-pink" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z"></path></svg></span><span class="grow"><b>How it started</b><small>Why CureBranch exists.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
+          <li><a class="row-item" href="/import/"><span class="tile t-blue" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span class="grow"><b>Add records</b><small>A health card, a FHIR file or example records.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
+          <li><a class="row-item" href="/my-branch/"><span class="tile t-purple" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg></span><span class="grow"><b>My branch</b><small>What your records show, your branch and your summary.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
+          <li><a class="row-item" href="/tree/"><span class="tile t-green" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25Zm-6 0a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Zm8.25-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"></path></svg></span><span class="grow"><b>See the tree</b><small>All cancers as one picture.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
+          <li><a class="row-item" href="/how-it-works/"><span class="tile t-gray" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path></svg></span><span class="grow"><b>How it works</b><small>Step by step, in plain English.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
+          <li><a class="row-item" href="/how-it-started/"><span class="tile t-pink" aria-hidden="true"><svg class="oct" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z"></path></svg></span><span class="grow"><b>How it started</b><small>Why CureBranch exists.</small></span><svg class="oct chev" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg></a></li>
         </ul>
       </section>
         </div>
@@ -104,7 +93,7 @@
             <p class="sub" id="privacy-help" style="margin:0">Nothing is shared until you pick a level. Your records stay on this device.</p>
           </div>
         </div>
-        <button type="button" class="btn btn-ghost" data-go="settings" data-focus="privacy-h" id="privacy-change" style="margin-top:12px">Change how much I share</button>
+        <a class="btn btn-ghost" href="/settings/#privacy-h" id="privacy-change" style="margin-top:12px">Change how much I share</a>
       </div>
       <div class="card tint" id="home-branch"></div>
       <div class="card">
@@ -115,7 +104,7 @@
             <p class="sub" style="margin:0">Current choice: <strong id="after-status">Not chosen yet</strong></p>
           </div>
         </div>
-        <button type="button" class="btn btn-ghost" data-go="settings" data-focus="after-death" style="margin-top:12px">Change this</button>
+        <a class="btn btn-ghost" href="/settings/#after-death" style="margin-top:12px">Change this</a>
       </div>
       <section class="sec" aria-labelledby="home-trust-h">
         <h2 id="home-trust-h">Built on trust</h2>
@@ -127,38 +116,53 @@
       </section>
         </div>
       </div>
-      <p class="disc">Information, not medical advice. Tree figures come from published sources (SEER, cBioPortal, FDA labels, ClinicalTrials.gov), each cited. Patient-shared branches start at zero. <a href="#sources" data-go="sources">Sources and licenses</a></p>
+      <p class="disc">Information, not medical advice. Tree figures come from published sources (SEER, cBioPortal, FDA labels, ClinicalTrials.gov), each cited. Patient-shared branches start at zero. <a href="/sources/">Sources and licenses</a></p>
     </section>
 
-    <!-- HOW IT WORKS (not a tab) -->
+    <!-- HOW IT WORKS -->
     <section class="screen" id="s-start" aria-labelledby="start-title">
-      <button type="button" class="back-btn" data-go="home">‹ Back to Home</button>
       <h1 id="start-title">How CureBranch works</h1>
-      <div data-listen-mount="#s-start" data-listen-label="Listen to how it works"></div>
-      <ol class="stack">
-        <li><strong>Your records stay with you.</strong> You import them into this app. They are saved only in this browser on this device.</li>
-        <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini, Grok, Copilot or any other). CureBranch never runs AI on your data.</li>
-        <li><strong>You pick how much to share, from 4 levels.</strong> Private (device only), Basic public summary, Detailed public, or Full public. Nothing is picked for you. Anything public is shown under a random code like <span class="mono">k7x2m9</span>, never your name, birthday, street address or record numbers. You can move to a lower level any time, but what was already shared stays out there.</li>
-        <li><strong>Only checked records count.</strong> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
-        <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a person to carry it out.</li>
-      </ol>
+      <aside class="what-is" aria-labelledby="wi-start"><h2 class="what-is-h" id="wi-start">What is this page?</h2><p>This page explains CureBranch step by step, in plain English. Read it before you add any records. At the bottom is a short agreement.</p></aside>
+      <section class="sec" aria-labelledby="hw-read-h">
+        <h2 id="hw-read-h">Part 1: Learn about a cancer (anyone can do this)</h2>
+        <ol class="steps-ol">
+          <li>Open <a href="/cancers/">Cancer trees</a> and pick a cancer. You can also search for it in the menu.</li>
+          <li>Read the <strong>What is this page?</strong> box at the top. It tells you what the page shows.</li>
+          <li>Press a <span class="q-sample" aria-hidden="true">?</span> button next to any word you don't know, like subtype<span data-help-slot="subtype"></span> or biomarker<span data-help-slot="biomarker"></span>.</li>
+          <li>Every number shows where it came from, like SEER<span data-help-slot="seer"></span> or TCGA<span data-help-slot="tcga"></span>. Click the source to check it.</li>
+          <li>If you use an AI chat tool, press <strong>Copy the prompt</strong> on the cancer page and paste it into your AI with your own records. <a href="/help/#q-ai">More about using your AI</a></li>
+        </ol>
+      </section>
+      <section class="sec" aria-labelledby="hw-branch-h">
+        <h2 id="hw-branch-h">Part 2: Grow your own branch (only if you want to)</h2>
+        <ol class="stack">
+          <li><strong>Your records stay with you.</strong> You add them to this website on your phone or computer. They are saved only in this browser on this device. We have no server that keeps them.</li>
+          <li><strong>Records come from your hospital.</strong> You can connect your patient portal<span data-help-slot="portal"></span>, or add a SMART Health Card<span data-help-slot="health-card"></span> or a FHIR file<span data-help-slot="fhir"></span>.</li>
+          <li><strong>You pick how much to share, from 4 levels.</strong><span data-help-slot="privacy" data-help-label="privacy levels"></span> Private (device only), Basic, Detailed, or Full. Nothing is picked for you. Anything shared is shown under a random code like <span class="mono">k7x2m9</span>, never your name, birthday, street address or record numbers. <a href="/privacy/">Read about privacy</a></li>
+          <li><strong>Only checked records count.</strong><span data-help-slot="verified"></span> Records signed by a hospital or lab count in the tree's numbers. Everything else is shown but not counted. One person, one count.</li>
+          <li><strong>Your own AI, your own bill.</strong> If you want an AI to read your records, you use your own (ChatGPT, Claude, Gemini, Grok, Copilot or any other). CureBranch never runs AI on your data.</li>
+          <li><strong>You decide what happens later.</strong> You choose what happens to your summary after you die, and name a trusted person<span data-help-slot="steward"></span> to carry it out.</li>
+        </ol>
+      </section>
       <div class="card">
         <h2>The plain-English agreement</h2>
+        <p class="sub">Check all 4 boxes to go on.</p>
         <label class="check"><input type="checkbox" class="agree"> I own my data, and I'm responsible for what I choose to share.</label>
         <label class="check"><input type="checkbox" class="agree"> CureBranch is information, not medical advice. I'll make care decisions with my doctors.</label>
         <label class="check"><input type="checkbox" class="agree"> The software is open source and provided "as is", with no warranty.</label>
         <label class="check"><input type="checkbox" class="agree"> Anything I make public can be copied by others, even if I remove it later.</label>
-        <button type="button" class="btn btn-primary" id="agree-next" disabled data-go="import">I agree, import my records</button>
+        <button type="button" class="btn btn-primary" id="agree-next" disabled data-go="/import/">I agree, add my records</button>
       </div>
-      <p class="disc">The step-by-step setup guide (with the consent video slot) is in Settings, under Run the setup guide again.</p>
+      <p class="disc">The step-by-step setup guide is in <a href="/settings/">Settings</a>, under Run the setup guide again. Still have questions? See <a href="/help/">Help</a>.</p>
     </section>
 
     <!-- IMPORT -->
     <section class="screen" id="s-import" aria-labelledby="import-title">
-      <h1 id="import-title">Import your records</h1>
-      <div data-listen-mount="#s-import"></div>
+      <h1 id="import-title">Add your records</h1>
+      <aside class="what-is" aria-labelledby="wi-import"><h2 class="what-is-h" id="wi-import">What is this page?</h2><p>On this page you add your own medical records to CureBranch. Files are read right here in your browser. Nothing is uploaded. Not sure? Try the made-up example records at the bottom first.</p></aside>
       <p class="sub">Files are read right here in your browser. Nothing is uploaded.</p>
       <div class="card">
+        <div class="hh"><h2 class="h-inline">Add a file</h2><span data-help-slot="health-card"></span><span data-help-slot="fhir"></span></div>
         <label class="file-label" for="file-in">Choose a SMART Health Card or FHIR file
           <input id="file-in" type="file" accept=".smart-health-card,.json,.txt,application/json,application/smart-health-card">
         </label>
@@ -170,7 +174,7 @@
         <button type="button" class="btn btn-ghost" id="shc-paste-go" style="margin-top:8px">Import pasted card</button>
       </div>
       <div class="card">
-        <h2>Connect your hospital portal</h2>
+        <div class="hh"><h2>Connect your hospital portal</h2><span data-help-slot="portal"></span></div>
         <p class="sub">Uses SMART on FHIR, the standard behind MyChart and other patient portals.</p>
         <button type="button" class="btn btn-primary" id="smart-connect">Connect a patient portal</button>
       </div>
@@ -188,16 +192,16 @@
 
     <!-- MY RECORD -->
     <section class="screen" id="s-repo" aria-labelledby="repo-title">
-      <h1 id="repo-title">My record</h1>
-      <div data-listen-mount="#s-repo"></div>
-      <p class="sub">Kept on this device. Code: <span class="mono" id="repo-code">…</span></p>
-      <h2>Imported records</h2>
+      <h1 id="repo-title">My branch</h1>
+      <aside class="what-is" aria-labelledby="wi-repo"><h2 class="what-is-h" id="wi-repo">What is this page?</h2><p>This page shows the records you added, what they say, your branch on the tree, and the summary you could share. Everything here is kept only on this device.</p></aside>
+      <p class="sub">Kept on this device. Code: <span class="mono" id="repo-code">…</span><span data-help-slot="code"></span></p>
+      <div class="hh"><h2>Your records</h2><span data-help-slot="verified"></span></div>
       <div class="card" id="sources"></div>
       <h2>Photos and files</h2>
       <div class="card" id="files-list"></div>
       <h2>What your records show</h2>
       <div class="card" id="facts"></div>
-      <h2 id="branch-h">Your branch</h2>
+      <div class="hh"><h2 id="branch-h">Your branch</h2><span data-help-slot="branch"></span></div>
       <div class="card">
         <p class="sub" id="branch-how"></p>
         <label class="field-label" for="branch-in">Branch, from trunk to tip, separated by ›</label>
@@ -213,7 +217,7 @@
           <legend class="sr-only">Parts of the public summary</legend>
         </fieldset>
       </div>
-      <h2>Your public summary</h2>
+      <div class="hh"><h2>Your public summary</h2><span data-help-slot="summary"></span></div>
       <div class="card">
         <p class="sub" id="summary-state"></p>
         <pre class="json" id="summary-json" tabindex="0" aria-label="Public summary preview"></pre>
@@ -229,8 +233,8 @@
     <!-- TREE -->
     <section class="screen" id="s-tree" aria-labelledby="tree-title">
       <h1 id="tree-title">The tree</h1>
-      <div data-listen-mount="#s-tree"></div>
-      <p class="notice ok"><strong>Published data.</strong> Each limb is a cancer type, sized by U.S. new cases a year (SEER). Each tip is a gene often mutated in it (TCGA via cBioPortal). Patient-shared branches: 0 so far. <a href="#sources" data-go="sources">Sources</a></p>
+      <aside class="what-is" aria-labelledby="wi-tree"><h2 class="what-is-h" id="wi-tree">What is this page?</h2><p>This page shows all cancers as one living tree. Each big limb is one type of cancer. A bigger limb means more people get that cancer each year. Each leafy tip is a gene that is often changed in it. Pick a limb or a tip to read about it. Prefer a list? Use <a href="/cancers/">Cancer trees</a>.</p></aside>
+      <p class="notice ok"><span data-help-slot="tree" data-help-label="the tree"></span><strong>Published data.</strong> Each limb is a cancer type, sized by U.S. new cases a year (SEER). Each tip is a gene often mutated in it (TCGA via cBioPortal). Patient-shared branches: 0 so far. <a href="/sources/">Sources</a></p>
       <div class="tree-layout">
       <div class="tree-pic"><figure class="lt-figure">
         <div id="living-tree"></div>
@@ -253,7 +257,7 @@
     <!-- SETTINGS -->
     <section class="screen" id="s-settings" aria-labelledby="settings-title">
       <h1 id="settings-title">Settings</h1>
-      <div data-listen-mount="#s-settings"></div>
+      <aside class="what-is" aria-labelledby="wi-settings"><h2 class="what-is-h" id="wi-settings">What is this page?</h2><p>Here you choose how much you share, what happens after you are gone, your profile, and your data. Changes are saved only on this device.</p></aside>
       <p class="sub">You decide everything here. Changes are saved on this device and noted in your edit history.</p>
 
       <h2>Setup guide</h2>
@@ -262,13 +266,13 @@
         <button type="button" class="btn btn-primary" id="rerun-wizard">Run the setup guide again</button>
       </div>
 
-      <h2 id="privacy-h" tabindex="-1">How much to share</h2>
+      <div class="hh"><h2 id="privacy-h" tabindex="-1">How much to share</h2><span data-help-slot="privacy" data-help-label="privacy levels"></span></div>
       <div class="card">
         <p class="sub">Four levels. Nothing is picked for you. You can move to a lower level any time; that stops sharing from then on, but anything already shared stays out there.</p>
         <div data-privacy-picker="set"></div>
       </div>
 
-      <h2 id="after-death" tabindex="-1">After you're gone</h2>
+      <div class="hh"><h2 id="after-death" tabindex="-1">After you're gone</h2><span data-help-slot="steward"></span></div>
       <div class="card">
         <fieldset class="choice-list">
           <legend class="sr-only">What happens to my public summary after I die</legend>
@@ -290,8 +294,8 @@
 
       <h2>Profile page (optional)</h2>
       <div class="card">
-        <p class="sub">Your public page is <a class="mono" id="profile-link" href="#">…</a>. By default it is anonymous. You can add a name and photo if you want.</p>
-        <p><a class="link" id="recognition-link" href="#">See my recognition: helped counter, badges and share card</a></p>
+        <p class="sub">Your public page is <a class="mono" id="profile-link" href="/my-branch/">…</a>. By default it is anonymous. You can add a name and photo if you want.</p>
+        <p><a class="link" id="recognition-link" href="/my-branch/">See my recognition: helped counter, badges and share card</a></p>
         <div class="item"><div class="grow"><h3 id="prof-lbl">Show a name and photo</h3><small>Only when your summary is public</small></div><button type="button" class="cb-switch" id="profile-switch" role="switch" aria-checked="false" aria-labelledby="prof-lbl"><span class="track" aria-hidden="true"></span></button></div>
         <label class="field-label" for="prof-name">Name to show (a nickname is fine)</label>
         <input class="field" id="prof-name" type="text" maxlength="60" autocomplete="off">
@@ -315,7 +319,7 @@
         <button type="button" class="btn btn-ghost" id="contact-save" style="margin-top:8px">Save</button>
       </div>
 
-      <h2>Your AI</h2>
+      <div class="hh"><h2>Your AI</h2><span data-help-slot="ai"></span></div>
       <div class="card">
         <p class="sub">You use and pay for your own AI. CureBranch stores no AI passwords or keys.</p>
         <label class="field-label" for="ai-name">Which AI you use (for your notes)</label>
@@ -339,7 +343,7 @@
       <h2>Accessibility</h2>
       <div class="card">
         <button type="button" class="btn btn-ghost" id="open-a11y">Open accessibility settings</button>
-        <button type="button" class="btn btn-ghost" style="margin-top:8px" data-go="a11y">Read the accessibility statement</button>
+        <a class="btn btn-ghost" style="margin-top:8px" href="/accessibility/">Read the accessibility statement</a>
       </div>
 
 
@@ -348,22 +352,69 @@
 
     <!-- ACCESSIBILITY STATEMENT -->
     <section class="screen" id="s-a11y" aria-labelledby="a11y-stmt-title">
-      <button type="button" class="back-btn" data-go="settings">‹ Back to Settings</button>
-      <h1 id="a11y-stmt-title">Accessibility</h1>
-      <div data-listen-mount="#s-a11y" data-listen-label="Listen to the accessibility statement"></div>
+            <h1 id="a11y-stmt-title">Accessibility</h1>
+      <aside class="what-is" aria-labelledby="wi-a11y"><h2 class="what-is-h" id="wi-a11y">What is this page?</h2><p>This page explains how CureBranch works for everyone, and how to change text size, fonts, colors and motion. To change them now, press <strong>Accessibility</strong> at the top of the page.</p></aside>
       <p class="lead sub">We want everyone to be able to use this app, including people with vision, hearing, mobility, or reading differences.</p>
       <h2>Our goal, in plain English</h2>
       <p>We aim to meet WCAG 2.2 Level AA, a widely used checklist for accessible apps and websites. The app has not been formally audited or certified.</p>
-      <h2>How to listen</h2>
-      <p>Every screen has a Listen button. It uses your browser's free, built-in read-aloud and picks the most natural voice your device has. You can play, pause, stop, and change the speed. Screen readers such as VoiceOver, TalkBack, NVDA, JAWS and Narrator also work.</p>
+      <h2>Screen readers and keyboards</h2>
+      <p>Screen readers such as VoiceOver, TalkBack, NVDA, JAWS and Narrator work with every page. You can do everything with a keyboard. Every "?" help button opens with Enter or Space and closes with Escape.</p>
+      <h2>Other languages</h2>
+      <p>Press <strong>Translate</strong> at the top of any page to read it in another language.</p>
       <h2>How to change the look</h2>
       <p>Open <strong>Accessibility</strong> from the top corner. You can make text larger (up to 200%), choose a font including OpenDyslexic, change spacing, pick a high-contrast or colorblind-safe theme or your own colors, reduce motion, underline links, and enlarge the focus ring. Your choices stay on this device.</p>
       <h2>Feedback</h2>
       <p>Report accessibility problems on the project's public issue tracker.</p>
     </section>
+    <!-- ALL CANCER TREES -->
+    <section class="screen" id="s-cancers" aria-labelledby="cancers-title">
+      <h1 id="cancers-title">Cancer trees</h1>
+      <aside class="what-is" aria-labelledby="wi-cancers"><h2 class="what-is-h" id="wi-cancers">What is this page?</h2><p>This page lists every cancer in CureBranch, grouped by part of the body. Pick yours to see facts from trusted public sources, in plain English. Each cancer page also shows how to use it with your own AI.</p><p class="sub" style="margin:0">Can’t find it? Use the search in the menu, or look under "Tumor-agnostic approvals" for drugs approved for many cancers.</p></aside>
+      <div id="cancers-body"></div>
+    </section>
+
+    <!-- HELP -->
+    <section class="screen" id="s-help" aria-labelledby="help-title">
+      <h1 id="help-title">Help: questions and answers</h1>
+      <aside class="what-is" aria-labelledby="wi-help"><h2 class="what-is-h" id="wi-help">What is this page?</h2><p>Plain answers to common questions. The words in the "?" buttons across the site are all explained here too.</p></aside>
+      <nav class="otp" aria-label="Help topics"><p class="otp-h">Jump to:</p><ul><li><a href="#faq-h-0">The basics</a></li><li><a href="#faq-h-1">Cancer words</a></li><li><a href="#faq-h-2">Where the numbers come from</a></li><li><a href="#faq-h-3">Your records and privacy</a></li><li><a href="#faq-h-4">Using your own AI</a></li><li><a href="#faq-h-5">Using the website</a></li></ul></nav>
+      <div id="help-body"></div>
+      <p class="disc">Still stuck? Report a problem on the project's public issue tracker. In an emergency, call your local emergency number.</p>
+    </section>
+
+    <!-- PRIVACY -->
+    <section class="screen" id="s-privacy" aria-labelledby="privacy-page-title">
+      <h1 id="privacy-page-title">Privacy</h1>
+      <aside class="what-is" aria-labelledby="wi-privacy"><h2 class="what-is-h" id="wi-privacy">What is this page?</h2><p>This page explains, in plain English, what CureBranch keeps private, what you can choose to share, and what happens if you change your mind.</p></aside>
+      <section class="sec" aria-labelledby="pv-short-h"><h2 id="pv-short-h">The short version</h2>
+        <ul class="tight">
+          <li>Reading cancer pages needs no account and stores nothing about you.</li>
+          <li>Your records stay on your own device. We have no server that keeps them.</li>
+          <li>Nothing is shared until you pick a sharing level. Nothing is picked for you.</li>
+          <li>If you share, people see a random code, never your name, birthday, street or record numbers.</li>
+          <li>No ads. No tracking. No selling data.</li>
+        </ul></section>
+      <section class="sec" aria-labelledby="pv-levels-h"><div class="hh"><h2 id="pv-levels-h">The 4 sharing levels</h2><span data-help-slot="privacy" data-help-label="privacy levels"></span></div>
+        <div class="table-box"><table class="data"><caption class="sr-only">What each sharing level shares</caption>
+          <thead><tr><th scope="col">Level</th><th scope="col">What is shared</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1. Private</th><td>Nothing. Everything stays on your device.</td></tr>
+            <tr><th scope="row">2. Basic</th><td>Ranges only, like "Stage 3" and "age 60 to 69", your cancer type, markers and treatments.</td></tr>
+            <tr><th scope="row">3. Detailed</th><td>Basic, plus exact age and dates.</td></tr>
+            <tr><th scope="row">4. Full</th><td>Detailed, plus your city.</td></tr>
+          </tbody></table></div>
+        <p class="sub">You can turn off any part, like treatments, on <a href="/my-branch/">My branch</a>. Change your level any time in <a href="/settings/#privacy-h">Settings</a>.</p></section>
+      <section class="sec" aria-labelledby="pv-change-h"><h2 id="pv-change-h">If you change your mind</h2>
+        <p>You can move to a lower level at any time. That stops sharing from then on. But anything already shared may have been copied by others. <strong>Only share what you would be OK with the world knowing someday.</strong></p></section>
+      <section class="sec" aria-labelledby="pv-tools-h"><h2 id="pv-tools-h">Translating and AI</h2>
+        <p>Translate on this device (in Chrome and Edge on a computer) keeps the words on your device. Browser translate in Chrome, Edge and Safari may send the page's words to Google, Microsoft or Apple. If you paste your records into an AI, that AI company's privacy rules apply. Leave out your name, birthday, address and record numbers.</p></section>
+      <section class="sec" aria-labelledby="pv-delete-h"><h2 id="pv-delete-h">Deleting your data</h2>
+        <p>Go to <a href="/settings/">Settings</a> and press <strong>Delete everything on this device</strong>. Download a backup first if you want to keep a copy.</p></section>
+      <p class="disc">Information, not medical advice. See also <a href="/help/">Help</a> and <a href="/sources/">Sources and licenses</a>.</p>
+    </section>
+
     <!-- CANCER TREE PAGE (filled from data/public-cancer-data.json) -->
     <section class="screen" id="s-cancer" aria-labelledby="cancer-title">
-      <div data-listen-mount="#s-cancer" data-listen-label="Listen to this page"></div>
       <div id="cancer-body"><h1 id="cancer-title">Cancer tree</h1></div>
       <p class="disc">Information, not medical advice. Published figures describe large groups of people and cannot predict what will happen to one person.</p>
     </section>
@@ -374,6 +425,7 @@
     </section>
   </main>
   </div>
+<!--@footer-->
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -382,7 +434,7 @@
 <!-- FIRST-RUN SETUP GUIDE (app/js/wizard.js). Full screen, 3 steps. -->
 <div class="wizard" id="wizard" hidden>
   <div class="wz-top">
-    <div class="brand"><span class="mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32" focusable="false"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M16 5.5c6.6 3.2 9.4 10.6 0 21-9.4-10.4-6.6-17.8 0-21Z" class="lf" fill="#fff"/><path d="M16 26.2V12.5M16 17.6l3.6-3.6M16 21.8l-3.8-3.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></span><span class="brand-name">CureBranch</span></div>
+    <div class="brand"><span class="mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32" focusable="false"><rect width="32" height="32" rx="6.5" fill="currentColor"/><path class="lf" fill="#fff" d="M17.41 31.44C17.19 31.17 17.16 30.73 17.32 30.08C17.65 28.82 17.43 28.31 16.21 27.47C15.39 26.89 15.23 27.59 15.94 28.64C16.57 29.56 16.69 30.20 16.37 30.88C16.05 31.55 15.68 31.37 15.68 30.54C15.68 29.93 14.63 28.48 14.18 28.48C13.55 28.48 12.98 29.47 13.02 30.48C13.05 31.33 13.04 31.36 12.81 31.36C12.53 31.36 12.20 30.87 12.03 30.19C11.78 29.21 11.27 29.22 10.66 30.21C10.17 31.00 9.82 30.64 10.08 29.62C10.26 28.93 10.47 28.73 11.57 28.21C12.97 27.56 13.23 27.11 12.12 27.26C11.27 27.37 10.75 27.65 10.19 28.30C9.68 28.90 9.10 29.23 8.59 29.23C8.14 29.23 8.18 29.02 8.74 28.42C9.60 27.52 9.25 27.10 8.11 27.68C7.24 28.12 7.01 27.62 7.79 26.95C8.30 26.52 8.73 26.39 10.24 26.24C11.53 26.11 12.08 25.89 12.63 25.27C13.32 24.52 13.17 23.89 11.99 22.59C9.62 19.95 9.43 17.06 11.52 15.25C12.26 14.60 12.32 14.49 12.11 14.08C11.81 13.51 10.80 13.09 10.33 13.34C9.96 13.53 9.93 13.64 9.99 14.35C10.10 15.44 9.48 16.45 8.81 16.28C8.50 16.20 8.32 15.75 8.32 15.02C8.32 13.95 7.74 14.25 7.65 15.36C7.58 16.23 7.32 16.73 6.77 17.07C5.69 17.74 5.17 16.55 6.00 15.30C6.56 14.46 6.23 14.27 5.35 14.93C3.96 15.97 2.16 15.62 2.88 14.45C3.31 13.76 4.38 13.48 5.48 13.78C5.86 13.88 6.02 13.87 6.31 13.75C6.67 13.60 6.67 13.60 5.93 13.47C4.47 13.20 4.28 12.08 5.63 11.78C6.22 11.65 6.29 11.61 6.29 11.41C6.29 11.23 6.22 11.20 5.73 11.20C4.24 11.20 2.84 9.98 3.69 9.42C4.46 8.92 5.73 9.31 6.30 10.23C6.68 10.84 7.95 11.45 9.39 11.71C11.23 12.04 11.33 11.62 9.73 10.37C9.38 10.11 9.37 10.10 9.00 10.28C7.89 10.81 6.40 10.11 6.40 9.05C6.40 8.64 6.59 8.55 7.47 8.51C8.24 8.48 8.27 8.47 8.27 8.21C8.27 7.99 8.19 7.92 7.79 7.81C6.98 7.57 6.61 7.34 6.34 6.88C5.78 5.93 5.89 5.44 6.66 5.44C7.62 5.44 8.30 6.07 8.52 7.15C8.60 7.54 8.77 7.79 9.51 8.57C10.49 9.60 10.80 9.73 10.86 9.11C10.89 8.74 10.79 8.63 10.12 8.29C9.30 7.86 8.87 6.61 9.32 5.92C9.78 5.22 10.99 6.16 10.99 7.23C10.99 7.40 11.13 7.72 11.30 7.96C11.47 8.19 11.64 8.51 11.68 8.67C11.79 9.08 11.94 9.03 12.45 8.43C13.00 7.80 13.01 7.67 12.55 7.10C12.35 6.86 12.07 6.43 11.92 6.13C11.68 5.66 11.57 5.56 11.05 5.35C9.64 4.76 9.19 2.57 10.52 2.82C11.33 2.97 11.94 3.84 11.95 4.83C11.95 5.27 12.32 5.76 12.64 5.76C12.79 5.76 12.80 5.66 12.74 5.04C12.61 3.72 13.08 3.18 13.86 3.73C14.19 3.96 14.51 4.63 14.51 5.10C14.51 5.58 14.66 5.71 14.86 5.40C15.08 5.06 15.09 4.67 14.88 4.26C14.47 3.47 14.60 2.29 15.15 1.76C15.80 1.13 16.48 1.92 16.41 3.23C16.37 4.12 16.41 4.16 17.08 3.99C18.41 3.64 18.70 4.40 17.70 5.64C17.37 6.06 17.37 6.06 17.56 6.42C17.67 6.61 17.81 6.97 17.87 7.20C18.19 8.42 19.24 6.87 19.33 5.05C19.38 3.91 19.65 3.43 20.41 3.09C21.72 2.50 21.68 4.72 20.37 5.57C19.50 6.14 19.68 6.63 20.62 6.24C21.76 5.76 22.46 6.35 21.84 7.25C21.43 7.85 21.10 8.03 20.25 8.10C19.34 8.17 19.20 8.24 19.20 8.59C19.20 8.82 19.25 8.85 19.57 8.85C20.03 8.85 20.27 9.09 20.27 9.56C20.27 10.63 20.63 10.52 21.49 9.18C21.86 8.62 22.26 8.07 22.39 7.96C22.52 7.84 22.62 7.62 22.62 7.42C22.64 6.16 24.25 4.88 24.94 5.57C25.45 6.08 24.39 7.89 23.57 7.89C23.26 7.89 23.04 8.01 23.04 8.17C23.04 8.29 23.18 8.31 23.77 8.25C24.58 8.18 24.85 8.32 24.85 8.81C24.85 9.15 24.61 9.72 24.39 9.91C24.29 9.99 24.21 10.12 24.21 10.20C24.21 10.49 24.54 10.34 24.86 9.89C25.40 9.15 25.94 8.85 26.74 8.85C28.68 8.85 27.83 10.62 25.81 10.77C24.86 10.84 24.69 11.11 25.43 11.36C27.16 11.96 26.54 13.31 24.70 12.97C24.45 12.92 24.10 12.71 23.72 12.36C23.10 11.80 22.98 11.77 22.21 12.07C21.37 12.38 23.15 13.51 24.66 13.62C25.58 13.69 26.02 13.57 26.29 13.17C26.91 12.22 29.75 12.78 29.23 13.76C28.91 14.35 28.11 14.49 26.37 14.23C25.77 14.14 25.73 14.46 26.31 14.77C27.50 15.42 27.59 16.99 26.42 16.81C25.56 16.67 24.97 16.06 24.81 15.13C24.71 14.55 24.16 14.24 23.75 14.53C23.57 14.67 23.58 14.70 23.89 15.29C24.56 16.57 24.14 17.76 23.23 17.19C22.75 16.89 22.51 16.44 22.50 15.82C22.49 13.89 20.78 12.74 18.86 13.39C17.48 13.86 17.36 14.51 18.66 14.51C21.14 14.51 22.60 16.37 22.19 19.01C21.99 20.32 21.52 21.15 20.04 22.86C18.09 25.09 18.55 26.05 21.65 26.24C23.28 26.34 23.81 26.49 24.34 26.99C25.09 27.71 24.79 28.03 23.78 27.58C22.67 27.08 22.36 27.44 23.20 28.26C24.36 29.40 22.93 29.39 21.71 28.25C21.01 27.60 20.57 27.38 19.68 27.27C18.27 27.09 18.79 27.67 20.62 28.32C21.30 28.56 21.73 28.94 21.88 29.43C22.14 30.30 21.80 30.67 21.33 30.03C20.90 29.42 20.37 29.46 20.37 30.10C20.37 30.49 20.07 31.04 19.86 31.04C19.64 31.04 19.52 30.77 19.52 30.26C19.52 29.69 19.00 29.02 18.70 29.21C18.57 29.29 17.98 30.62 17.86 31.06C17.77 31.45 17.56 31.62 17.41 31.44ZM16.59 23.16C17.38 22.68 19.40 20.54 19.73 19.84C20.82 17.51 18.61 15.61 16.72 17.27C16.52 17.45 16.24 17.60 16.11 17.60C15.98 17.60 15.70 17.45 15.49 17.27C13.68 15.68 11.44 17.60 12.54 19.81C13.04 20.81 15.57 23.25 16.21 23.35C16.24 23.36 16.41 23.27 16.59 23.16ZM14.32 12.61C14.78 12.09 14.79 10.62 14.34 9.63C14.00 8.87 13.81 8.90 13.67 9.72C13.60 10.09 13.43 10.55 13.28 10.77C12.93 11.28 12.94 11.47 13.39 12.10C13.92 12.84 14.05 12.92 14.32 12.61ZM17.94 12.05C18.52 11.76 18.60 11.62 18.46 11.16C18.40 10.98 18.33 10.69 18.29 10.53C18.16 9.86 17.32 10.40 16.74 11.53C16.19 12.61 16.52 12.75 17.94 12.05ZM22.99 10.83C23.47 10.63 23.46 10.54 22.94 10.37C22.29 10.17 22.09 10.20 22.01 10.52C21.90 10.98 22.31 11.11 22.99 10.83ZM16.57 9.16C16.56 8.96 16.49 8.56 16.42 8.26C16.30 7.79 16.31 7.64 16.47 7.19C16.57 6.90 16.68 6.58 16.71 6.48C16.79 6.23 16.31 6.05 15.94 6.19C15.25 6.45 15.26 8.96 15.97 9.66C16.23 9.92 16.59 9.62 16.57 9.16Z"/></svg></span><span class="brand-name">CureBranch</span></div>
     <div class="topbar-end"><button type="button" class="wz-later" id="wz-later">Finish later</button><span data-a11y-launch="compact"></span></div>
   </div>
   <div id="wz-banners"></div>
@@ -395,13 +447,12 @@
     <!-- 1. Get started: welcome, consent, private code -->
     <section class="wz-step" id="wz-start" data-step="start" aria-labelledby="wz-h-start">
       <h1 id="wz-h-start" tabindex="-1">Get started</h1>
-      <div data-listen-mount="#wz-start" data-listen-label="Listen to this step"></div>
       <p class="wz-lead">This app keeps your cancer records in one place. You decide who sees what.</p>
       <div class="wz-video" id="wz-video">
         <div class="video wz-video-placeholder" id="wz-video-placeholder">
           <span class="wz-play" aria-hidden="true"><svg class="oct" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 15.584V8.416a.5.5 0 0 1 .77-.42l5.576 3.583a.5.5 0 0 1 0 .842l-5.576 3.584a.5.5 0 0 1-.77-.42Z"></path><path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12Zm11-9.5A9.5 9.5 0 0 0 2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5Z"></path></svg></span>
           <p class="wz-video-title">Short welcome video</p>
-          <p class="wz-video-note">Coming soon. For now, press <strong>Listen</strong> above, or read the main points below.</p>
+          <p class="wz-video-note">Coming soon. For now, read the main points below.</p>
         </div>
       </div>
       <h2>The main points</h2>
@@ -433,7 +484,6 @@
     <!-- 2. Your records: portal connect + sharing choice -->
     <section class="wz-step" id="wz-records" data-step="records" aria-labelledby="wz-h-records" hidden>
       <h1 id="wz-h-records" tabindex="-1">Your records</h1>
-      <div data-listen-mount="#wz-records" data-listen-label="Listen to this step"></div>
       <h2>Connect your hospital portal</h2>
       <p class="wz-lead">Bring in your records straight from your hospital. Records from the hospital are checked, so they count.</p>
       <fieldset class="wz-choices">
@@ -476,7 +526,6 @@
     <!-- 3. Your choices: after-death, AI, summary -->
     <section class="wz-step" id="wz-choices" data-step="choices" aria-labelledby="wz-h-choices" hidden>
       <h1 id="wz-h-choices" tabindex="-1">Your choices</h1>
-      <div data-listen-mount="#wz-choices" data-listen-label="Listen to this step"></div>
       <div id="wz-after">
       <h2 id="wz-h-after">After you're gone</h2>
       <p class="wz-lead">This is hard to think about. Your choice can be changed any time.</p>
@@ -509,7 +558,7 @@
         <h2>How to use it with CureBranch</h2>
         <ol class="wz-howto">
           <li>Finish this setup.</li>
-          <li>Open <strong>Record</strong> at the bottom of the screen.</li>
+          <li>Open <strong>My branch</strong> from the top of the screen (or the Menu on a phone).</li>
           <li>Press <strong>Copy a prompt for my AI</strong>.</li>
           <li>Open <span id="wz-ai-name-inline">your AI</span> and paste it in.</li>
         </ol>
